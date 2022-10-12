@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import Dialog from 'components/Dialog';
+import Modal from 'components/Modal';
 import CommentItem from 'components/Comment/Item';
 import { useStore } from 'store';
 import Editor from 'components/Editor';
@@ -59,15 +59,12 @@ const Reply = observer(() => {
 export default observer(() => {
   const { modalStore } = useStore();
   return (
-    <Dialog
+    <Modal
       hideCloseButton
       open={modalStore.commentReply.open}
       onClose={() => modalStore.commentReply.hide()}
-      transitionDuration={{
-        enter: 300,
-      }}
     >
       <Reply />
-    </Dialog>
+    </Modal>
   );
 });

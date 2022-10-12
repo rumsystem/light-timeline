@@ -45,7 +45,7 @@ const Editor = observer((props: IProps) => {
   };
 
   return (
-    <div className="mt-2 md:mt-0 comment-editor-container bg-white rounded-12">
+    <div className="mt-2 md:mt-0 comment-editor-container ">
       <div className="mb-2">
         {replyingComment && (
           <div style={{ marginLeft: '1px' }} className="md:pl-3 pt-1">
@@ -129,7 +129,7 @@ export default observer((props: IProps) => {
           onClose={onClose}
         >
           <div
-            className="w-90-vw px-5 pb-1 box-border bg-white rounded-12 md:pt-2"
+            className="w-90-vw px-5 pb-1 box-border  md:pt-2"
             style={{
               marginTop: '-52vh',
             }}

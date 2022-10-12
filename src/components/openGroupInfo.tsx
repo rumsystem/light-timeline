@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import Dialog from 'components/Dialog';
 import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
 import { lang } from 'utils/lang';
@@ -11,8 +10,7 @@ import Loading from 'components/Loading';
 import { useStore } from 'store';
 import Tooltip from '@material-ui/core/Tooltip';
 import copy from 'copy-to-clipboard';
-import DrawerModal from 'components/DrawerModal';
-import { isMobile } from 'utils/env';
+import Modal from 'components/Modal';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 
 interface IModalProps {
@@ -20,7 +18,7 @@ interface IModalProps {
   rs: (result: boolean) => void
 }
 
-const Modal = observer((props: IModalProps) => {
+const Main = observer((props: IModalProps) => {
   const { snackbarStore } = useStore();
   const state = useLocalObservable(() => ({
     group: {} as IGroup,
@@ -86,126 +84,107 @@ const Modal = observer((props: IModalProps) => {
     props.rs(result);
   };
 
-  const main = () => (
-    <div className="h-[90vh] md:h-[70vh] overflow-y-auto bg-white rounded-12 p-8 px-5 md:px-10 box-border">
-      <div className="w-full md:w-[455px]">
-        {state.loading && (
-          <div className="py-32">
-            <Loading />
-          </div>
-        )}
-        {!state.loading && (
-          <div>
-            <div className="text-18 font-bold text-gray-700 text-center">
-              <div className="flex items-center justify-center">
-                {state.group.groupName}
-              </div>
-              <div className="mt-1 text-12 opacity-40">
-                {state.group.groupId}
-              </div>
+  return (
+    <Modal open={state.open} onClose={() => handleClose(false)}>
+      <div className="h-[90vh] md:h-[70vh] overflow-y-auto  p-8 px-5 md:px-10 box-border">
+        <div className="w-full md:w-[455px]">
+          {state.loading && (
+            <div className="py-32">
+              <Loading />
             </div>
-            <div className="mt-8">
-              <div className="flex">
-                <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
-                  节点
+          )}
+          {!state.loading && (
+            <div>
+              <div className="text-18 font-bold text-gray-700 text-center">
+                <div className="flex items-center justify-center">
+                  {state.group.groupName}
+                </div>
+                <div className="mt-1 text-12 opacity-40">
+                  {state.group.groupId}
                 </div>
               </div>
-              <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
-                {state.group.status === 'disconnected' && (
-                  <div className="flex items-center justify-center bg-red-400 text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
-                    <MdOutlineErrorOutline className="mr-1 text-18" /> 节点都访问不了，无法连接
-                  </div>
-                )}
-                {state.group.extra.rawGroup.chainAPIs.map((api, i) => (
-                  <Tooltip
-                    key={api}
-                    enterDelay={300}
-                    enterNextDelay={300}
-                    placement="left"
-                    title="点击复制"
-                    arrow
-                    interactive
-                  >
-                    <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
-                      copy(api);
-                      snackbarStore.show({
-                        message: lang.copied,
-                      });
-                    }}>
-                      <div className="w-[22px] h-[22px] box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
-                      <div className="text-12 md:text-13 text-gray-88 flex-1 pr-2 truncate">{api}</div>
-                    </div>
-                  </Tooltip>
-                ))}
-              </div>
-            </div>
-            {state.contents.length > 0 && (
               <div className="mt-8">
                 <div className="flex">
                   <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
-                    区块
+                    节点
                   </div>
                 </div>
                 <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
-                  {state.contents.map((content, index) => (
+                  {state.group.status === 'disconnected' && (
+                    <div className="flex items-center justify-center bg-red-400 text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
+                      <MdOutlineErrorOutline className="mr-1 text-18" /> 节点都访问不了，无法连接
+                    </div>
+                  )}
+                  {state.group.extra.rawGroup.chainAPIs.map((api, i) => (
                     <Tooltip
-                      key={content.id}
+                      key={api}
                       enterDelay={300}
                       enterNextDelay={300}
                       placement="left"
-                      title={
-                        <div className="py-5 mx-4 text-12 tracking-wide text-left w-[200px] overflow-x-auto leading-5" >
-                          <pre dangerouslySetInnerHTML={{ __html: JSON.stringify(content.Data, null, 2) }} />
-                        </div>
-                      }
+                      title="点击复制"
                       arrow
                       interactive
-                      >
+                    >
                       <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
-                        copy(JSON.stringify(content.Data));
+                        copy(api);
                         snackbarStore.show({
                           message: lang.copied,
                         });
                       }}>
-                        <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{state.group.contentCount - index}</div>
-                        <span className="text-12 md:text-13 text-gray-88 truncate">{content.TrxId}</span>
+                        <div className="w-[22px] h-[22px] box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
+                        <div className="text-12 md:text-13 text-gray-88 flex-1 pr-2 truncate">{api}</div>
                       </div>
                     </Tooltip>
                   ))}
-                  {state.hasMoreContent && (
-                    <div className="text-center pt-1 text-12" onClick={fetchMoreContents}>
-                      <span className="text-blue-400 cursor-pointer">加载更多</span>
-                    </div>
-                  )}
                 </div>
               </div>
-            )}
-          </div>
-        )}
+              {state.contents.length > 0 && (
+                <div className="mt-8">
+                  <div className="flex">
+                    <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
+                      区块
+                    </div>
+                  </div>
+                  <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                    {state.contents.map((content, index) => (
+                      <Tooltip
+                        key={content.id}
+                        enterDelay={300}
+                        enterNextDelay={300}
+                        placement="left"
+                        title={
+                          <div className="py-5 mx-4 text-12 tracking-wide text-left w-[200px] overflow-x-auto leading-5" >
+                            <pre dangerouslySetInnerHTML={{ __html: JSON.stringify(content.Data, null, 2) }} />
+                          </div>
+                        }
+                        arrow
+                        interactive
+                        >
+                        <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
+                          copy(JSON.stringify(content.Data));
+                          snackbarStore.show({
+                            message: lang.copied,
+                          });
+                        }}>
+                          <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{state.group.contentCount - index}</div>
+                          <span className="text-12 md:text-13 text-gray-88 truncate">{content.TrxId}</span>
+                        </div>
+                      </Tooltip>
+                    ))}
+                    {state.hasMoreContent && (
+                      <div className="text-center pt-1 text-12" onClick={fetchMoreContents}>
+                        <span className="text-blue-400 cursor-pointer">加载更多</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Modal>
   )
-
-  if (isMobile) {
-    return (
-      <DrawerModal open={state.open} onClose={() => handleClose(false)}>
-        {main()}
-      </DrawerModal>
-    )
-  }
-
-  return (
-    <Dialog
-      open={state.open}
-      onClose={handleClose}
-      hideCloseButton
-      transitionDuration={{
-        enter: 300,
-      }}
-    >
-      {main()}
-    </Dialog>
-  );
 });
 
 export default async (groupId: string) => {
@@ -219,7 +198,7 @@ export default async (groupId: string) => {
     (
       <ThemeRoot>
         <StoreProvider>
-          <Modal
+          <Main
             groupId={groupId}
             rs={() => {
               setTimeout(unmount, 3000);

@@ -4,8 +4,7 @@ import Loading from 'components/Loading';
 import pixabayApi from 'apis/pixabay';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import BottomLine from 'components/BottomLine';
-import Dialog from '@material-ui/core/Dialog';
-import DrawerModal from 'components/DrawerModal';
+import Modal from 'components/Modal';
 import { isMobile, isPc } from 'utils/env';
 import sleep from 'utils/sleep';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -89,7 +88,7 @@ const ImageLib = observer((props: any) => {
   };
 
   return (
-    <div className="bg-white rounded-12 text-center p-0 md:p-8 md:pt-5 image-lib">
+    <div className=" text-center p-0 md:p-8 md:pt-5 image-lib">
       <div className="md:w-600-px relative pt-4 md:pt-0">
         <div className="flex justify-center">
           <SearchInput className="w-64" placeholder="输入关键词" search={search} />
@@ -193,17 +192,9 @@ const ImageLib = observer((props: any) => {
 export default (props: any) => {
   const { open, close } = props;
 
-  if (isMobile) {
-    return (
-      <DrawerModal open={open} onClose={close}>
-        <ImageLib {...props} />
-      </DrawerModal>
-    );
-  }
-
   return (
-    <Dialog open={open} onClose={close} maxWidth={false}>
+    <Modal open={open} onClose={close}>
       <ImageLib {...props} />
-    </Dialog>
+    </Modal>
   );
 };

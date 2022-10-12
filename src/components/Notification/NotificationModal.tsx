@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import Dialog from 'components/Dialog';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Badge from '@material-ui/core/Badge';
@@ -15,8 +14,7 @@ import { NotificationApi } from 'apis';
 import sleep from 'utils/sleep';
 import { useStore } from 'store';
 import { runInAction } from 'mobx';
-import DrawerModal from 'components/DrawerModal';
-import { isMobile } from 'utils/env';
+import Modal from 'components/Modal';
 import { useHistory } from 'react-router-dom';
 
 interface IProps {
@@ -144,7 +142,7 @@ const Notification = observer((props: IProps) => {
   }
 
   return (
-    <div className="w-full h-[90vh] md:h-[80vh] md:w-[550px] flex flex-col bg-white rounded-12">
+    <div className="w-full h-[90vh] md:h-[80vh] md:w-[550px] flex flex-col">
       <Tabs
         className="px-8 relative bg-white z-0 md:z-10 with-border flex-none mt-2"
         value={state.tabIndex}
@@ -213,23 +211,9 @@ const Notification = observer((props: IProps) => {
 
 
 export default observer((props: IProps) => {
-  if (isMobile) {
-    return (
-      <DrawerModal open={props.open} onClose={() => props.onClose()}>
-        <Notification { ...props } />
-      </DrawerModal>
-    )
-  }
-
   return (
-    <Dialog
-      open={props.open}
-      onClose={() => props.onClose()}
-      transitionDuration={{
-        enter: 300,
-      }}
-    >
+    <Modal open={props.open} onClose={() => props.onClose()}>
       <Notification { ...props } />
-    </Dialog>
+    </Modal>
   )
 });

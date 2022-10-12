@@ -33,11 +33,9 @@ export default (props: IProps) => {
   return (
     <DrawerModal
       smallRadius
-      hideCloseButton
       open={open}
       onClose={() => {
         onClose();
-        // stopBodyScroll(false);
       }}
     >
       <div className="bg-gray-f2 leading-none rounded-t-10">
@@ -51,7 +49,6 @@ export default (props: IProps) => {
                   if (!item.stayOpenAfterClick) {
                     onClose();
                   }
-                  // stopBodyScroll(false);
                   await sleep(item.stayOpenAfterClick ? 0 : 200);
                   item.onClick();
                 }}

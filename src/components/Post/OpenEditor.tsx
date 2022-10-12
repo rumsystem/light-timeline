@@ -6,14 +6,13 @@ import { ThemeRoot } from 'utils/theme';
 import Editor from 'components/Editor';
 import { lang } from 'utils/lang';
 import Avatar from 'components/Avatar';
-import Dialog from 'components/Dialog';
 import { IPost } from 'apis/types';
 import { TrxStorage } from 'apis/common';
 import { TrxApi } from 'apis';
 import { useStore } from 'store';
 import { toJS } from 'mobx';
 import { isMobile, isPc } from 'utils/env';
-import DrawerModal from 'components/DrawerModal';
+import Modal from 'components/Modal';
 import openLoginModal from 'components/openLoginModal';
 import { IObject } from 'quorum-light-node-sdk';
 
@@ -54,7 +53,7 @@ const PostEditor = observer((props: {
   }
 
   return (
-    <div className="w-full md:w-[600px] box-border px-5 md:px-8 py-5 bg-white rounded-12">
+    <div className="w-full md:w-[600px] box-border px-5 md:px-8 py-5 ">
       <div className="items-center pb-3 hidden md:flex">
         <Avatar
           className="cursor-pointer"
@@ -94,7 +93,7 @@ const PostEditor = observer((props: {
   )
 });
 
-const Modal = observer((props: {
+const ModalWrapper = observer((props: {
   post?: IPost
   close: (result?: any) => void
 }) => {
@@ -117,29 +116,13 @@ const Modal = observer((props: {
     props.close(result);
   }
 
-  if (isMobile) {
-    return (
-      <DrawerModal open={state.open} onClose={() => close()} hideCloseButton>
-        <div ref={PostEditorRef}>
-          <PostEditor post={props.post} rs={close} />
-        </div>
-      </DrawerModal>
-    )
-  }
-
   return (
-    <Dialog
-      maxWidth="xl"
-      hideCloseButton
-      open={state.open}
-      onClose={() => close()}
-      transitionDuration={{
-        enter: 300,
-      }}
-    >
-      <PostEditor post={props.post} rs={close} />
-    </Dialog>
-  );
+    <Modal open={state.open} onClose={() => close()} hideCloseButton>
+      <div ref={PostEditorRef}>
+        <PostEditor post={props.post} rs={close} />
+      </div>
+    </Modal>
+  )
 });
 
 
@@ -154,7 +137,7 @@ export default (post?: IPost) => new Promise<IPost | null>((rs) => {
     (
       <ThemeRoot>
         <StoreProvider>
-          <Modal
+          <ModalWrapper
             post={post}
             close={(result) => {
               rs(result);

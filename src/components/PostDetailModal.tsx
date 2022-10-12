@@ -1,13 +1,11 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import Dialog from 'components/Dialog';
 import Loading from 'components/Loading';
 import PostItem from 'components/Post/Item';
 import { PostApi } from 'apis';
 import { IPost } from 'apis/types';
 import { useStore } from 'store';
-import DrawerModal from 'components/DrawerModal';
-import { isMobile } from 'utils/env';
+import Modal from 'components/Modal';
 
 const PostDetail = observer(() => {
   const { modalStore } = useStore();
@@ -36,7 +34,7 @@ const PostDetail = observer(() => {
   }, []);
 
   return (
-    <div className="bg-white rounded-12">
+    <div className="">
       <div className="w-full md:w-[600px] box-border mx-auto h-[90vh] md:h-[80vh] relative">
         {!state.loading && (
           <PostItem
@@ -62,27 +60,12 @@ const PostDetail = observer(() => {
 export default observer(() => {
   const { modalStore } = useStore();
 
-  if (isMobile) {
-    return (
-      <DrawerModal
-        open={modalStore.postDetail.open}
-        onClose={() => modalStore.postDetail.hide()}
-      >
-        <PostDetail />
-      </DrawerModal>
-    )
-  }
-
   return (
-    <Dialog
-      hideCloseButton
+    <Modal
       open={modalStore.postDetail.open}
       onClose={() => modalStore.postDetail.hide()}
-      transitionDuration={{
-        enter: 300,
-      }}
     >
       <PostDetail />
-    </Dialog>
-  );
+    </Modal>
+  )
 });

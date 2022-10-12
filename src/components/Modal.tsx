@@ -1,14 +1,41 @@
-import React from 'react';
-import Modal from '@material-ui/core/Modal';
-import Fade from '@material-ui/core/Fade';
+import { IoMdClose } from 'react-icons/io';
+import { Dialog, DialogProps } from '@material-ui/core';
+import DrawerModal from 'components/DrawerModal';
+import { isMobile } from 'utils/env';
 
-export default (props: any) => {
-  const { open, onClose } = props;
-  return (
-    <Modal open={open} onClose={onClose} className="flex justify-center items-center">
-      <Fade in={open} timeout={open ? 300 : 100}>
+interface IProps extends DialogProps {
+  hideCloseButton?: boolean
+}
+
+export default (props: IProps) => {
+  const { hideCloseButton, ...DialogProps } = props;
+  
+  if (isMobile) {
+    return (
+      <DrawerModal
+        hideCloseButton={hideCloseButton}
+        open={props.open}
+        onClose={props.onClose as any}
+      >
         {props.children}
-      </Fade>
-    </Modal>
+      </DrawerModal>
+    )
+  }
+
+  return (
+    <Dialog {...DialogProps} className="flex items-center justify-center">
+      <div className="bg-white rounded-12">
+        {!hideCloseButton && (
+          <div
+            className="text-gray-6d text-22 p-4 top-0 right-0 absolute cursor-pointer z-10"
+            onClick={props.onClose as any}
+            data-test-id="dialog-close-button"
+          >
+            <IoMdClose />
+          </div>
+        )}
+        {props.children}
+      </div>
+    </Dialog>
   );
 };

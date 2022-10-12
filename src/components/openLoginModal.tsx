@@ -3,9 +3,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
-import Dialog from 'components/Dialog';
-import { isMobile } from 'utils/env';
-import DrawerModal from 'components/DrawerModal';
+import Modal from 'components/Modal';
 import { useStore } from 'store';
 import { ethers } from 'ethers';
 import store from 'store2';
@@ -21,7 +19,7 @@ const Main = observer(() => {
   }));
 
   return (
-    <div className="box-border px-16 py-12 pb-10 bg-white rounded-12">
+    <div className="box-border px-16 py-12 pb-10 ">
       <div className="flex justify-center">
         <Button
           size="large"
@@ -62,7 +60,7 @@ const Main = observer(() => {
   )
 });
 
-const Modal = observer((props: {
+const ModalWrapper = observer((props: {
   close: (result?: any) => void
 }) => {
   const state = useLocalObservable(() => ({
@@ -80,27 +78,11 @@ const Modal = observer((props: {
     props.close(result);
   }
 
-  if (isMobile) {
-    return (
-      <DrawerModal open={state.open} onClose={() => close()}>
-        <Main />
-      </DrawerModal>
-    )
-  }
-
   return (
-    <Dialog
-      maxWidth="xl"
-      hideCloseButton
-      open={state.open}
-      onClose={() => close()}
-      transitionDuration={{
-        enter: 300,
-      }}
-    >
+    <Modal open={state.open} onClose={() => close()}>
       <Main />
-    </Dialog>
-  );
+    </Modal>
+  )
 });
 
 
@@ -115,7 +97,7 @@ export default () => {
     (
       <ThemeRoot>
         <StoreProvider>
-          <Modal
+          <ModalWrapper
             close={() => {
               setTimeout(unmount, 500);
             }}

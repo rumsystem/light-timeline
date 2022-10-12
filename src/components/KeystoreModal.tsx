@@ -1,12 +1,11 @@
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import Dialog from 'components/Dialog';
 import { TextField } from '@material-ui/core';
 import Button from 'components/Button';
 import { useStore } from 'store';
 import { ethers } from 'ethers';
 import sleep from 'utils/sleep';
 import store from 'store2';
-import DrawerModal from 'components/DrawerModal';
+import Modal from 'components/Modal';
 import { isMobile } from 'utils/env';
 
 interface IProps {
@@ -24,7 +23,7 @@ const Keystore = observer((props: IProps) => {
     percent: 0
   }));
   return (
-    <div className="p-8 w-full md:w-[560px] bg-white rounded-12">
+    <div className="p-8 pt-6 w-full md:w-[560px]">
        <TextField
         multiline
         name='keystore'
@@ -88,25 +87,8 @@ const Keystore = observer((props: IProps) => {
 })
 
 
-export default observer((props: IProps) => {
-  if (isMobile) {
-    return (
-      <DrawerModal open={props.open} onClose={() => props.onClose()}>
-        <Keystore {...props} />
-      </DrawerModal>
-    )
-  }
-
-  return (
-    <Dialog
-      open={props.open}
-      onClose={() => props.onClose()}
-      hideCloseButton
-      transitionDuration={{
-        enter: 300,
-      }}
-    >
-      <Keystore {...props} />
-    </Dialog>
-  )
-});
+export default observer((props: IProps) => (
+  <Modal hideCloseButton open={props.open} onClose={() => props.onClose()}>
+    <Keystore {...props} />
+  </Modal>
+));

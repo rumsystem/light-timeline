@@ -198,7 +198,7 @@ export default observer((props: IProps) => {
             </Fade>
           )}
 
-          {(isHomePage || isUserPage) && (
+          {userStore.isLogin && (isHomePage || isUserPage) && (
             <div className='cursor-pointer' onClick={async () => {
               const result = await openSearchModal();
               if (result) {

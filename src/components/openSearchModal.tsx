@@ -3,9 +3,8 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
-import Dialog from 'components/Dialog';
-import { isMobile, isPc } from 'utils/env';
-import DrawerModal from 'components/DrawerModal';
+import { isPc } from 'utils/env';
+import Modal from 'components/Modal';
 import Button from 'components/Button';
 import { FiFilter } from 'react-icons/fi';
 import { TextField } from '@material-ui/core';
@@ -50,7 +49,7 @@ const Main = observer((props: IModalProps) => {
   }
 
   return (
-    <div className="box-border px-12 py-12 pb-10 w-full md:w-[330px] bg-white rounded-12">
+    <div className="box-border px-12 py-12 pb-10 w-full md:w-[330px] ">
       <TextField
         autoFocus={isPc}
         label="输入关键词"
@@ -120,7 +119,7 @@ const Main = observer((props: IModalProps) => {
   )
 });
 
-const Modal = observer((props: IModalProps) => {
+const ModalWrapper = observer((props: IModalProps) => {
   const state = useLocalObservable(() => ({
     open: false,
   }));
@@ -136,27 +135,11 @@ const Modal = observer((props: IModalProps) => {
     props.close(result);
   }
 
-  if (isMobile) {
-    return (
-      <DrawerModal open={state.open} onClose={() => close()}>
-        <Main {...props} close={close} />
-      </DrawerModal>
-    )
-  }
-
   return (
-    <Dialog
-      maxWidth="xl"
-      hideCloseButton
-      open={state.open}
-      onClose={() => close()}
-      transitionDuration={{
-        enter: 300,
-      }}
-    >
+    <Modal open={state.open} onClose={() => close()}>
       <Main {...props} close={close} />
-    </Dialog>
-  );
+    </Modal>
+  )
 });
 
 export default (props?: IProps) => new Promise<IProps | undefined>((rs) => {
@@ -170,7 +153,7 @@ export default (props?: IProps) => new Promise<IProps | undefined>((rs) => {
     (
       <ThemeRoot>
         <StoreProvider>
-          <Modal
+          <ModalWrapper
             {...(props || {}) as IProps}
             close={(result) => {
               rs(result);

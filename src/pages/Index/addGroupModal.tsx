@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import Dialog from 'components/Dialog';
+import Modal from 'components/Modal';
 import { useStore } from 'store';
 import { TextField } from '@material-ui/core';
 import Button from 'components/Button';
@@ -202,14 +202,11 @@ export default observer((props: IProps) => {
   const { open, onClose } = props;
 
   return (
-    <Dialog
+    <Modal
       open={open}
       onClose={onClose}
-      transitionDuration={{
-        enter: 300,
-      }}
     >
       <Main { ...props } />
-    </Dialog>
+    </Modal>
   );
 });

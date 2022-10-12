@@ -27,14 +27,21 @@
 }
 .button.large {
   font-size: 14px;
-  padding: 11px 24px;
+  padding: 10px 24px;
+}
+.button.large.mobile {
+  font-size: 15px;
+  padding: 13px 24px;
 }
 .button.large.w-full {
   font-size: 15px;
-  padding: 11px 24px;
+  padding: 12px 24px;
 }
 .button.large.outline {
-  padding: 10px 23px;
+  padding: 9px 23px;
+}
+.button.large.mobile.outline {
+  padding: 11px 23px;
 }
 .button[disabled] {
   color: rgba(0, 0, 0, 0.26);
