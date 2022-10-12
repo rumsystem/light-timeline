@@ -5,7 +5,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import { BsPencil } from 'react-icons/bs';
 import openEditor from 'components/Post/OpenEditor';
-import Notification from 'components/Notification';
+import { MdNotificationsNone } from 'react-icons/md';
 import { BsInfo } from 'react-icons/bs';
 import openGroupInfo from 'components/openGroupInfo';
 import Avatar from 'components/Avatar';
@@ -42,8 +42,8 @@ export default observer((props: IProps) => {
     showBackToTop: false,
     showPostEditorEntry: false,
     openMessageModal: false,
-    unreadCount: 0,
-    consoleClickCount: 0
+    consoleClickCount: 0,
+    unreadCount: 0
   }));
   const history = useHistory();
   const location = useLocation();
@@ -142,7 +142,21 @@ export default observer((props: IProps) => {
               <div
                 className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-gray-c4'
               >
-                <Notification className="text-24 text-gray-af" />
+                <div>
+                  <Badge
+                    badgeContent={state.unreadCount}
+                    className='transform cursor-pointer'
+                    color="error"
+                    overlap='rectangular'
+                    onClick={() => { 
+                      state.openMessageModal = true;
+                    }}
+                  >
+                    <div className="w-8 h-8 flex items-center justify-center">
+                      <MdNotificationsNone className="text-24 text-gray-af" />
+                    </div>
+                  </Badge>
+                </div>
               </div>
             </Fade>
           )}
@@ -345,17 +359,17 @@ export default observer((props: IProps) => {
               <span className="text-14 text-red-500">退出</span>
             </div>
           )}
-          <MessagesModal
-            open={state.openMessageModal}
-            onClose={() => { state.openMessageModal = false; }}
-            addReadCount={(count) => {
-              if (state.unreadCount >= count) {
-                state.unreadCount -= count
-              }
-            }}
-          />
         </div>
       )}
+      <MessagesModal
+        open={state.openMessageModal}
+        onClose={() => { state.openMessageModal = false; }}
+        addReadCount={(count) => {
+          if (state.unreadCount >= count) {
+            state.unreadCount -= count
+          }
+        }}
+      />
     </div>
   )
 });
