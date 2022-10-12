@@ -10,21 +10,47 @@ import store from 'store2';
 import KeystoreModal from './KeystoreModal';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
+import * as Vault from 'utils/vault';
 
 const Main = observer(() => {
   const { userStore } = useStore();
   const state = useLocalObservable(() => ({
-    loading: false,
+    loadingMixin: false,
+    loadingRandom: false,
     openKeystoreModal: false,
   }));
 
   return (
-    <div className="box-border px-16 py-12 pb-10 ">
-      <div className="flex justify-center">
+    <div className="box-border px-14 pt-8 pb-10 w-[300px]">
+      <div className="text-17 font-bold text-gray-700 text-center opacity-90">
+        选择登录方式
+      </div>
+      <div className="flex justify-center w-full mt-6">
         <Button
+          className="w-full"
           size="large"
           onClick={async () => {
-            state.loading = true;
+            state.loadingMixin = true;
+            const {
+              aesKey,
+              keyInHex
+            } = await Vault.createKey();
+            await Vault.saveCryptoKeyToLocalStorage(aesKey);
+            window.location.href = Vault.getMixinOauthUrl({
+              state: keyInHex,
+              return_to: encodeURIComponent(window.location.href)
+            });
+          }}
+        >
+          Mixin 登录{state.loadingMixin && '...'}
+        </Button>
+      </div>
+      <div className="flex justify-center mt-4 w-full">
+        <Button
+          className="w-full"
+          size="large"
+          onClick={async () => {
+            state.loadingRandom = true;
             await sleep(200);
             const wallet = ethers.Wallet.createRandom();
             const password = "123";
@@ -42,7 +68,7 @@ const Main = observer(() => {
             window.location.reload();
           }}
         >
-          {state.loading ? '正在创建帐号...' : '使用随机帐号'}
+          {state.loadingRandom ? '正在创建帐号...' : '使用随机帐号'}
         </Button>
       </div>
       <div className="text-gray-88 opacity-60 mt-4 md:mt-[10px] text-center">

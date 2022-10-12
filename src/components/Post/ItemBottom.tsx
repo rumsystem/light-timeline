@@ -21,6 +21,7 @@ import { lang } from 'utils/lang';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
 import { TrxApi } from 'apis';
+import * as Vault from 'utils/vault';
 
 interface IProps {
   post: IPost
@@ -65,6 +66,7 @@ export default observer((props: IProps) => {
         },
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
+        ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
       });
       console.log(res);
       postStore.updatePost({
@@ -105,6 +107,7 @@ export default observer((props: IProps) => {
         },
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
+        ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
       });
       console.log(res);
     } catch (err) {

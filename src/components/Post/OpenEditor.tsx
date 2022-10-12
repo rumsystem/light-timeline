@@ -15,6 +15,7 @@ import { isMobile, isPc } from 'utils/env';
 import Modal from 'components/Modal';
 import openLoginModal from 'components/openLoginModal';
 import { IObject } from 'quorum-light-node-sdk';
+import * as Vault from 'utils/vault';
 
 const PostEditor = observer((props: {
   post?: IPost
@@ -31,6 +32,7 @@ const PostEditor = observer((props: {
       object: payload,
       aesKey: groupStore.cipherKey,
       privateKey: userStore.privateKey,
+      ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
     });
     console.log(res);
     const post: IPost = {

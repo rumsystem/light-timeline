@@ -6,9 +6,16 @@ export default async (url: any, options: any = {}) => {
     options.headers = { 'Content-Type': 'application/json' };
     options.body = JSON.stringify(options.body);
   }
+  if (options.jwt) {
+    options.headers = {
+      ...(options.headers || {}),
+      Authorization: `Bearer ${options.jwt}`
+    }
+  }
   if (!options.base) {
     options.credentials = 'include';
   }
+  console.log({ options });
   const result = await Promise.all([
     fetch(new Request((options.base || BASE) + url), options),
     sleep(options.minPendingDuration ? options.minPendingDuration : 0)

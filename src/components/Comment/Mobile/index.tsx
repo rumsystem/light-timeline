@@ -18,6 +18,7 @@ import Loading from 'components/Loading';
 import TopItemPageModal from './TopItemPageModal';
 import FixedCommentEntry from './FixedCommentEntry';
 import EditorModal from './EditorModal';
+import * as Vault from 'utils/vault';
 
 import './index.css';
 
@@ -141,6 +142,7 @@ export default observer((props: IProps) => {
       object: payload,
       aesKey: groupStore.cipherKey,
       privateKey: userStore.privateKey,
+      ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
     });
     console.log(res);
     const comment: IComment = {

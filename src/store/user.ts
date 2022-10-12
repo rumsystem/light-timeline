@@ -1,4 +1,4 @@
-import { IProfile, IUser } from 'apis/types';
+import { IProfile, IUser, IVaultAppUser } from 'apis/types';
 import store from 'store2';
 
 export function createUserStore() {
@@ -10,13 +10,17 @@ export function createUserStore() {
     keystore: store('keystore') || '',
 
     password: store('password') || '',
+    
+    jwt: '',
 
     user: {} as IUser,
+
+    vaultAppUser: {} as IVaultAppUser,
 
     profile: {} as IProfile,
 
     get isLogin() {
-      return !!this.address
+      return !!(this.jwt || this.address)
     },
 
     setAddress(address: string) {
@@ -61,6 +65,14 @@ export function createUserStore() {
 
     setUser(user: IUser) {
       this.user = user;
+    },
+
+    setJwt(jwt: string) {
+      this.jwt = jwt;
+    },
+
+    setVaultAppUser(vaultAppUser: IVaultAppUser) {
+      this.vaultAppUser = vaultAppUser;
     }
   };
 }

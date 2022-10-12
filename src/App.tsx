@@ -14,11 +14,13 @@ import CommentReplyModal from 'components/CommentReplyModal';
 import PostDetailModal from 'components/PostDetailModal';
 import PageLoadingModal from 'components/PageLoadingModal';
 import NewFeaturesModal from 'components/NewFeaturesModal';
-import { GroupApi, ProfileApi, UserApi } from 'apis';
+import { GroupApi, ProfileApi, UserApi, VaultApi } from 'apis';
 import { useStore } from 'store';
 import GlobalSetup from './globalSetup';
 import { lang } from 'utils/lang';
 import { useParams } from 'react-router-dom';
+import Query from 'utils/query';
+import * as Vault from 'utils/vault';
 
 const App = observer(() => {
   const { groupStore, userStore } = useStore();
@@ -63,11 +65,20 @@ const App = observer(() => {
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore } = useStore();
   const { groupId } = useParams() as { groupId: string };
+  const token = Query.get('token');
+  console.log({ token });
+  if (token) {
+    Query.remove('mixin_access_token');
+    Query.remove('token');
+  }
 
   React.useEffect(() => {
     (async () => {
-      groupStore.setLoading(true);      
+      groupStore.setLoading(true);
       try {
+        if (token) {
+          await handleToken(token);
+        }
         const group = await GroupApi.get(groupId);
         groupStore.setGroup(group);
         if (userStore.isLogin) {
@@ -81,7 +92,7 @@ const Preload = observer(() => {
         groupStore.setLoading(false);
       } catch (err: any) {
         console.log(err);
-        if (err.status === 404) {
+        if (err.message === 'group not found') {
           confirmDialogStore.show({
             content: '您访问种子网络不存在',
             okText: '返回首页',
@@ -96,13 +107,27 @@ const Preload = observer(() => {
             okText: '返回首页',
             cancelDisabled: true,
             ok: () => {
-              window.location.href = '/';
+              window.location.href = `/${groupStore.groupId}`;
             },
           });
         }
       }
     })();
   }, []);
+
+  const handleToken = async (token: string) => {
+    const jwt = await Vault.getJwtFromToken(token);
+    userStore.setJwt(jwt);
+    const vaultUser = await VaultApi.getUser(jwt);
+    try {
+      const vaultAppUser = await VaultApi.getAppUser(jwt, vaultUser.id);
+      userStore.setVaultAppUser(vaultAppUser);
+    } catch (err) {
+      console.log(err);
+      const vaultAppUser = await VaultApi.createAppUser(jwt);
+      userStore.setVaultAppUser(vaultAppUser);
+    }
+  }
 
   return null;
 });

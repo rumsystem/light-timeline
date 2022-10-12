@@ -4,11 +4,12 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import Modal from 'components/Modal';
 import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
-import QuorumLightNodeSDK, { ITrx } from 'quorum-light-node-sdk';
+import { ITrx } from 'quorum-light-node-sdk';
 import { lang } from 'utils/lang';
 import Loading from 'components/Loading';
 import { useStore } from 'store';
 import MiddleTruncate from 'components/MiddleTruncate';
+import { TrxApi } from 'apis';
 
 interface IProps {
   trxId: string
@@ -40,7 +41,7 @@ const ModalWrapper = observer((props: IModalProps) => {
   React.useEffect(() => {
     (async () => {
       try {
-        state.trx = await QuorumLightNodeSDK.chain.Trx.get(groupStore.groupId, props.trxId);
+        state.trx = await TrxApi.get(groupStore.groupId, props.trxId);
         state.loading = false;
       } catch (err) {
         console.error(err);
