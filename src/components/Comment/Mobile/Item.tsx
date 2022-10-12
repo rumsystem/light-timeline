@@ -102,7 +102,7 @@ export default observer((props: IProps) => {
       <div className="pt-[2px]" id={`comment_${commentStore.mobile.topCommentPage.open ? '_xxx_' : ''}${comment.trxId}`}>
         <span
           className="text-gray-1e break-words"
-          dangerouslySetInnerHTML={{ __html: `${previewContentPrefix}${comment.content}` }}
+          dangerouslySetInnerHTML={{ __html: urlify(`${previewContentPrefix}${comment.content}`) }}
         />
         {comment.images && comment.images.length > 0 && (
           <span
