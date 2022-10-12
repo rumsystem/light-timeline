@@ -53,7 +53,13 @@ const App = observer(() => {
                 </KeepAlive>
               )} />
               <Route path="/:groupId/posts/:trxId" exact component={PostDetail} />
-              <Route path="/:groupId/users/:userAddress" exact component={User} />
+              <Route path="/:groupId/users/:userAddress" exact component={() => (
+                <KeepAlive name='user' when={() => (
+                  window.location.pathname.startsWith(`/${groupStore.groupId}/posts`)
+                )}>
+                  <User />
+                </KeepAlive>
+              )} />
               <PostDetailModal />
               {userStore.isLogin && <CommentReplyModal />}
               {userStore.isLogin && <NewFeaturesModal />}

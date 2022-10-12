@@ -26,6 +26,7 @@ import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
 import store from 'store2';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
+import { useActivate } from 'react-activation';
 
 import './index.css';
 
@@ -55,12 +56,16 @@ export default observer(() => {
       return this.fetchedProfile && this.fetchedPosts
     }
   }));
-  const { userAddress } = useParams() as { userAddress: string };
+  let { userAddress } = useParams() as { userAddress: string };
   const { profile } = state;
   const user = userStore.userMap[userAddress]!;
   const isMyself = userStore.address === userAddress;
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
+
+  useActivate(() => {
+    userAddress = window.location.pathname.split('/users/')[1];
+  });
 
   React.useEffect(() => {
     if (state.fetched) {
