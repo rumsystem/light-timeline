@@ -16,7 +16,6 @@ import openLoginModal from 'components/openLoginModal';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 import Images from 'components/Images';
 import openPhotoSwipe from 'components/openPhotoSwipe';
-import Base64 from 'utils/base64';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 
