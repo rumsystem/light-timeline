@@ -23,7 +23,6 @@ export const createKey = async () => {
   }, true, ['encrypt', 'decrypt']);
   const keyBuffer = await window.crypto.subtle.exportKey('raw', aesKey);
   const keyInHex = Array.from(new Uint8Array(keyBuffer)).map((v) => `0${v.toString(16)}`.slice(-2)).join('');
-  console.log({ keyInHex });
   return {
     aesKey,
     keyInHex
@@ -31,16 +30,12 @@ export const createKey = async () => {
 }
 
 export const saveCryptoKeyToLocalStorage = async (aesKey: CryptoKey) => {
-  console.log(` ------------- before ---------------`);
-  console.log(aesKey);
   const jwk = await window.crypto.subtle.exportKey("jwk", aesKey);
   localStorage.setItem('jwk', JSON.stringify(jwk));
 }
 
 export const getCryptoKeyFromLocalStorage = async () => {
-  console.log(` ------------- after ---------------`);
   const jwk: any = JSON.parse(localStorage.getItem('jwk') || '');
-  console.log({ jwk });
   const result = await window.crypto.subtle.importKey(
     "jwk", {
         kty: jwk.kty,
@@ -51,8 +46,7 @@ export const getCryptoKeyFromLocalStorage = async () => {
       name: "AES-GCM",
     }, true, jwk.key_ops 
   )
-  console.log(result);
-  localStorage.removeItem('jwt');
+  localStorage.removeItem('jwk');
   return result;
 }
 
@@ -61,6 +55,13 @@ export const getMixinOauthUrl = (p: {
   return_to: string
 }) => {
   return `https://vault.rumsystem.net/v1/oauth/mixin/login?${qs.stringify(p)}`
+}
+
+export const getGithubOauthUrl = (p: {
+  state: string,
+  return_to: string
+}) => {
+  return `https://vault.rumsystem.net/v1/oauth/github/login?${qs.stringify(p)}`
 }
 
 export const getJwtFromToken = async (token: string) => {

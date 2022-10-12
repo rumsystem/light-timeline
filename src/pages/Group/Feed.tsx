@@ -15,7 +15,6 @@ import openLoginModal from 'components/openLoginModal';
 import { IObject } from 'quorum-light-node-sdk';
 import Button from 'components/Button';
 import { isMobile } from 'utils/env';
-import * as Vault from 'utils/vault';
 
 interface Props {
   scrollRef: React.RefObject<HTMLElement>
@@ -93,7 +92,7 @@ export default observer((props: Props) => {
       object: payload,
       aesKey: groupStore.cipherKey,
       privateKey: userStore.privateKey,
-      ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
+      ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
     });
     console.log(res);
     const post: IPost = {

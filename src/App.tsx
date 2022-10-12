@@ -21,6 +21,10 @@ import { lang } from 'utils/lang';
 import { useParams } from 'react-router-dom';
 import Query from 'utils/query';
 import * as Vault from 'utils/vault';
+import { TrxApi } from 'apis';
+import Base64 from 'utils/base64';
+
+(window as any).Base64 = Base64;
 
 const App = observer(() => {
   const { groupStore, userStore } = useStore();
@@ -66,8 +70,8 @@ const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore } = useStore();
   const { groupId } = useParams() as { groupId: string };
   const token = Query.get('token');
-  console.log({ token });
   if (token) {
+    console.log({ token });
     Query.remove('mixin_access_token');
     Query.remove('token');
   }
@@ -76,12 +80,13 @@ const Preload = observer(() => {
     (async () => {
       groupStore.setLoading(true);
       try {
-        if (token) {
-          await handleToken(token);
-        }
         const group = await GroupApi.get(groupId);
         groupStore.setGroup(group);
-        if (userStore.isLogin) {
+        let isCreatedByToken = false;
+        if (token) {
+          isCreatedByToken = await handleToken(token);
+        }
+        if (userStore.isLogin && !isCreatedByToken) {
           const [profile, user] = await Promise.all([
             ProfileApi.get(groupStore.groupId, userStore.address),
             UserApi.get(groupStore.groupId, userStore.address)
@@ -116,17 +121,44 @@ const Preload = observer(() => {
   }, []);
 
   const handleToken = async (token: string) => {
+    let isCreatedByToken = false;
     const jwt = await Vault.getJwtFromToken(token);
     userStore.setJwt(jwt);
     const vaultUser = await VaultApi.getUser(jwt);
+    console.log({ vaultUser });
     try {
       const vaultAppUser = await VaultApi.getAppUser(jwt, vaultUser.id);
+      console.log({ vaultAppUser });
       userStore.setVaultAppUser(vaultAppUser);
     } catch (err) {
       console.log(err);
       const vaultAppUser = await VaultApi.createAppUser(jwt);
+      console.log({ vaultAppUser });
       userStore.setVaultAppUser(vaultAppUser);
+      const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
+      const res = await TrxApi.createPerson({
+        groupId: groupStore.groupId,
+        person: {
+          name: vaultUser.display_name,
+          image: {
+            mediaType: Base64.getMimeType(avatar.url),
+            content: Base64.getContent(avatar.url),
+          },
+        },
+        aesKey: groupStore.cipherKey,
+        privateKey: userStore.privateKey,
+        ...(userStore.jwt ? { eth_pub_key: vaultAppUser.eth_pub_key, jwt } : {})
+      });
+      console.log(res);
+      userStore.setProfile({
+        name: vaultUser.display_name,
+        avatar: avatar.url,
+        groupId: groupStore.groupId,
+        userAddress: vaultAppUser.eth_address
+      });
+      isCreatedByToken = true;
     }
+    return isCreatedByToken;
   }
 
   return null;

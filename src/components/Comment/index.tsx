@@ -18,7 +18,6 @@ import Editor from 'components/Editor';
 import Query from 'utils/query';
 import { useHistory } from 'react-router-dom';
 import openLoginModal from 'components/openLoginModal';
-import * as Vault from 'utils/vault';
 
 interface IProps {
   post: IPost
@@ -88,7 +87,7 @@ export default observer((props: IProps) => {
       object: payload,
       aesKey: groupStore.cipherKey,
       privateKey: userStore.privateKey,
-      ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
+      ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
     });
     console.log(res);
     const comment: IComment = {

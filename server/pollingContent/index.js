@@ -60,6 +60,9 @@ const startJob = async (groupId, duration) => {
       if (isLazyGroup) {
         await sleep(5 * 60 * 1000);
       }
+      if (process.env.NODE_ENV === 'production') {
+        console.log(`执行同步任务: ${group.groupName}`);
+      }
       const where = { groupId: group.groupId };
       try {
         const listOptions = {

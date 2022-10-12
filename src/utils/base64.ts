@@ -46,6 +46,9 @@ export default {
   }) {
     return new Promise((resolve) => {
       const img = new Image();
+      if (blobUrl.startsWith('http') && !blobUrl.startsWith(window.location.origin)) {
+        img.crossOrigin="anonymous";
+      }
       img.src = blobUrl;
       img.onload = async () => {
         const count = options ? options.count || 1 : 1;

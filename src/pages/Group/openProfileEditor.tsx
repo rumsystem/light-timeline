@@ -17,7 +17,6 @@ import openLoginModal from 'components/openLoginModal';
 import Base64 from 'utils/base64';
 import sleep from 'utils/sleep';
 import Modal from 'components/Modal';
-import * as Vault from 'utils/vault';
 
 interface IModalProps {
   rs: () => void
@@ -69,7 +68,7 @@ const ModalWrapper = observer((props: IModalProps) => {
         person,
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
-        ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
+        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
       });
       console.log(res);
       const profile: IProfile = {

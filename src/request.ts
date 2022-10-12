@@ -15,7 +15,6 @@ export default async (url: any, options: any = {}) => {
   if (!options.base) {
     options.credentials = 'include';
   }
-  console.log({ options });
   const result = await Promise.all([
     fetch(new Request((options.base || BASE) + url), options),
     sleep(options.minPendingDuration ? options.minPendingDuration : 0)

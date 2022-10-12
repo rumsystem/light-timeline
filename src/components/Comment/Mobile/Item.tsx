@@ -19,7 +19,6 @@ import openPhotoSwipe from 'components/openPhotoSwipe';
 import Base64 from 'utils/base64';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
-import * as Vault from 'utils/vault';
 
 import './Item.css';
 
@@ -141,7 +140,7 @@ export default observer((props: IProps) => {
         },
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
-        ...Vault.getTrxCreateParam(userStore.vaultAppUser.eth_pub_key, userStore.jwt)
+        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
       });
       console.log(res);
       commentStore.updateComment({

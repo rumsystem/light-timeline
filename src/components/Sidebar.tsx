@@ -15,14 +15,8 @@ import { MdArrowUpward } from 'react-icons/md';
 import { BiArrowBack, BiLogOut } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import store from 'store2';
 import { isPc, getMixinContext } from 'utils/env';
 import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
-import {
-  IoPersonOutline,
-  IoPerson,
-  IoChatbubbleEllipsesOutline,
-} from 'react-icons/io5';
 import { AiOutlineHome, AiFillHome, AiOutlineSearch } from 'react-icons/ai';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
@@ -34,7 +28,8 @@ import { NotificationApi } from 'apis';
 import openSearchModal from 'components/openSearchModal';
 import qs from 'query-string';
 import { useAliveController } from 'react-activation';
-
+import { IoPersonOutline, IoPerson, IoChatbubbleEllipsesOutline } from 'react-icons/io5';
+import store from 'store2';
 
 interface IProps {
   scrollRef: React.RefObject<HTMLElement>
@@ -128,6 +123,19 @@ export default observer((props: IProps) => {
     }
   };
 
+  const logout = async () => {
+    confirmDialogStore.show({
+      content: '确定退出帐号吗？',
+      ok: async () => {
+        confirmDialogStore.hide();
+        await sleep(400);
+        store.clear();
+        modalStore.pageLoading.show();
+        window.location.href = `/${groupStore.groupId}`;
+      },
+    });
+  }
+
   if (isPc) {
     return (
       <div>
@@ -218,23 +226,7 @@ export default observer((props: IProps) => {
           )}
 
           {isMyUserPage && (
-            <div className='cursor-pointer' onClick={() => {
-              confirmDialogStore.show({
-                content: '确定退出帐号吗？',
-                ok: async () => {
-                  confirmDialogStore.hide();
-                  await sleep(400);
-                  userStore.setKeystore('');
-                  userStore.setPrivateKey('');
-                  userStore.setPassword('');
-                  userStore.setAddress('');
-                  store.remove('groupStatusMap');
-                  store.remove('lightNodeGroupMap');
-                  modalStore.pageLoading.show();
-                  window.location.href = `/${groupStore.groupId}`;
-                },
-              });
-            }}>
+            <div className='cursor-pointer' onClick={logout}>
               <div
                 className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center border border-red-500'
               >
@@ -427,21 +419,7 @@ export default observer((props: IProps) => {
               'right-[10px]': !getMixinContext().isMixinImmersive,
               'left-[70px]': getMixinContext().isMixinImmersive
             }, 'px-4 cursor-pointer fixed top-[12px] z-[21] flex items-center justify-center')} onClick={() => {
-              confirmDialogStore.show({
-                content: '确定退出帐号吗？',
-                ok: async () => {
-                  confirmDialogStore.hide();
-                  await sleep(400);
-                  userStore.setKeystore('');
-                  userStore.setPrivateKey('');
-                  userStore.setPassword('');
-                  userStore.setAddress('');
-                  store.remove('groupStatusMap');
-                  store.remove('lightNodeGroupMap');
-                  modalStore.pageLoading.show();
-                  window.location.href = `/${groupStore.groupId}`;
-                },
-              });
+              logout();
             }}>
               {getMixinContext().isMixinImmersive && (
                 <div className="text-gray-88 opacity-80 mr-4">|</div>

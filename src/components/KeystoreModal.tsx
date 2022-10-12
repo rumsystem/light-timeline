@@ -4,7 +4,6 @@ import Button from 'components/Button';
 import { useStore } from 'store';
 import { ethers } from 'ethers';
 import sleep from 'utils/sleep';
-import store from 'store2';
 import Modal from 'components/Modal';
 import { isMobile } from 'utils/env';
 
@@ -63,8 +62,6 @@ const Keystore = observer((props: IProps) => {
               userStore.setPassword(state.password);
               userStore.setAddress(wallet.address);
               userStore.setPrivateKey(wallet.privateKey);
-              store.remove('groupStatusMap');
-              store.remove('lightNodeGroupMap');
               snackbarStore.show({
                 message: '导入成功',
               });
