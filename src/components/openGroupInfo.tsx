@@ -12,7 +12,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import copy from 'copy-to-clipboard';
 import Modal from 'components/Modal';
 import { MdOutlineErrorOutline } from 'react-icons/md';
-import sleep from 'utils/sleep';
 
 interface IModalProps {
   groupId: string
