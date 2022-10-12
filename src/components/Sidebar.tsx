@@ -266,7 +266,10 @@ export default observer((props: IProps) => {
         </div>
         <MessagesModal
           open={state.openMessageModal}
-          onClose={() => { state.openMessageModal = false; }}
+          onClose={() => {
+            state.openMessageModal = false;
+            fetchUnreadCount();
+          }}
           addReadCount={(count) => {
             if (state.unreadCount >= count) {
               state.unreadCount -= count
@@ -400,7 +403,10 @@ export default observer((props: IProps) => {
       )}
       <MessagesModal
         open={state.openMessageModal}
-        onClose={() => { state.openMessageModal = false; }}
+        onClose={() => {
+          state.openMessageModal = false;
+          fetchUnreadCount();
+        }}
         addReadCount={(count) => {
           if (state.unreadCount >= count) {
             state.unreadCount -= count
