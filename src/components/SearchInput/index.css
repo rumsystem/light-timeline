@@ -1,0 +1,14 @@
+.search-input .MuiOutlinedInput-notchedOutline {
+  border-width: 2px;
+  border-color: #333;
+}
+.search-input .MuiOutlinedInput-root {
+  border-radius: 30px !important;
+}
+.search-input .MuiOutlinedInput-input {
+  color: #888888 !important;
+  padding: 10px 10px 9px 34px;
+}
+.search-input.small .MuiOutlinedInput-input {
+  padding: 8px 11px 7px 36px;
+}
