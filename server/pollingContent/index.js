@@ -44,7 +44,7 @@ module.exports = (duration) => {
       for (const group of groups) {
         if (!jobMap[group.groupId]) {
           jobMap[group.groupId] = startJob(group.groupId, duration);
-          await sleep(500);
+          await sleep(10 * 1000);
         }
       }
       await sleep(5 * 1000);
