@@ -1,12 +1,12 @@
 const { Sequelize } = require('sequelize');
 const config = require('../config');
 
-const dbConfig = config.database;
+const dbConfig = process.env.NODE_ENV === 'production-debug' ? config.database_prod : config.database;
 const sequelize = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.password, {
   host: dbConfig.host,
   port: dbConfig.port,
   dialect: dbConfig.dialect,
-  logging: () => {}
+  logging: process.env.NODE_ENV === 'production-debug' ? true : () => {}
 });
 
 (async () => {

@@ -7,6 +7,7 @@
     "dev": "nodemon index.js",
     "reset": "node reset.js",
     "start": "node index.js",
+    "start-prod-debug": "export NODE_ENV='production-debug' && nodemon index.js",
     "start-prod": "export NODE_ENV='production' && ./node_modules/.bin/pm2-runtime index.js",
     "stop-prod": "./node_modules/.bin/pm2 stop 0"
   },

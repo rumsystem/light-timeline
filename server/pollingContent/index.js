@@ -21,6 +21,13 @@ module.exports = (duration) => {
       for (const group of groups) {
         QuorumLightNodeSDK.cache.Group.add(group.seedUrl);
       }
+      if (process.env.NODE_ENV === 'production-debug') {
+        stop = true;
+        console.log('==================================================');
+        console.log('Disabled polling content for production debug mode');
+        console.log('==================================================');
+        return;
+      }
       for (const group of groups) {
         const where = { groupId: group.groupId };
         try {
