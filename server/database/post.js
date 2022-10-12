@@ -102,10 +102,8 @@ const getCounterMap = async (p) => {
   return keyBy(counters, (counter) => counter.objectId);
 }
 
-exports.count = async (userAddress) => {
+exports.count = async (where) => {
   return await Post.count({
-    where: {
-      userAddress
-    }
+    where
   });
 };

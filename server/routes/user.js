@@ -4,8 +4,10 @@ const Post = require('../database/post');
 router.get('/:userAddress', get);
 
 async function get(ctx) {
-  const userAddress = ctx.params.userAddress;
-  const postCount = await Post.count(userAddress);
+  const postCount = await Post.count({
+    groupId: ctx.params.groupId,
+    userAddress: ctx.params.userAddress,
+  });
   ctx.body = {
     postCount
   };

@@ -4,6 +4,7 @@ const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 
 router.post('/object', createObject);
 router.post('/person', createPerson);
+router.get('/:trxId', get);
 
 async function createObject(ctx) {
   const data = ctx.request.body;
@@ -25,7 +26,15 @@ async function createPerson(ctx) {
     console.log(err);
     throws(Errors.ERR_IS_REQUEST_FAILED());
   }
-  
+}
+
+async function get(ctx) {
+  try {
+    ctx.body = await QuorumLightNodeSDK.chain.Trx.get(ctx.params.groupId, ctx.params.trxId);
+  } catch (err) {
+    console.log(err);
+    throws(Errors.ERR_IS_REQUEST_FAILED());
+  }
 }
 
 module.exports = router;
