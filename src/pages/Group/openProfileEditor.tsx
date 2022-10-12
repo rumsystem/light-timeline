@@ -170,7 +170,7 @@ const ModalWrapper = observer((props: IModalProps) => {
 
           <div className="mt-8" onClick={updateProfile}>
             <Button
-              className="rounded w-[160px] h-10"
+              className="w-[160px] h-10"
               isDoing={state.loading}
               data-test-id="profile-edit-confirm"
             >
