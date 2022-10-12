@@ -31,7 +31,10 @@ async function list(ctx, type) {
     where.from = ctx.params.userAddress;
   }
   let items = await Relation.findAll({
-    where
+    where,
+    order: [['id', 'DESC']],
+    limit: Math.min(~~ctx.query.limit || 10, 100),
+    offset: ctx.query.offset || 0
   });
   items = items.map(item => item.toJSON());
   const profiles = await Profile.bulkGet(items.map((item) => ({

@@ -26,7 +26,8 @@ const UserList = observer((props: IProps) => {
   const state = useLocalStore(() => ({
     hasMore: false,
     page: 0,
-    loading: false,
+    fetching: false,
+    fetched: false,
     submitting: false,
     relations: [] as IRelation[],
   }));
@@ -35,7 +36,7 @@ const UserList = observer((props: IProps) => {
 
   React.useEffect(() => {
     (async () => {
-      state.loading = true;
+      state.fetching = true;
       try {
         let relations = [] as IRelation[];
         if (props.type === 'following') {
@@ -50,12 +51,13 @@ const UserList = observer((props: IProps) => {
       } catch (err) {
         console.log(err);
       }
-      state.loading = false;
+      state.fetching = false;
+      state.fetched = true;
     })();
   }, [state, state.page]);
 
   const [sentryRef, { rootRef }] = useInfiniteScroll({
-    loading: state.loading,
+    loading: state.fetching,
     hasNextPage: state.hasMore,
     rootMargin: '0px 0px 300px 0px',
     onLoadMore: async () => {
@@ -109,12 +111,12 @@ const UserList = observer((props: IProps) => {
         {props.type === 'muted' && '我屏蔽掉的人'}
       </div>
       <div className="w-full md:w-[330px] h-[80vh] md:h-[400px] overflow-y-auto" ref={rootRef}>
-        {state.loading && (
+        {!state.fetched && (
           <div className="pt-24 flex items-center justify-center">
             <Loading />
           </div>
         )}
-        {!state.loading && (
+        {state.fetched && (
           <div>
             {state.relations.map((relation) => {
               const isMyself = relation.to === userStore.address;
@@ -192,19 +194,19 @@ const UserList = observer((props: IProps) => {
                 </div>
               );
             })}
-            {!state.loading && state.relations.length === 0 && (
+            {state.relations.length === 0 && (
               <div className="py-28 text-center text-14 text-gray-400 opacity-80">
                 空空如也 ~
               </div>
             )}
-            {!state.loading && state.hasMore && (
+            {state.fetching && (
               <div className="py-8 flex items-center justify-center">
                 <Loading />
               </div>
             )}
-            <div ref={sentryRef} />
           </div>
         )}
+        <div ref={sentryRef} />
       </div>
     </div>
   );
