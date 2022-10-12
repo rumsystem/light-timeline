@@ -6,6 +6,9 @@ exports.create = async (item) => {
 };
 
 exports.bulkGet = async (trxIds) => {
+  if (trxIds.length === 0) {
+    return [];
+  }
   return await Counter.findAll({
     where: {
       trxId: {

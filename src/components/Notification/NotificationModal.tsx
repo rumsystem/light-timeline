@@ -96,7 +96,7 @@ const Notification = observer((props: IProps) => {
         }
         state.unreadCount = state.tab.unreadCount;
         if (!state.fetched) {
-          await sleep(300);
+          await sleep(200);
         }
         const notifications = await NotificationApi.list(groupStore.groupId, userStore.address, state.tab.type, {
           offset: state.offset,

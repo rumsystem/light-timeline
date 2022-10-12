@@ -34,16 +34,17 @@ async function list(ctx) {
     withExtra: true,
     viewer: ctx.query.viewer
   });
-  let subComments = await Comment.list({
+  const subCommentTrxIds = comments.map(item => item.trxId);
+  let subComments = subCommentTrxIds.length > 0 ? await Comment.list({
     where: {
       threadId: {
-        [Op.or]: comments.map(item => item.trxId)
+        [Op.or]: subCommentTrxIds
       }
     }
   }, {
     withExtra: true,
     viewer: ctx.query.viewer
-  });
+  }) : [];
   comments = comments.map((item) => {
     if (ctx.query.truncatedLength) {
       item.content = truncate(item.content, ~~ctx.query.truncatedLength)

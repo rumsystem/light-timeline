@@ -69,7 +69,7 @@ export default observer((props: IProps) => {
           offset: 0,
           limit: 1000
         });
-        if (props.where === 'postList') {
+        if (props.post.commentCount === 0 && props.where === 'postList') {
           await sleep(400);
         }
         addComments(comments);

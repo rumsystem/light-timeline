@@ -12,6 +12,9 @@ exports.destroy = async (where) => {
 };
 
 exports.bulkGet = async (queries) => {
+  if (queries.length === 0) {
+    return [];
+  }
   return await UniqueCounter.findAll({
     where: {
       [Op.or]: queries

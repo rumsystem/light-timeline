@@ -19,6 +19,9 @@ exports.get = async (index) => {
 };
 
 exports.bulkGet = async (indexes) => {
+  if (indexes.length === 0) {
+    return [];
+  }
   const items = await Profile.findAll({
     where: {
       [Op.or]: indexes

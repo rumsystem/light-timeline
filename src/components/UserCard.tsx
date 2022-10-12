@@ -42,7 +42,7 @@ const UserCard = observer((props: IUserCardProps) => {
         state.profile = await ProfileApi.get(groupStore.groupId, props.userAddress);
         state.user = await UserApi.get(groupStore.groupId, props.userAddress);
       } catch (_) {}
-      await sleep(300);
+      await sleep(200);
       state.fetched = true;
     })();
   }, []);

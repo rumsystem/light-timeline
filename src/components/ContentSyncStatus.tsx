@@ -30,7 +30,7 @@ export default observer((props: IProps) => {
     ) {
       (async () => {
         state.showSuccessChecker = true;
-        await sleep(3000);
+        await sleep(2000);
         state.showSuccessChecker = false;
       })();
     }

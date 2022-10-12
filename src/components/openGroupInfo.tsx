@@ -40,7 +40,6 @@ const Modal = observer((props: IModalProps) => {
   React.useEffect(() => {
     (async () => {
       try {
-        await sleep(300);
         const group = await GroupApi.get(props.groupId);
         await fetchMoreContents();
         state.group = group;

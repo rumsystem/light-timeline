@@ -18,6 +18,9 @@ exports.update = async (id, item) => {
 };
 
 exports.markAsRead = async (ids) => {
+  if (ids.length === 0) {
+    return;
+  }
   return await Notification.update({
     status: 'read'
   }, {
