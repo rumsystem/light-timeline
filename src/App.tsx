@@ -62,7 +62,6 @@ const Preload = observer(() => {
       try {
         const group = await GroupApi.get(groupId);
         groupStore.setGroup(group);
-        document.title = group.groupName;
         if (userStore.isLogin) {
           const [profile, user] = await Promise.all([
             ProfileApi.get(groupStore.groupId, userStore.address),

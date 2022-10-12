@@ -4,9 +4,19 @@ import { initSocket, getSocket } from 'utils/socket';
 import { useStore } from 'store';
 import { TrxStorage } from 'apis/common';
 import { IComment, IPost } from 'apis/types';
+import { useLocation } from 'react-router-dom';
 
 export default observer(() => {
-  const { userStore, commentStore, postStore, groupStore } = useStore();
+  const { userStore, commentStore, postStore, groupStore, pathStore } = useStore();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    console.log(location.pathname);
+    if (location.pathname === `/${groupStore.groupId}`) {
+      document.title = groupStore.group.groupName;
+    }
+    pathStore.push(location.pathname);
+  }, [location.pathname]);
   
   React.useEffect(() => {
     initSocket();

@@ -59,6 +59,7 @@ const UserCard = observer((props: IUserCardProps) => {
             size={50}
           />
           <div className="pl-16 pt-2">
+            {user.postCount === 0 && <div className="pt-2" />}
             <div className="font-bold text-15 truncate w-44 text-gray-6d">
               {profile.name}
             </div>
@@ -67,6 +68,7 @@ const UserCard = observer((props: IUserCardProps) => {
                 {user.postCount}  条内容
               </div>
             )}
+            {user.postCount === 0 && <div className="pb-2" />}
           </div>
         </div>
       </div>

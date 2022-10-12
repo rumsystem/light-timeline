@@ -29,7 +29,7 @@ export default observer(() => {
   }));
 
   React.useEffect(() => {
-    document.title = '微博轻节点';
+    document.title = 'Rum 微博网页版';
   }, []);
 
   React.useEffect(() => {

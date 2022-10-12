@@ -251,7 +251,7 @@ export default observer((props: IProps) => {
                     </div>
                   </div>
                 )}
-                {state.expandContent && state.canExpandContent && post.content.length > 600 && (
+                {isPc && state.expandContent && state.canExpandContent && post.content.length > 600 && (
                   <div
                     className="text-blue-400 cursor-pointer tracking-wide flex items-center text-12 absolute top-[2px] right-[-90px] opacity-80"
                     onClick={() => {

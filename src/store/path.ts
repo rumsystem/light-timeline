@@ -8,7 +8,7 @@ export function createPathStore() {
     get lastPath() {
       return this.paths[this.paths.length - 1] || '';
     },
-    pushPath(path: string) {
+    push(path: string) {
       this.paths.push(path);
     },
   };
