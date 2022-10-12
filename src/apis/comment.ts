@@ -12,10 +12,5 @@ export default {
   }) {
     const items: IComment[] = await request(`${API_BASE_URL}/${groupId}/comments?${qs.stringify(options)}`);
     return items;
-  },
-
-  async get(groupId: string, trxId: string) {
-    const item: IComment = await request(`${API_BASE_URL}/${groupId}/comments/${trxId}`);
-    return item;
   }
 }

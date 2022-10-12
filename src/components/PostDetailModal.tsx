@@ -10,7 +10,7 @@ import Modal from 'components/Modal';
 const PostDetail = observer(() => {
   const { modalStore } = useStore();
   const { trxId } = modalStore.postDetail.data;
-  const { postStore, groupStore } = useStore();
+  const { postStore, groupStore, userStore } = useStore();
   const state = useLocalObservable(() => ({
     open: true,
     loading: true,
@@ -24,7 +24,9 @@ const PostDetail = observer(() => {
     }
     (async () => {
       try {
-        const post = await PostApi.get(groupStore.groupId, trxId);
+        const post = await PostApi.get(groupStore.groupId, trxId, {
+          viewer: userStore.address
+        });
         postStore.tryAddPostToMap(post);
       } catch (err) {
         console.log(err);

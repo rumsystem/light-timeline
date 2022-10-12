@@ -11,7 +11,8 @@ async function get(ctx) {
   const trxId = ctx.params.trxId;
   const post = await Post.get(trxId, {
     withReplacedImage: true,
-    withExtra: true
+    withExtra: true,
+    viewer: ctx.query.viewer
   });
   assert(post, Errors.ERR_NOT_FOUND('post'));
   ctx.body = post;

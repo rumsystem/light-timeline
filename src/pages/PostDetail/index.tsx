@@ -13,7 +13,7 @@ import Sidebar from 'components/Sidebar';
 import Button from 'components/Button';
 
 export default observer(() => {
-  const { postStore, groupStore } = useStore();
+  const { postStore, groupStore, userStore } = useStore();
   const state = useLocalObservable(() => ({
     loading: true,
   }));
@@ -30,7 +30,9 @@ export default observer(() => {
     }
     (async () => {
       try {
-        const post = await PostApi.get(groupStore.groupId, trxId);
+        const post = await PostApi.get(groupStore.groupId, trxId, {
+          viewer: userStore.address
+        });
         if (post.latestTrxId) {
           history.push(`/${groupStore.groupId}/posts/${post.latestTrxId}`);
           return;

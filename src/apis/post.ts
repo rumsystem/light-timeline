@@ -17,8 +17,10 @@ export default {
     return items;
   },
 
-  async get(groupId: string, trxId: string) {
-    const item: IPost = await request(`${API_BASE_URL}/${groupId}/posts/${trxId}`);
+  async get(groupId: string, trxId: string, options: {
+    viewer: string | undefined
+  }) {
+    const item: IPost = await request(`${API_BASE_URL}/${groupId}/posts/${trxId}?${qs.stringify(options)}`);
     return item;
   }
 }
