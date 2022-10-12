@@ -40,7 +40,7 @@ export function createPostStore() {
           if (!this.trxIds.includes(post.trxId)) {
             this.trxIds.push(post.trxId);
           }
-          this.map[post.trxId] = post;
+          this.tryAddPostToMap(post);
         }
       });
     },
@@ -48,7 +48,7 @@ export function createPostStore() {
     addPost(post: IPost) {
       runInAction(() => {
         this.trxIds.unshift(post.trxId);
-        this.map[post.trxId] = post;
+        this.tryAddPostToMap(post);
       })
     },
 
@@ -58,7 +58,7 @@ export function createPostStore() {
           if (!this.userTrxIds.includes(post.trxId)) {
             this.userTrxIds.push(post.trxId);
           }
-          this.map[post.trxId] = post;
+          this.tryAddPostToMap(post);
         }
       });
     },
@@ -69,7 +69,7 @@ export function createPostStore() {
           if (!this.searchedTrxIds.includes(post.trxId)) {
             this.searchedTrxIds.push(post.trxId);
           }
-          this.map[post.trxId] = post;
+          this.tryAddPostToMap(post);
         }
       });
     },
@@ -77,12 +77,14 @@ export function createPostStore() {
     addUserPost(post: IPost) {
       runInAction(() => {
         this.userTrxIds.unshift(post.trxId);
-        this.map[post.trxId] = post;
+        this.tryAddPostToMap(post);
       })
     },
 
-    addPostToMap(post: IPost) {
-      this.map[post.trxId] = post;
+    tryAddPostToMap(post: IPost) {
+      if (!this.map[post.trxId]) {
+        this.map[post.trxId] = post;
+      }
     },
 
     removePost(trxId: string) {

@@ -25,7 +25,7 @@ const PostDetail = observer(() => {
     (async () => {
       try {
         const post = await PostApi.get(groupStore.groupId, trxId);
-        postStore.addPostToMap(post);
+        postStore.tryAddPostToMap(post);
       } catch (err) {
         console.log(err);
       }

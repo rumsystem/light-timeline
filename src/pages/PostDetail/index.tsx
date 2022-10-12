@@ -36,7 +36,7 @@ export default observer(() => {
           return;
         }
         if (post) {
-          postStore.addPostToMap(post);
+          postStore.tryAddPostToMap(post);
           document.title = post.content.slice(0, 50);
         }
       } catch (err) {
