@@ -11,6 +11,7 @@ import Query from 'utils/query';
 import { useHistory } from 'react-router-dom';
 import { isMobile } from 'utils/env';
 import sleep from 'utils/sleep';
+import urlify from 'utils/urlify';
 
 interface IMessagesProps {
   notifications: INotification[]
@@ -67,7 +68,9 @@ export default observer((props: IMessagesProps) => {
                     className="mt-[9px] opacity-90 break-all"
                   >
                     <div>
-                      {fromObject.content}
+                      <div dangerouslySetInnerHTML={{
+                        __html: urlify(fromObject.content || '')
+                      }}/>
                       {!fromObject.content && fromObject.images && <Images images={fromObject.images || []} />}
                     </div>
                   </div>

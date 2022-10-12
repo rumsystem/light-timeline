@@ -262,7 +262,7 @@ export default observer((props: IProps) => {
                     )}
                     ref={commentRef}
                     dangerouslySetInnerHTML={{
-                      __html: comment.content,
+                      __html: urlify(comment.content),
                     }}
                   />
 
