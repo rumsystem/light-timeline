@@ -138,18 +138,20 @@ export default observer((props: Props) => {
             <MdChevronLeft />
             {isPc && <span className="text-14 mr-5">返回</span>}
           </div>
-          <TextField
-            autoFocus
-            className="flex-1 md:flex-initial md:w-64"
-            placeholder='输入关键词'
-            value={state.q}
-            onChange={(e) => {
-              state.q = e.target.value.trim();
-            }}
-            onKeyDown={onKeyDown}
-            variant="outlined"
-            margin="dense"
-          />
+          <form action="/" className="flex-1 md:flex-initial md:w-64">
+            <TextField
+              fullWidth
+              autoFocus
+              placeholder='输入关键词'
+              value={state.q}
+              onChange={(e) => {
+                state.q = e.target.value.trim();
+              }}
+              onKeyDown={onKeyDown}
+              variant="outlined"
+              margin="dense"
+            />
+          </form>
           <div className={classNames({
             'text-orange-500': state.minLike || state.minComment
           }, "ml-4 flex items-center text-gray-88 cursor-pointer mt-1 mr-1 md:mr-0")}

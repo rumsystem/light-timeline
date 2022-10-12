@@ -50,18 +50,21 @@ const Main = observer((props: IModalProps) => {
 
   return (
     <div className="box-border px-12 py-12 pb-10 w-full md:w-[330px] ">
-      <TextField
-        autoFocus={isPc}
-        label="输入关键词"
-        value={state.q}
-        onChange={(e) => {
-          state.q = e.target.value.trim();
-        }}
-        onKeyDown={onKeyDown}
-        variant="outlined"
-        margin="dense"
-        fullWidth
-      />
+      <form action="/">
+        <TextField
+          autoFocus={isPc}
+          label="输入关键词"
+          value={state.q}
+          onChange={(e) => {
+            state.q = e.target.value.trim();
+          }}
+          onKeyDown={onKeyDown}
+          variant="outlined"
+          margin="dense"
+          type="search"
+          fullWidth
+        />
+      </form>
       {!state.showCondition && (
         <div className="flex justify-center mt-5 text-gray-9c" onClick={() => {
           state.showCondition = true;
