@@ -104,11 +104,11 @@ export default observer(() => {
             </div>
           </div>
           <Button onClick={() => {
-            if (isPc) {
-              window.open(`/${group.groupId}`);
-            } else {
-              window.location.href = `/${group.groupId}`;
-            }
+            window.location.href = `/${group.groupId}`;
+            // if (isPc) {
+            //   window.open(`/${group.groupId}`);
+            // } else {
+            // }
           }}>打开</Button>
         </div>
       ))}
