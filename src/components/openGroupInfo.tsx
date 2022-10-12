@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import copy from 'copy-to-clipboard';
 import DrawerModal from 'components/DrawerModal';
 import { isMobile } from 'utils/env';
+import { MdOutlineErrorOutline } from 'react-icons/md';
 
 interface IModalProps {
   groupId: string
@@ -99,16 +100,6 @@ const Modal = observer((props: IModalProps) => {
           <div>
             <div className="text-18 font-bold text-gray-700 text-center">
               <div className="flex items-center justify-center">
-              <Tooltip
-                enterDelay={200}
-                enterNextDelay={200}
-                placement="top"
-                title={state.group.status === 'connected' ? '连接中' : "已断开"}
-                arrow
-                interactive
-                >
-                  <div className={`w-[10px] h-[10px] rounded-full mr-2 ${state.group.status === 'connected' ? 'bg-emerald-300' : 'bg-red-400'}`} />
-                </Tooltip>
                 {state.group.groupName}
               </div>
               <div className="mt-1 text-12 opacity-40">
@@ -122,6 +113,11 @@ const Modal = observer((props: IModalProps) => {
                 </div>
               </div>
               <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                {state.group.status === 'disconnected' && (
+                  <div className="flex items-center justify-center bg-red-400 text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
+                    <MdOutlineErrorOutline className="mr-1 text-18" /> 节点都访问不了，无法连接
+                  </div>
+                )}
                 {state.group.extra.rawGroup.chainAPIs.map((api, i) => (
                   <Tooltip
                     key={api}

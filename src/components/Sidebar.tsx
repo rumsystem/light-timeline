@@ -36,7 +36,14 @@ interface IProps {
 }
 
 export default observer((props: IProps) => {
-  const { userStore, postStore, confirmDialogStore, groupStore, modalStore } = useStore();
+  const {
+    userStore,
+    postStore,
+    confirmDialogStore,
+    groupStore,
+    modalStore,
+    pathStore
+  } = useStore();
   const { profile } = userStore;
   const state = useLocalObservable(() => ({
     showBackToTop: false,
@@ -61,7 +68,9 @@ export default observer((props: IProps) => {
 
   const fetchUnreadCount = async () => {
     try {
-      const count1 = await NotificationApi.getUnreadCount(groupStore.groupId, userStore.address, 'like');
+      const count1 = await NotificationApi.getUnreadCount(groupStore.groupId,
+        userStore.address,
+        'like');
       const count2 = await NotificationApi.getUnreadCount(groupStore.groupId, userStore.address, 'comment');
       state.unreadCount = count1 + count2;
     } catch (err) {
@@ -70,10 +79,16 @@ export default observer((props: IProps) => {
   }
 
   React.useEffect(() => {
+    if (!userStore.isLogin) {
+      return;
+    }
     fetchUnreadCount();
   }, []);
 
   React.useEffect(() => {
+    if (!userStore.isLogin) {
+      return;
+    }
     const listener = (notification: any) => {
       console.log({ notification });
       fetchUnreadCount();
@@ -85,6 +100,10 @@ export default observer((props: IProps) => {
   }, []);
 
   const onOpenEditor = async () => {
+    if (!userStore.isLogin) {
+      openLoginModal();
+      return;
+    }
     const post = await openEditor();
     if (post) {
       await sleep(300);
@@ -116,7 +135,9 @@ export default observer((props: IProps) => {
           )}
 
           {!isHomePage && (
-            <div className='cursor-pointer' onClick={() => history.goBack()}>
+            <div className='cursor-pointer' onClick={() => {
+              pathStore.prevPath ? history.goBack() : history.push(`/${groupStore.groupId}`)
+            }}>
               <div
                 className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center border border-gray-9c'
               >
@@ -141,6 +162,13 @@ export default observer((props: IProps) => {
             <Fade in={true} timeout={350}>
               <div
                 className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-gray-c4'
+                onClick={() => {
+                  if (!userStore.isLogin) {
+                    openLoginModal();
+                    return;
+                  }
+                  state.openMessageModal = true;
+                }}
               >
                 <div>
                   <Badge
@@ -236,6 +264,15 @@ export default observer((props: IProps) => {
               </div>
             </Tooltip>
         </div>
+        <MessagesModal
+          open={state.openMessageModal}
+          onClose={() => { state.openMessageModal = false; }}
+          addReadCount={(count) => {
+            if (state.unreadCount >= count) {
+              state.unreadCount -= count
+            }
+          }}
+        />
       </div>
     );
   }

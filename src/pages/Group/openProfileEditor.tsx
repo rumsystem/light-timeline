@@ -64,7 +64,6 @@ const Modal = observer((props: IModalProps) => {
           content: Base64.getContent(state.profile.avatar),
         }
       }
-      console.log(QuorumLightNodeSDK.chain.Trx);
       const res = await QuorumLightNodeSDK.chain.Trx.createPerson({
         groupId: groupStore.groupId,
         person,

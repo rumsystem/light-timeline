@@ -9,6 +9,10 @@ export function createPostStore() {
 
     map: {} as Record<string, IPost>,
 
+    get total() {
+      return this.trxIds.length;
+    },
+
     get posts() {
       return this.trxIds.map((rId: string) => this.map[rId]);
     },

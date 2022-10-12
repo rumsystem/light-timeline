@@ -65,7 +65,9 @@ export default observer(() => {
       body.onclick = (e: any) => {
         if (e.target && e.target.tagName === 'A') {
           e.preventDefault();
+          e.stopPropagation();
           const href = e.target.getAttribute('href');
+          console.log({ href });
           if (href && href.startsWith('http')) {
             window.open(href);
           }

@@ -12,9 +12,9 @@ import sleep from 'utils/sleep';
 import Loading from 'components/Loading';
 import classNames from 'classnames';
 import openGroupInfo from 'components/openGroupInfo';
-import Tooltip from '@material-ui/core/Tooltip';
 import { runInAction } from 'mobx';
-import { isPc, isMobile, getMixinContext } from 'utils/env';
+import { isPc, getMixinContext, isMobile } from 'utils/env';
+import { MdOutlineErrorOutline } from 'react-icons/md';
 
 export default observer(() => {
   const { snackbarStore } = useStore();
@@ -78,32 +78,29 @@ export default observer(() => {
             <div className="mt-[15px] text-gray-9b md:flex md:items-center cursor-pointer" onClick={() => {
               openGroupInfo(group.groupId);
             }}>
-              <div className="flex items-center">
-                {isPc && (
-                  <Tooltip
-                    enterDelay={200}
-                    enterNextDelay={200}
-                    placement="top"
-                    title={group.status === 'connected' ? '连接中' : "已断开"}
-                    arrow
-                    interactive
-                    >
-                      <div className={`w-[8px] h-[8px] rounded-full mr-2 ${group.status === 'connected' ? 'bg-emerald-300' : 'bg-red-400'}`} />
-                  </Tooltip>
-                )}
-                连接<span className={classNames({
-                  'text-emerald-500': isMobile,
-                  'text-gray-64': isPc,
-                }, "font-bold mx-[6px]")}>{group.extra.rawGroup.chainAPIs.length}</span>个节点
-              </div>
+              {group.status === 'connected' && (
+                <div className="flex items-center">
+                  连接<span className="text-emerald-500 font-bold mx-[6px]">{group.extra.rawGroup.chainAPIs.length}</span>个节点
+                </div>
+              )}
+              {isPc && group.status === 'disconnected' && (
+                <div className="flex items-center bg-red-400 text-white p-1 px-2 text-12 rounded-12 mr-2 text-center">
+                  <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
+                </div>
+              )}
               <div className="mt-[10px] md:mt-0">
                 {group.contentCount > 0 && (
                   <div>
-                    {isPc && '，'}同步<span className="text-gray-64 font-bold mx-[6px]">{group.contentCount}</span>条内容
+                    {isPc && group.status === 'connected' && '，'}同步<span className="text-gray-64 font-bold mx-[6px]">{group.contentCount}</span>条内容
                   </div>
                 )}
               </div>
-              {isPc && <BiChevronRight className="text-18 ml-[2px]" />}
+              {isPc && (group.status === 'connected' || group.contentCount > 0) && <BiChevronRight className="text-18 ml-[2px]" />}
+              {isMobile && group.status === 'disconnected' && (
+                <div className="flex items-center bg-red-400 text-white p-1 px-2 text-12 rounded-12 mt-[10px] text-center">
+                  <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
+                </div>
+              )}
             </div>
           </div>
           <Button onClick={() => {

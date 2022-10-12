@@ -14,6 +14,8 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Loading from 'components/Loading';
 import openLoginModal from 'components/openLoginModal';
 import { IObject } from 'quorum-light-node-sdk';
+import Button from 'components/Button';
+import { isMobile } from 'utils/env';
 
 interface Props {
   scrollRef: React.RefObject<HTMLElement>
@@ -35,7 +37,6 @@ export default observer((props: Props) => {
       return this.profileMap[userStore.address]
     }
   }));
-  const length = postStore.posts.length;
 
   React.useEffect(() => {
     (async () => {
@@ -160,9 +161,16 @@ export default observer((props: Props) => {
           <Loading />
         </div>
       )}
-      {state.fetched && length === 0 && (
+      {state.fetched && postStore.total === 0 && (
         <div className="py-[30vh] text-center text-gray-500 text-14 tracking-wider opacity-80">
           来发布一条内容吧 ~
+          {isMobile && !userStore.isLogin && (
+            <div className="flex justify-center mt-5">
+              <Button onClick={openLoginModal} >
+                点击发布
+              </Button>
+            </div>
+          )}
         </div>
       )}
       <div ref={sentryRef} />
