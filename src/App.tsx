@@ -17,6 +17,7 @@ import { useStore } from 'store';
 import GlobalSetup from './globalSetup';
 import { lang } from 'utils/lang';
 import { useParams } from 'react-router-dom';
+import QuorumLightNodeSDK from 'quorum-light-node-sdk';
 
 const App = observer(() => {
   const { groupStore } = useStore();
@@ -61,6 +62,8 @@ const Preload = observer(() => {
       groupStore.setLoading(true);      
       try {
         const group = await GroupApi.get(groupId);
+        QuorumLightNodeSDK.cache.Group.clear();
+        QuorumLightNodeSDK.cache.Group.add(group.seedUrl);
         groupStore.setGroup(group);
         document.title = group.groupName;
         if (userStore.isLogin) {
