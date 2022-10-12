@@ -124,7 +124,7 @@ export default async (props: IProps) => new Promise((rs) => {
             {...props}
             rs={() => {
               rs(true);
-              setTimeout(unmount, 3000);
+              setTimeout(unmount, 500);
             }}
           />
         </StoreProvider>

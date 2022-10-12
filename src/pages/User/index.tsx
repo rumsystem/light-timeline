@@ -1,10 +1,8 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { isMobile, isPc } from 'utils/env';
+import { isMobile } from 'utils/env';
 import Button from 'components/Button';
 import { BiEditAlt } from 'react-icons/bi';
-import { RiSettings4Fill } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
 import { useStore } from 'store';
 import { useParams } from 'react-router-dom';
 import { ProfileApi, UserApi, PostApi } from 'apis';
@@ -22,6 +20,7 @@ import { RiMoreFill } from 'react-icons/ri';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
+import UserListModal from './UserListModal';
 
 import './index.css';
 
@@ -39,6 +38,7 @@ export default observer(() => {
     fetchedPosts: false,
     hasMorePosts: false,
     anchorEl: null,
+    showUserListModal: false,
     get fetched() {
       return this.fetchedProfile && this.fetchedPosts
     }
@@ -201,6 +201,9 @@ export default observer(() => {
                   {user.postCount > 0 && (
                     <span
                       className="cursor-pointer mt-2"
+                      onClick={() => {
+                        state.showUserListModal = true;
+                      }}
                     >
                       <span className="text-16 font-bold">
                         {user.postCount}
@@ -219,6 +222,11 @@ export default observer(() => {
                       被关注
                     </span>
                   )}
+                  <UserListModal
+                    open={state.showUserListModal}
+                    onClose={() => {
+                      state.showUserListModal = false;
+                    }} />
                 </div>
                 {/* <div className="pt-2 pr-5 text-white opacity-90 w-[230px] md:w-[320px] box-border">
                   {profile.intro && <div className="text-13 whitespace-pre-line">{profile.intro}</div>}

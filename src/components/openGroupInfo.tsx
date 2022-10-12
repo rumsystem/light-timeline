@@ -201,7 +201,7 @@ export default async (groupId: string) => {
           <Main
             groupId={groupId}
             rs={() => {
-              setTimeout(unmount, 3000);
+              setTimeout(unmount, 500);
             }}
           />
         </StoreProvider>

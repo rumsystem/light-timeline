@@ -197,7 +197,7 @@ export default async () => {
         <StoreProvider>
           <ModalWrapper
             rs={() => {
-              setTimeout(unmount, 3000);
+              setTimeout(unmount, 500);
             }}
           />
         </StoreProvider>
