@@ -78,7 +78,7 @@ export default observer(() => {
   React.useEffect(() => {
     const body = document.querySelector('body') as any;
     if (body) {
-      body.onclick = (e: any) => {
+      const listener = (e: any) => {
         if (e.target && e.target.tagName === 'A') {
           e.preventDefault();
           e.stopPropagation();
@@ -88,6 +88,8 @@ export default observer(() => {
           }
         }
       };
+      body.addEventListener('click', listener);
+      body.addEventListener('touchstart', listener, { passive: false });
     }
   }, []);
 

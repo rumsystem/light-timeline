@@ -180,6 +180,7 @@ export default observer((props: IProps) => {
                   <div>
                     <UserCard
                       userAddress={props.comment.userAddress}
+                      className="inline-block"
                     >
                       <UserName
                         name={comment.extra.userProfile.name || ''}
