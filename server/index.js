@@ -37,7 +37,7 @@ const {
 } = require('./middleware/api');
 
 const app = new Koa();
-const port = 8002;
+const port = 9000;
  
 app.use(convert(bodyparser));
 app.use(convert(json()));
@@ -66,7 +66,7 @@ router.use('/api/:groupId/profiles', profile.routes(), profile.allowedMethods())
 router.use('/api/:groupId/notifications', notification.routes(), notification.allowedMethods());
 router.use('/api/:groupId/users', user.routes(), user.allowedMethods());
 
-router.use('/3786200a-3d6c-41b8-bd38-1d6ecd890fae', async ctx => ctx.render('index'));
+router.use('(.*)', async ctx => ctx.render('index'));
 
 app.use(router.routes(), router.allowedMethods());
 
