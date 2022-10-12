@@ -24,6 +24,7 @@ import * as Vault from 'utils/vault';
 import { TrxApi } from 'apis';
 import Base64 from 'utils/base64';
 import { IVaultAppUser } from 'apis/types';
+import { isEmpty } from 'lodash';
 
 (window as any).Base64 = Base64;
 
@@ -83,18 +84,20 @@ const Preload = observer(() => {
       try {
         const group = await GroupApi.get(groupId);
         groupStore.setGroup(group);
-        let isCreatedByToken = false;
+        let createdByToken = false;
         if (token) {
           modalStore.pageLoading.show();
-          isCreatedByToken = await handleToken(token);
+          createdByToken = await handleToken(token);
           modalStore.pageLoading.hide();
         }
-        if (userStore.isLogin && !isCreatedByToken) {
+        if (userStore.isLogin && !createdByToken) {
           const [profile, user] = await Promise.all([
             ProfileApi.get(groupStore.groupId, userStore.address),
             UserApi.get(groupStore.groupId, userStore.address)
           ]);
-          userStore.setProfile(profile);
+          if (isEmpty(userStore.profile)) {
+            userStore.setProfile(profile);
+          }
           userStore.setUser(user);
         }
         groupStore.setLoading(false);
@@ -124,7 +127,7 @@ const Preload = observer(() => {
   }, []);
 
   const handleToken = async (token: string) => {
-    let isCreatedByToken = false;
+    let createdByToken = false;
     const jwt = await Vault.getJwtFromToken(token);
     userStore.setJwt(jwt);
     const vaultUser = await VaultApi.getUser(jwt);
@@ -139,11 +142,10 @@ const Preload = observer(() => {
       vaultAppUser = await VaultApi.createAppUser(jwt);
       console.log({ vaultAppUser });
       userStore.setVaultAppUser(vaultAppUser);
-      isCreatedByToken = true;
+      createdByToken = true;
     }
     try {
       const profileExist = await ProfileApi.exist(groupStore.groupId, userStore.address);
-      console.log({ profileExist });
       if (!profileExist) {
         const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
         const res = await TrxApi.createPerson({
@@ -170,7 +172,7 @@ const Preload = observer(() => {
     } catch (err) {
       console.log(err);
     }
-    return isCreatedByToken;
+    return createdByToken;
   }
 
   return null;
