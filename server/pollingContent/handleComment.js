@@ -154,7 +154,10 @@ const pack = async item => {
 }
 
 const notify = async (trxId) => {
-  const comment = await Comment.get(trxId, { withExtra: true });
+  const comment = await Comment.get(trxId, {
+    withReplacedImage: true,
+    withExtra: true
+  });
   if (comment) {
     getSocketIo().to(comment.groupId).emit('comment', comment);
   }

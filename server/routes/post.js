@@ -9,7 +9,10 @@ router.get('/', list);
 
 async function get(ctx) {
   const trxId = ctx.params.trxId;
-  const post = await Post.get(trxId, { withExtra: true });
+  const post = await Post.get(trxId, {
+    withReplacedImage: true,
+    withExtra: true
+  });
   assert(post, Errors.ERR_NOT_FOUND('post'));
   ctx.body = post;
 }
@@ -50,6 +53,7 @@ async function list(ctx) {
     limit: Math.min(~~ctx.query.limit || 10, 100),
     offset: ctx.query.offset || 0
   }, {
+    withReplacedImage: true,
     withExtra: true,
     viewer: ctx.query.viewer
   });

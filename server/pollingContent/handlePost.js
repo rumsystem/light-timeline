@@ -87,7 +87,10 @@ const pack = async item => {
 }
 
 const notify = async (trxId) => {
-  const post = await Post.get(trxId, { withExtra: true });
+  const post = await Post.get(trxId, {
+    withReplacedImage: true,
+    withExtra: true
+  });
   if (post) {
     getSocketIo().to(post.groupId).emit('post', post);
   }

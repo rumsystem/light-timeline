@@ -42,27 +42,41 @@ exports.appendExtra = async (item) => {
 
   if (item.toObjectType === 'post') {
     try {
-      item.extra.toObject = await Post.get(item.toObjectId, { withExtra: true });
+      item.extra.toObject = await Post.get(item.toObjectId, {
+        withReplacedImage: true,
+        withExtra: true
+      });
     } catch (_) {}
   } else if (item.toObjectType === 'comment') {
     try {
-      item.extra.toObject = await Comment.get(item.toObjectId, { withExtra: true });
+      item.extra.toObject = await Comment.get(item.toObjectId, {
+        withReplacedImage: true,
+        withExtra: true
+      });
     } catch (_) {}
   }
   
   if (item.fromObjectType === 'post') {
     try {
-      item.extra.fromObject = await Post.get(item.fromObjectId, { withExtra: true });
+      item.extra.fromObject = await Post.get(item.fromObjectId, {
+        withReplacedImage: true,
+        withExtra: true
+      });
     } catch (_) {}
   } else if (item.fromObjectType === 'comment') {
     try {
-      item.extra.fromObject = await Comment.get(item.fromObjectId, { withExtra: true });
+      item.extra.fromObject = await Comment.get(item.fromObjectId, {
+        withReplacedImage: true,
+        withExtra: true
+      });
     } catch (_) {}
   }
 
   item.extra.fromProfile = await Profile.get({
     groupId: item.groupId,
     userAddress: item.from
+  }, {
+    withReplacedImage: true
   }) || getDefaultProfile(item.from);
   return item;
 }

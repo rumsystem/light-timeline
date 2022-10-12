@@ -18,6 +18,7 @@ import Loading from 'components/Loading';
 import TopItemPageModal from './TopItemPageModal';
 import FixedCommentEntry from './FixedCommentEntry';
 import EditorModal from './EditorModal';
+import Base64 from 'utils/base64';
 
 import './index.css';
 
@@ -146,7 +147,7 @@ export default observer((props: IProps) => {
     console.log(res);
     const comment: IComment = {
       content: payload.content || '',
-      images: payload.image,
+      images: (payload.image || []).map(image => Base64.getUrl(image)),
       objectId: props.post.trxId,
       threadId: '',
       replyId: '',

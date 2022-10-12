@@ -3,13 +3,12 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import classNames from 'classnames';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { BsFillCaretDownFill, BsFillCaretUpFill } from 'react-icons/bs';
-import { IPost, IImage } from 'apis/types';
+import { IPost } from 'apis/types';
 import ItemBottom from './ItemBottom';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 import Avatar from 'components/Avatar';
 import UserCard from 'components/UserCard';
 import { lang } from 'utils/lang';
-import Base64 from 'utils/base64';
 import sleep from 'utils/sleep';
 import { isMobile, isPc } from 'utils/env';
 import ago from 'utils/ago';
@@ -31,7 +30,7 @@ interface IProps {
   hideBottom?: boolean
 }
 
-const Images = observer((props: { images: IImage[] }) => {
+const Images = observer((props: { images: string[] }) => {
   const count = props.images.length;
 
   return (
@@ -42,11 +41,11 @@ const Images = observer((props: { images: IImage[] }) => {
       'grid grid-rows-2 grid-cols-2 gap-1': count === 4,
     }, 'rounded-12 overflow-hidden max-w-[70vw] md:max-w-[100%]')}
     >
-      {props.images.map((item: IImage, index: number) => {
-        const url = Base64.getUrl(item);
+      {props.images.map((image: string, index) => {
+        const url = image;
         const onClick = () => {
           openPhotoSwipe({
-            image: props.images.map((image: IImage) => Base64.getUrl(image)),
+            image: props.images,
             index,
           });
         };
@@ -65,7 +64,7 @@ const Images = observer((props: { images: IImage[] }) => {
                 <img
                   className="cursor-pointer opacity-0 absolute top-[-9999px] left-[-9999px]"
                   src={url}
-                  alt={item.name}
+                  alt={`${index}`}
                   onLoad={(e: any) => {
                     const div: any = divRef.current;
                     const { width, height } = e.target;

@@ -158,10 +158,11 @@ const Editor = observer((props: IProps) => {
       const imageMap = {} as Record<string, IPreviewItem>;
       let i = 0;
       for (const image of props.post.images) {
-        imageMap[image.name || i] = {
-          id: image.name,
-          name: image.name || i,
-          url: Base64.getUrl(image),
+        const name = `${i}`;
+        imageMap[name] = {
+          id: name,
+          name: name,
+          url: image,
         } as IPreviewItem;
         i++;
       }
@@ -271,10 +272,19 @@ const Editor = observer((props: IProps) => {
       content: state.content.trim()
     };
     if (props.enabledImage && imageIdSet.size > 0) {
-      const images = Object.values(state.imageMap).map((image: IPreviewItem) => ({
-        mediaType: Base64.getMimeType(image.url),
-        content: Base64.getContent(image.url),
-        name: image.name,
+      const images = await Promise.all(Object.values(state.imageMap).map(async (image: IPreviewItem) => {
+        let url = image.url;
+        if (!url.startsWith('data:')) {
+          const res: any = await Base64.getFromBlobUrl(url);
+          url = res.url;
+          console.log(` ------------- 转换成 base64 ---------------`);
+          console.log(image.url, url);
+        }
+        return {
+          mediaType: Base64.getMimeType(url),
+          content: Base64.getContent(url),
+          name: image.name,
+        }
       }));
       payload.images = images;
     }

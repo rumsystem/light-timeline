@@ -18,6 +18,7 @@ import Editor from 'components/Editor';
 import Query from 'utils/query';
 import { useHistory } from 'react-router-dom';
 import openLoginModal from 'components/openLoginModal';
+import Base64 from 'utils/base64';
 
 interface IProps {
   post: IPost
@@ -92,7 +93,7 @@ export default observer((props: IProps) => {
     console.log(res);
     const comment: IComment = {
       content: payload.content || '',
-      images: payload.image,
+      images: (payload.image || []).map(image => Base64.getUrl(image)),
       objectId: props.post.trxId,
       threadId: '',
       replyId: '',

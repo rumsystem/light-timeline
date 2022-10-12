@@ -1,13 +1,11 @@
-import { IImage } from 'apis/types';
-import Base64 from 'utils/base64';
 import classNames from 'classnames';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 
 export default (props: {
-  images: IImage[]
+  images: string[]
   className?: string
 }) => {
-  const urls = props.images.map((image: IImage) => Base64.getUrl(image));
+  const urls = props.images.map((image: string) => image);
   return (
     <div className="flex">
       {urls.map((url: string, index: number) => (

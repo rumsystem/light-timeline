@@ -10,7 +10,10 @@ router.get('/', list);
 
 async function get(ctx) {
   const trxId = ctx.params.trxId;
-  const comment = await Comment.get(trxId, { withExtra: true });
+  const comment = await Comment.get(trxId, {
+    withReplacedImage: true,
+    withExtra: true
+  });
   assert(comment, Errors.ERR_NOT_FOUND('comment'));
   ctx.body = comment;
 }
@@ -31,6 +34,7 @@ async function list(ctx) {
     query.where.threadId = '';
   }
   let comments = await Comment.list(query, {
+    withReplacedImage: true,
     withExtra: true,
     viewer: ctx.query.viewer
   });
@@ -42,6 +46,7 @@ async function list(ctx) {
       }
     }
   }, {
+    withReplacedImage: true,
     withExtra: true,
     viewer: ctx.query.viewer
   }) : [];

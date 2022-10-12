@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const Profile = require('./sequelize/profile');
 const getDefaultProfile = require('../utils/getDefaultProfile');
+const config = require('../config');
 
 exports.upsert = async (item) => {
   const where = {
@@ -22,17 +23,17 @@ exports.upsert = async (item) => {
   }
 };
 
-exports.get = async (index) => {
+exports.get = async (index, options = {}) => {
   const item = await Profile.findOne({
     where: index
   });
   if (!item) {
     return null;
   }
-  return pack(item.toJSON());
+  return  pack(item.toJSON(), options);
 };
 
-exports.bulkGet = async (indexes) => {
+exports.bulkGet = async (indexes, options ={}) => {
   if (indexes.length === 0) {
     return [];
   }
@@ -41,10 +42,17 @@ exports.bulkGet = async (indexes) => {
       [Op.or]: indexes
     }
   });
-  return items.map(item => pack(item.toJSON()));
+  return items.map(item => pack(item.toJSON(), options));
 };
 
-const pack = profile => {
+const pack = (profile, options = {}) => {
   profile.avatar = profile.avatar || getDefaultProfile(profile.userAddress).avatar;
-  return profile
+  return options.withReplacedImage ? replaceImage(profile) : profile;
+}
+
+const replaceImage = profile => {
+  if (profile.avatar.startsWith('data:')) {
+    profile.avatar = `${config.serverOrigin || ''}/api/${profile.groupId}/images/profiles/${profile.userAddress}`
+  }
+  return profile;
 }

@@ -3,6 +3,7 @@ const { keyBy } = require('lodash');
 const Profile = require('./profile');
 const UniqueCounter = require('./uniqueCounter');
 const getDefaultProfile = require('../utils/getDefaultProfile');
+const config = require('../config');
 
 exports.create = async (item) => {
   return await Comment.create(item);
@@ -35,7 +36,7 @@ exports.get = async (trxId, options = {}) => {
   if (!item) {
     return null;
   }
-  const result = item.toJSON();
+  const result = options.withReplacedImage ? replaceImages(item.toJSON()) : item.toJSON();
   if (options.withExtra) {
     return (await bulkAppendExtra([result], {
       viewer: options.viewer
@@ -54,7 +55,7 @@ exports.destroy = async (trxId) => {
 
 exports.list = async (query, options = {}) => {
   const items = await Comment.findAll(query);
-  const result = items.map(item => item.toJSON());
+  const result = items.map(item => options.withReplacedImage ? replaceImages(item.toJSON()) : item.toJSON());
   if (options.withExtra) {
     return await bulkAppendExtra(result, {
       viewer: options.viewer
@@ -92,7 +93,9 @@ const bulkAppendExtra = async (items, options = {}) => {
   const profiles = await Profile.bulkGet(items.map((item) => ({
     groupId: item.groupId,
     userAddress: item.userAddress
-  })));
+  })), {
+    withReplacedImage: true
+  });
   const profileMap = keyBy(profiles, 'userAddress');
   items = items.map((item) => {
     item.extra.userProfile = profileMap[item.userAddress] || getDefaultProfile(item.userAddress)
@@ -108,4 +111,11 @@ const getCounterMap = async (p) => {
     userAddress: p.userAddress
   })));
   return keyBy(counters, (counter) => counter.objectId);
+}
+
+const replaceImages = item => {
+  if (item.images) {
+    item.images = item.images.map((_, index) => `${config.serverOrigin || ''}/api/${item.groupId}/images/comments/${item.trxId}/${index}`);
+  }
+  return item;
 }

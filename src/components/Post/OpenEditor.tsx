@@ -15,6 +15,7 @@ import { isMobile, isPc } from 'utils/env';
 import Modal from 'components/Modal';
 import openLoginModal from 'components/openLoginModal';
 import { IObject } from 'quorum-light-node-sdk';
+import Base64 from 'utils/base64';
 
 const PostEditor = observer((props: {
   post?: IPost
@@ -36,7 +37,7 @@ const PostEditor = observer((props: {
     console.log(res);
     const post: IPost = {
       content: payload.content || '',
-      images: payload.image,
+      images: (payload.image || []).map(image => Base64.getUrl(image)),
       userAddress: userStore.address,
       groupId: groupStore.groupId,
       trxId: res.trx_id,

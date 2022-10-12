@@ -13,7 +13,6 @@ import { lang } from 'utils/lang';
 import { IComment } from 'apis/types';
 import { BsFillCaretDownFill } from 'react-icons/bs';
 import openPhotoSwipe from 'components/openPhotoSwipe';
-import Base64 from 'utils/base64';
 import Images from 'components/Images';
 import { isMobile, isPc } from 'utils/env';
 import Fade from '@material-ui/core/Fade';
@@ -236,7 +235,7 @@ export default observer((props: IProps) => {
                           className="mx-[6px] text-blue-400 opacity-90 cursor-pointer"
                           onClick={() => {
                             openPhotoSwipe({
-                              image: Base64.getUrl((comment.images || [])[0]!),
+                              image: ((comment.images || [])[0]!),
                             });
                           }}
                         >

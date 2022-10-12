@@ -15,6 +15,7 @@ import openLoginModal from 'components/openLoginModal';
 import { IObject } from 'quorum-light-node-sdk';
 import Button from 'components/Button';
 import { isMobile } from 'utils/env';
+import Base64 from 'utils/base64';
 
 interface Props {
   scrollRef: React.RefObject<HTMLElement>
@@ -59,7 +60,7 @@ export default observer((props: Props) => {
               runInAction(() => {
                 state.invisibleOverlay = false;
               });
-            });
+            }, 100);
           }
       } catch (err) {
         console.log(err);
@@ -97,7 +98,7 @@ export default observer((props: Props) => {
     console.log(res);
     const post: IPost = {
       content: payload.content || '',
-      images: payload.image,
+      images: (payload.image || []).map(image => Base64.getUrl(image)),
       userAddress: userStore.address,
       groupId: groupStore.groupId,
       trxId: res.trx_id,

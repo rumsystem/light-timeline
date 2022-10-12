@@ -110,7 +110,7 @@ export default observer((props: IProps) => {
             className="mx-[6px] text-blue-400 opacity-90 cursor-pointer"
             onClick={(e) => {
               openPhotoSwipe({
-                image: Base64.getUrl((comment.images || [])[0]!),
+                image: ((comment.images || [])[0]!),
               });
               e.stopPropagation();
             }}
