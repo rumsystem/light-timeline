@@ -13,6 +13,7 @@ import KeepAlive from 'react-activation'
 import CommentReplyModal from 'components/CommentReplyModal';
 import PostDetailModal from 'components/PostDetailModal';
 import PageLoadingModal from 'components/PageLoadingModal';
+import NewFeaturesModal from 'components/NewFeaturesModal';
 import { GroupApi, ProfileApi, UserApi } from 'apis';
 import { useStore } from 'store';
 import GlobalSetup from './globalSetup';
@@ -46,6 +47,7 @@ const App = observer(() => {
               <GlobalSetup />
               <CommentReplyModal />
               <PostDetailModal />
+              <NewFeaturesModal />
             </div>
           )}
 
