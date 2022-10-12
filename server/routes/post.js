@@ -2,10 +2,12 @@ const router = require('koa-router')();
 const Post = require('../database/post');
 const truncate = require('../utils/truncate');
 const { assert, Errors } = require('../utils/validator');
+const Relation = require('../database/sequelize/relation');
 const { Op } = require("sequelize");
 
 router.get('/:trxId', get);
 router.get('/', list);
+router.get('/following', listByFollowing);
 
 async function get(ctx) {
   const trxId = ctx.params.trxId;
@@ -45,6 +47,61 @@ async function list(ctx) {
       [Op.gte]: ~~ctx.query.minComment
     }
   }
+  
+  let posts = await Post.list({
+    where,
+    order: [
+      ['timestamp', ctx.query.order === 'ASC' ? 'ASC' : 'DESC']
+    ],
+    limit: Math.min(~~ctx.query.limit || 10, 100),
+    offset: ctx.query.offset || 0
+  }, {
+    withReplacedImage: true,
+    withExtra: true,
+    viewer: ctx.query.viewer
+  });
+  if (ctx.query.truncatedLength) {
+    posts = posts.map((item) => {
+      item.content = truncate(item.content, ~~ctx.query.truncatedLength)
+      return item;
+    })
+  }
+  ctx.body = posts;
+}
+
+
+async function listByFollowing(ctx) {
+  const [following, muted] = await Promise.all([
+    Relation.findAll({
+      attributes: ['to'],
+      where: {
+        type: 'following',
+        from: ctx.query.viewer
+      }
+    }),
+    Relation.findAll({
+      attributes: ['to'],
+      where: {
+        type: 'muted',
+        from: ctx.query.viewer
+      }
+    })
+  ]);
+
+  const where = {
+    [Op.and]: [{
+      userAddress: {
+        [Op.or]: following
+      }
+    },
+    {
+      userAddress: {
+        [Op.ne]: muted
+      }
+    }],
+    groupId: ctx.params.groupId,
+    latestTrxId: '',
+  };
   
   let posts = await Post.list({
     where,

@@ -25,8 +25,6 @@ import { TrxApi } from 'apis';
 import Base64 from 'utils/base64';
 import { IVaultAppUser } from 'apis/types';
 import { isEmpty } from 'lodash';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 
 (window as any).Base64 = Base64;
 
@@ -102,6 +100,7 @@ const Preload = observer(() => {
           userStore.setUser(user);
         }
         groupStore.setLoading(false);
+        initRelationGroup();
       } catch (err: any) {
         console.log(err);
         if (err.message === 'group not found') {
@@ -174,6 +173,15 @@ const Preload = observer(() => {
       console.log(err);
     }
     return createdByToken;
+  }
+
+  const initRelationGroup = async () => {
+    try {
+      const relationGroup = await GroupApi.getRelationGroup();
+      groupStore.setRelationGroupId(relationGroup.groupId);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return null;

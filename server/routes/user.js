@@ -1,15 +1,52 @@
 const router = require('koa-router')();
 const Post = require('../database/post');
+const Relation = require('../database/sequelize/relation');
 
 router.get('/:userAddress', get);
 
 async function get(ctx) {
-  const postCount = await Post.count({
-    groupId: ctx.params.groupId,
-    userAddress: ctx.params.userAddress,
-  });
+  const [
+    postCount,
+    followingCount,
+    followerCount,
+    following,
+    muted
+  ] = await Promise.all([
+    Post.count({
+      groupId: ctx.params.groupId,
+      userAddress: ctx.params.userAddress,
+    }),
+    Relation.count({
+      where: {
+        type: 'following',
+        from: ctx.params.userAddress
+      }
+    }),
+    Relation.count({
+      where: {
+        type: 'following',
+        to: ctx.params.userAddress
+      }
+    }),
+    Relation.findOne({
+      where: {
+        type: 'following',
+        from: ctx.query.viewer || ''
+      }
+    }),
+    Relation.findOne({
+      where: {
+        type: 'muted',
+        from: ctx.query.viewer || ''
+      }
+    })
+  ]);
   ctx.body = {
-    postCount
+    postCount,
+    followingCount,
+    followerCount,
+    following: !!following,
+    muted: !!muted
   };
 }
 

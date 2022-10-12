@@ -15,7 +15,7 @@ export function createUserStore() {
 
     vaultAppUser: (store('vaultAppUser') || {}) as IVaultAppUser,
     
-    user: { postCount: 0 } as IUser,
+    userMap: {} as Record<string, IUser | undefined>,
 
     profile: {} as IProfile,
 
@@ -25,6 +25,10 @@ export function createUserStore() {
 
     get isLogin() {
       return !!(this.jwt || this.address)
+    },
+
+    get user() {
+      return this.userMap[this.address]!;
     },
 
     setAddress(address: string) {
@@ -51,8 +55,15 @@ export function createUserStore() {
       this.profile = profile;
     },
 
-    setUser(user: IUser) {
-      this.user = user;
+    setUser(address: string, user: IUser) {
+      this.userMap[address] = user;
+    },
+
+    updateUser(address: string, user: Partial<IUser>) {
+      for (const [key, value] of Object.entries(user)) {
+        const _user = this.userMap[address] as any;
+        _user[key] = value;
+      }
     },
 
     setJwt(jwt: string) {
@@ -68,6 +79,6 @@ export function createUserStore() {
         this.vaultAppUser = {} as IVaultAppUser;
         store.remove('vaultAppUser');
       }
-    }
+    },
   };
 }

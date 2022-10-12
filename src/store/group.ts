@@ -6,6 +6,8 @@ export function createGroupStore() {
 
     group: {} as IGroup,
 
+    relationGroupId: '' as string,
+
     get groupId() {
       return this.group.groupId || '';
     },
@@ -16,6 +18,10 @@ export function createGroupStore() {
 
     setGroup(group: IGroup) {
       this.group = group;
+    },
+
+    setRelationGroupId(groupId: string) {
+      this.relationGroupId = groupId;
     },
 
     setLoading(loading: boolean) {

@@ -21,13 +21,15 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
 import UserListModal from './UserListModal';
+import openLoginModal from 'components/openLoginModal';
+import { TrxApi } from 'apis';
+import { lang } from 'utils/lang';
 
 import './index.css';
 
 export default observer(() => {
-  const { userStore, groupStore, postStore } = useStore();
+  const { userStore, groupStore, postStore, snackbarStore, confirmDialogStore } = useStore();
   const state = useLocalObservable(() => ({
-    user: {} as IUser,
     profile: {} as IProfile,
     notFound: false,
     postPage: 1,
@@ -39,12 +41,15 @@ export default observer(() => {
     hasMorePosts: false,
     anchorEl: null,
     showUserListModal: false,
+    submitting: false,
+    userListType: 'following' as ('following' | 'muted'),
     get fetched() {
       return this.fetchedProfile && this.fetchedPosts
     }
   }));
   const { userAddress } = useParams() as { userAddress: string };
-  const { user, profile } = state;
+  const { profile } = state;
+  const user = userStore.userMap[userAddress]!;
   const isMyself = userStore.address === userAddress;
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
@@ -62,13 +67,14 @@ export default observer(() => {
       state.fetchingProfile = true;
       try {
         if (isMyself) {
-          state.user = userStore.user;
           state.profile = userStore.profile;
         } else {
-          const user = await UserApi.get(groupStore.groupId, userAddress);
-          state.user = user;
           const profile = await ProfileApi.get(groupStore.groupId, userAddress);
           state.profile = profile;
+        }
+        if (!user) {
+          const user = await UserApi.get(groupStore.groupId, userAddress);
+          userStore.setUser(userAddress, user);
         }
       } catch (err) {
         console.log(err);
@@ -137,6 +143,50 @@ export default observer(() => {
     }
   }, [userStore.profile]);
 
+  const changeRelation = async (type: 'follow' | 'unfollow' | 'mute' | 'unmute') => {
+    if (!userStore.isLogin) {
+      openLoginModal();
+      return;
+    }
+    if (state.submitting) {
+      return;
+    }
+    state.submitting = true;
+    try {
+      const res = await TrxApi.createObject({
+        groupId: groupStore.relationGroupId,
+        object: {
+          type: 'Note',
+          content: JSON.stringify({
+            type,
+            to: userAddress
+          })
+        },
+        aesKey: groupStore.cipherKey,
+        privateKey: userStore.privateKey,
+        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
+      });
+      console.log(res);
+      if (type.includes('follow')) {
+        userStore.updateUser(userAddress, {
+          followerCount: user.followerCount + (type === 'follow' ? 1 : -1),
+          following: !user.following
+        });
+      }
+      if (type.includes('mute')) {
+        user.muted = !user.muted;
+      }
+    } catch (err) {
+      console.log(err);
+      snackbarStore.show({
+        message: lang.somethingWrong,
+        type: 'error',
+      });
+    }
+    await sleep(2000);
+    state.submitting = false;
+  }
+
   if (!state.fetched) {
     return (
       <div className="pt-[30vh] flex justify-center">
@@ -158,12 +208,6 @@ export default observer(() => {
   return (
     <div className="pt-[40px] md:pt-[42px] box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent" ref={scrollRef}>
       <div className="w-full md:w-[600px] box-border mx-auto md:pt-5">
-        {/* {isMobile && (
-          <div>
-            {Menu()}
-            {isMyself && !(isWeChat && !userStore.canPublish) && EditorEntry()}
-          </div>
-        )} */}
         <div>
           <div className="flex items-stretch overflow-hidden relative p-6 px-5 md:px-8 md:rounded-12">
             <div
@@ -187,50 +231,33 @@ export default observer(() => {
                   {profile.name}
                 </div>
                 <div className="text-14 md:text-16 flex items-center">
-                  {user.postCount > 0 && (
-                    <span className="mt-2">
-                      {' '}
-                      <span className="text-16 font-bold">
-                        {user.postCount}
-                      </span> 内容{' '}
-                    </span>
-                  )}
-                  {user.postCount > 0 && (
-                    <span className="mx-3 mt-[10px] opacity-50">|</span>
-                  )}
-                  {user.postCount > 0 && (
-                    <span
-                      className="cursor-pointer mt-2"
-                      onClick={() => {
-                        state.showUserListModal = true;
-                      }}
-                    >
-                      <span className="text-16 font-bold">
-                        {user.postCount}
-                      </span>{' '}
-                      关注{' '}
-                    </span>
-                  )}
-                  {user.postCount > 0 && (
-                    <span className="opacity-50 mx-3 mt-[10px]">|</span>
-                  )}
-                  {user.postCount > 0 && (
-                    <span
-                      className="cursor-pointer mt-2"
-                    >
-                      <span className="text-16 font-bold">{user.postCount}</span>{' '}
-                      被关注
-                    </span>
-                  )}
-                  <UserListModal
-                    open={state.showUserListModal}
-                    onClose={() => {
-                      state.showUserListModal = false;
-                    }} />
+                  <span className="mt-2">
+                    {' '}
+                    <span className="text-16 font-bold">
+                      {user.postCount}
+                    </span> 内容{' '}
+                  </span>
+                  <span className="mx-3 mt-[10px] opacity-50">|</span>
+                  <span
+                    className="cursor-pointer mt-2"
+                    onClick={() => {
+                      state.userListType = 'following';
+                      state.showUserListModal = true;
+                    }}
+                  >
+                    <span className="text-16 font-bold">
+                      {user.followingCount}
+                    </span>{' '}
+                    关注{' '}
+                  </span>
+                  <span className="opacity-50 mx-3 mt-[10px]">|</span>
+                  <span
+                    className="cursor-pointer mt-2"
+                  >
+                    <span className="text-16 font-bold">{user.followerCount}</span>{' '}
+                    被关注
+                  </span>
                 </div>
-                {/* <div className="pt-2 pr-5 text-white opacity-90 w-[230px] md:w-[320px] box-border">
-                  {profile.intro && <div className="text-13 whitespace-pre-line">{profile.intro}</div>}
-                </div> */}
               </div>
               <div className="mt-8 md:mt-12 pt-4 mr-3 md:mr-5 absolute top-0 right-0">
                 <div className="flex items-center">
@@ -243,12 +270,12 @@ export default observer(() => {
                   </div>
                   {!isMyself && (
                     <div>
-                      {true ? (
-                        <Button color="white" outline onClick={() => {}}>
+                      {user.following ? (
+                        <Button color="white" outline onClick={() => changeRelation('unfollow')}>
                           已关注
                         </Button>
                       ) : (
-                        <Button color='white' onClick={() => {}}>关注</Button>
+                        <Button color='white' onClick={() => changeRelation('follow')}>关注</Button>
                       )}
                     </div>
                   )}
@@ -265,7 +292,8 @@ export default observer(() => {
                       编辑资料
                     </Button>
                   )}
-                   <Menu
+                  {!isMyself && user.muted && (
+                    <Menu
                       anchorEl={state.anchorEl}
                       getContentAnchorEl={null}
                       open={Boolean(state.anchorEl)}
@@ -273,11 +301,12 @@ export default observer(() => {
                         state.anchorEl = null;
                       }}
                       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    >
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
                       {isMyself && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
+                          state.userListType = 'following';
+                          state.showUserListModal = true;
                         }}>  
                           <div className="py-1 pl-2 pr-3 flex items-center text-red-400">
                             <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽列表
@@ -287,6 +316,14 @@ export default observer(() => {
                       {!isMyself && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
+                          confirmDialogStore.show({
+                            content: `确定屏蔽 ${state.profile.name} 吗？`,
+                            ok: async () => {
+                              confirmDialogStore.setLoading(true);
+                              await changeRelation('mute');
+                              confirmDialogStore.hide();
+                            },
+                          });
                         }}>
                           <div className="py-1 pl-2 pr-3 flex items-center text-red-400">
                             <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽
@@ -294,7 +331,15 @@ export default observer(() => {
                         </MenuItem>
                       )}
                     </Menu>
-                  {/* <Button color='red' onClick={() => {}}>已屏蔽</Button> */}
+                  )}
+                  {user.muted && (
+                    <Button
+                      isDoing={state.submitting}
+                      color='red'
+                      onClick={() => changeRelation('unmute')}>
+                        已屏蔽
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -327,6 +372,9 @@ export default observer(() => {
                     scrollRef.current?.scrollTo(0, 0);
                     await sleep(200);
                     postStore.addUserPost(post);
+                    userStore.updateUser(userAddress, {
+                      postCount: user.postCount + 1
+                    });
                   }
                 }}
               >
@@ -346,6 +394,12 @@ export default observer(() => {
           )}
         </div>
       </div>
+      <UserListModal
+        type={state.userListType}
+        open={state.showUserListModal}
+        onClose={() => {
+          state.showUserListModal = false;
+        }} />
       <Sidebar scrollRef={scrollRef} />
       <div ref={sentryRef} />
     </div>

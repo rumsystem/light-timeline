@@ -3,7 +3,10 @@ const Group = require('../database/sequelize/group');
 const { assert, Errors } = require('../utils/validator');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { shuffle } = require('lodash');
+const config = require('../config');
+const { Op } = require("sequelize");
 
+router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', shuffleChainApi);
 router.get('/', list);
@@ -24,7 +27,24 @@ async function list(ctx) {
       ['contentCount', 'DESC']
     ]
   });
-  ctx.body = groups.map((group) => pack(group.toJSON()));
+  ctx.body = groups
+              .filter(group => (
+                group.seedUrl.includes('group_timeline') ||
+                (config.userRelation?.visible && group.seedUrl.includes('group_relations'))
+              ))
+              .map(group => pack(group.toJSON()));
+}
+
+async function getRelationGroup(ctx) {
+  const group = await Group.findOne({
+    where: {
+      seedUrl: {
+        [Op.like]: `%group_relations%`
+      }
+    }
+  });
+  assert(group, Errors.ERR_NOT_FOUND('group'));
+  ctx.body = group;
 }
 
 async function shuffleChainApi(ctx) {

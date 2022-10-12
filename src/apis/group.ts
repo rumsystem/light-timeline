@@ -12,4 +12,9 @@ export default {
     const items: IGroup[] = await request(`${API_BASE_URL}/groups`);
     return items;
   },
+
+  async getRelationGroup() {
+    const item: IGroup = await request(`${API_BASE_URL}/groups/relation`);
+    return item;
+  },
 }

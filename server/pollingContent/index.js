@@ -4,6 +4,7 @@ const handlePost = require('./handlePost');
 const handleComment = require('./handleComment');
 const handleCounter = require('./handleCounter');
 const handleProfile = require('./handleProfile');
+const handleRelation = require('./handleRelation');
 const getTrxType = require('../utils/getTrxType');
 const Content = require('../database/sequelize/content');
 const Group = require('../database/sequelize/group');
@@ -123,6 +124,7 @@ const handleContents = async (group, contents) => {
           case 'comment': await handleComment(content, group); break;
           case 'counter': await handleCounter(content, group); break;
           case 'profile': await handleProfile(content); break;
+          case 'relation': await handleRelation(content); break;
           default: break;
         }
         !DEBUG && console.log(`${content.TrxId} ✅`);

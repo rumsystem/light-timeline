@@ -2,9 +2,6 @@ import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from 'components/Avatar';
-// import { lang } from 'utils/lang';
-// import { GoMute } from 'react-icons/go';
-// import { HiOutlineBan } from 'react-icons/hi';
 import { ProfileApi, UserApi } from 'apis';
 import { IProfile, IUser } from 'apis/types';
 import Loading from 'components/Loading';
@@ -14,6 +11,9 @@ import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { isPc, isMobile } from 'utils/env';
 import Button from 'components/Button';
+import openLoginModal from 'components/openLoginModal';
+import { TrxApi } from 'apis';
+import { lang } from 'utils/lang';
 
 interface IProps {
   disableHover?: boolean
@@ -27,24 +27,67 @@ interface IUserCardProps extends IProps {
 }
 
 const UserCard = observer((props: IUserCardProps) => {
-  const { groupStore } = useStore();
+  const { groupStore, userStore, snackbarStore } = useStore();
   const state = useLocalObservable(() => ({
-    user: {} as IUser,
     profile: {} as IProfile,
-    fetched: false
+    fetched: false,
+    submitting: false
   }));
-  const { user, profile } = state;
+  const { profile } = state;
+  const user = userStore.userMap[props.userAddress]!;
 
   React.useEffect(() => {
     (async () => {
       try {
         state.profile = await ProfileApi.get(groupStore.groupId, props.userAddress);
-        state.user = await UserApi.get(groupStore.groupId, props.userAddress);
+        if (!user) {
+          const user = await UserApi.get(groupStore.groupId, props.userAddress);
+          userStore.setUser(props.userAddress, user);
+        }
       } catch (_) {}
       await sleep(200);
       state.fetched = true;
     })();
   }, []);
+
+  const changeRelation = async (type: 'follow' | 'unfollow') => {
+    if (!userStore.isLogin) {
+      openLoginModal();
+      return;
+    }
+    if (state.submitting) {
+      return;
+    }
+    state.submitting = true;
+    try {
+      const res = await TrxApi.createObject({
+        groupId: groupStore.relationGroupId,
+        object: {
+          type: 'Note',
+          content: JSON.stringify({
+            type,
+            to: props.userAddress
+          })
+        },
+        aesKey: groupStore.cipherKey,
+        privateKey: userStore.privateKey,
+        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
+      });
+      console.log(res);
+      userStore.updateUser(props.userAddress, {
+        followerCount: user.followerCount + (type === 'follow' ? 1 : -1),
+        following: !user.following
+      });
+    } catch (err) {
+      console.log(err);
+      snackbarStore.show({
+        message: lang.somethingWrong,
+        type: 'error',
+      });
+    }
+    await sleep(2000);
+    state.submitting = false;
+  }
 
   return (
     <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-[250px] p-4 pb-3 px-5 min-h-[70px]">
@@ -61,62 +104,41 @@ const UserCard = observer((props: IUserCardProps) => {
             <div className="font-bold text-15 truncate w-44 text-gray-6d">
               {profile.name}
             </div>
-            {/* {user.postCount > 0 && (
-              <div className="mt-[10px] text-gray-6d opacity-60 text-13">
-                {user.postCount}  条内容
-              </div>
-            )} */}
             {user.postCount === 0 && <div className="pb-2" />}
           </div>
         </div>
       </div>
 
-      {/* {profile.intro && (
-        <div className="text-gray-9b opacity-90 pt-5 text-13">
-          {profile.intro}
-        </div>
-      )} */}
-
       <div className="text-13 flex items-center text-neutral-400 pt-4 pb-3">
-        {user.postCount === 0 && (
-          <span className="mr-1">发布了</span>
-        )}
-        {user.postCount > 0 && (
-          <span>
-            {' '}
-            <span className="text-14 font-bold">
-              {user.postCount}
-            </span> 内容{' '}
-          </span>
-        )}
-        {user.postCount > 0 && (
-          <span className="mx-[10px] opacity-50">|</span>
-        )}
-        {user.postCount > 0 && (
-          <span
-            className="cursor-pointer"
-          >
-            <span className="text-14 font-bold">
-              {user.postCount}
-            </span>{' '}
-            关注{' '}
-          </span>
-        )}
-        {user.postCount > 0 && (
-          <span className="opacity-50 mx-[10px]">|</span>
-        )}
-        {user.postCount > 0 && (
-          <span
-            className="cursor-pointer"
-          >
-            <span className="text-14 font-bold">{user.postCount}</span>{' '}
-            被关注
-          </span>
-        )}
+        <span>
+          {' '}
+          <span className="text-14 font-bold">
+            {user.postCount}
+          </span> 内容{' '}
+        </span>
+        <span className="mx-[10px] opacity-50">|</span>
+        <span
+          className="cursor-pointer"
+        >
+          <span className="text-14 font-bold">
+            {user.followingCount}
+          </span>{' '}
+          关注{' '}
+        </span>
+        <span className="opacity-50 mx-[10px]">|</span>
+        <span
+          className="cursor-pointer"
+        >
+          <span className="text-14 font-bold">{user.followerCount}</span>{' '}
+          被关注
+        </span>
       </div>
 
       <div className="absolute top-6 right-5">
-        <Button>关注</Button>
+        {user.following ?
+          <Button outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
+          <Button onClick={() => changeRelation('follow')}>关注</Button>
+        }
       </div>
 
       {!state.fetched && (

@@ -3,12 +3,23 @@ const { assert, Errors } = require('../utils/validator');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
+const config = require('../config');
 
 router.post('/', create);
 
 async function create(ctx) {
   const { url } = ctx.request.body;
   assert(url, Errors.ERR_IS_REQUIRED('url'));
+  const groupId = await createSeed(url);
+  tryCreateUserRelationSeed();
+  ctx.body = await Group.findOne({
+    where: {
+      groupId
+    }
+  });
+}
+
+const createSeed = async (url) => {
   const existGroup = await Seed.findOne({
     where: {
       url
@@ -63,12 +74,15 @@ async function create(ctx) {
   }
   QuorumLightNodeSDK.cache.Group.remove(groupId);
   QuorumLightNodeSDK.cache.Group.add(combinedSeedUrl);
-  ctx.body = await Group.findOne({
-    where: {
-      groupId
-    }
-  });
+  return groupId;
 }
 
+const tryCreateUserRelationSeed = async () => {
+  try {
+    if (config.userRelation?.seed) {
+      await createSeed(config.userRelation.seed);
+    }
+  } catch (_) {}
+}
 
 module.exports = router;

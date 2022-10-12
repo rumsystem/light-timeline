@@ -125,6 +125,9 @@ export default observer((props: IProps) => {
       } else {
         postStore.addPost(post);
       }
+      userStore.updateUser(userStore.address, {
+        postCount: userStore.user.postCount + 1
+      });
     }
   };
 
@@ -145,7 +148,7 @@ export default observer((props: IProps) => {
     <div>
       <div className={classNames({
         hidden: isSearchPage
-      }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white border-b border-neutral-100 md:shadow-sm")}>
+      }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white border-b border-neutral-100")}>
         <div className="w-[600px] flex items-center justify-between">
           {isHomePage && (
             <Tabs />
