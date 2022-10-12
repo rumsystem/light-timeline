@@ -11,7 +11,7 @@ export default observer(() => {
   const location = useLocation();
 
   React.useEffect(() => {
-    if (location.pathname === `/${groupStore.groupId}`) {
+    if (location.pathname === `/${groupStore.groupId}` || !pathStore.prevPath) {
       document.title = groupStore.group.groupName;
     } else if (location.pathname === `/${groupStore.groupId}/search`) {
       document.title = '搜索';
