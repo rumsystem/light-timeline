@@ -15,7 +15,7 @@ import { MdArrowUpward } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { isPc, isMobile, getMixinContext } from 'utils/env';
+import { isPc, isMobile } from 'utils/env';
 import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
 import { AiOutlineHome, AiFillHome, AiOutlineSearch } from 'react-icons/ai';
 import Badge from '@material-ui/core/Badge';
@@ -123,6 +123,9 @@ export default observer((props: IProps) => {
       }
       if (isMyUserPage) {
         postStore.addUserPost(post);
+        if (postStore.feedType === 'latest') {
+          postStore.addPost(post);
+        }
       } else {
         postStore.addPost(post);
       }
@@ -163,7 +166,7 @@ export default observer((props: IProps) => {
               <div className="flex items-center text-20 ml-3 md:ml-2">
                 <BiArrowBack />
               </div>
-              <span className="ml-3 text-15 leading-none">返回</span>
+              <span className="ml-3 text-15 leading-none mt-[1px]">返回</span>
             </div>
           )}
           {isPc && !userStore.isLogin && (
@@ -190,13 +193,13 @@ export default observer((props: IProps) => {
                 </div>
               )}
               <div
-                className="mr-5 p-1 cursor-pointer"
+                className="mr-5 px-1 py-2 cursor-pointer"
                 onClick={() => { 
                   state.openMessageModal = true;
                 }}>
                 <Badge
                   badgeContent={state.unreadCount}
-                  className='transform cursor-pointer scale-90'
+                  className='transform cursor-pointer scale-90 lower'
                   color="error"
                   overlap='rectangular'
                   onClick={() => { 

@@ -88,8 +88,12 @@ ul {
 .MuiTabs-root.small .MuiTab-root {
   margin-right: 20px;
   height: 41px;
-  padding-left: 2px !important;
-  padding-right: 2px !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+.MuiTabs-root.disable-transition .MuiTabs-indicator {
+  transition: none !important;
 }
 
 .MuiTabs-root .MuiTab-textColorInherit.Mui-selected {
@@ -207,4 +211,10 @@ body::-webkit-scrollbar { /* WebKit */
   background: none !important;
   color: #63b3ed !important;
   border-color: #63b3ed;
+}
+
+
+/************************************** BADGE **************************************/
+.MuiBadge-root.lower .MuiBadge-anchorOriginTopRightRectangular {
+  top: 5px !important;
 }

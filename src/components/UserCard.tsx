@@ -82,6 +82,9 @@ const UserCard = observer((props: IUserCardProps) => {
         followerCount: user.followerCount + (type === 'follow' ? 1 : -1),
         following: !user.following
       });
+      userStore.updateUser(userStore.address, {
+        followingCount: userStore.user.followingCount + (type === 'follow' ? 1 : -1),
+      });
     } catch (err) {
       console.log(err);
       snackbarStore.show({
@@ -139,8 +142,8 @@ const UserCard = observer((props: IUserCardProps) => {
             <div className="absolute top-8 right-5">
               <div>
                 {user.following ?
-                  <Button outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
-                  <Button onClick={() => changeRelation('follow')}>关注</Button>
+                  <Button isDoing={state.submitting} outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
+                  <Button isDoing={state.submitting} onClick={() => changeRelation('follow')}>关注</Button>
                 }
               </div>
             </div>

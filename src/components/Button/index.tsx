@@ -64,7 +64,7 @@ export default (props: Props) => {
         <ButtonProgress
           isDoing={isDoing}
           isDone={isDone}
-          color={outline ? 'text-black' : 'text-white'}
+          color={(!outline && color === 'white') || (outline && color !== 'white') ? 'text-black' : 'text-white'}
         />
       </div>
     </button>

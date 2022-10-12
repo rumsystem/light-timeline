@@ -155,6 +155,7 @@ const UserList = observer((props: IProps) => {
                               confirmDialogStore.show({
                                 content: '确定取消关注吗？',
                                 ok: async () => {
+                                  confirmDialogStore.setLoading(true);
                                   await changeRelation('unfollow', relation)
                                   confirmDialogStore.hide();
                                 },
@@ -168,6 +169,7 @@ const UserList = observer((props: IProps) => {
                               confirmDialogStore.show({
                                 content: '确定解除屏蔽吗？',
                                 ok: async () => {
+                                  confirmDialogStore.setLoading(true);
                                   await changeRelation('unmute', relation);
                                   confirmDialogStore.hide();
                                 },

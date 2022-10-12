@@ -14,12 +14,12 @@ export default observer(() => {
   React.useEffect(() => {
     setTimeout(() => {
       state.loading = false;
-    }, 200); 
+    }, 300); 
   }, []);
 
   return (
     <Tabs
-      className={`px-4 md:px-0 ${isPc ? '' : 'small'}`}
+      className={`px-4 md:px-0 ${isPc ? '' : 'small'} disable-transition`}
       value={postStore.feedType}
       onChange={(_e, newType) => {
         postStore.setFeedType(newType)
@@ -30,9 +30,8 @@ export default observer(() => {
         }
       }}
     >
-      <Tab value={'following'} label={<div>关注</div>} />
-      <Tab value={'latest'} label={<div>最新</div>} />
-      {/* <Tab value={'random'} label={<div>发现</div>} /> */}
+      <Tab value={'latest'} label='最新' />
+      <Tab value={'following'} label='关注' />
     </Tabs>
   )
 })

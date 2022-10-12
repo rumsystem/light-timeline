@@ -141,7 +141,7 @@ const Notification = observer((props: IProps) => {
   const toUserPage = async (userAddress: string) => {
     props.onClose();
     await sleep(400);
-    const path = `${groupStore.groupId}/users/${userAddress}`;
+    const path = `/${groupStore.groupId}/users/${userAddress}`;
     if (window.location.pathname !== path) {
       history.push(path);
     } 

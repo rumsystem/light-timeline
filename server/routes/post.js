@@ -39,13 +39,16 @@ async function list(ctx) {
       }
     });
 
-    if (following.length > 0) {
-      where[Op.and].push({
-        userAddress: {
-          [Op.in]: following.map(item => item.to)
-        }
-      })
-    };    
+    if (following.length === 0) {
+      ctx.body = [];
+      return;
+    }
+
+    where[Op.and].push({
+      userAddress: {
+        [Op.in]: following.map(item => item.to)
+      }
+    })
   }
 
   if (ctx.query.viewer) {

@@ -179,8 +179,9 @@ export default observer((props: Props) => {
       )}
       {state.fetched && postStore.total === 0 && (
         <div className="py-[30vh] text-center text-gray-500 text-14 tracking-wider opacity-80">
-          来发布一条内容吧 ~
-          {isMobile && !userStore.isLogin && (
+          {postStore.feedType === 'latest' && '来发布一条内容吧 ~'}
+          {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
+          {postStore.feedType === 'latest' && isMobile && !userStore.isLogin && (
             <div className="flex justify-center mt-5">
               <Button onClick={openLoginModal} >
                 点击发布

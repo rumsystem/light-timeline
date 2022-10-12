@@ -65,12 +65,6 @@ export default observer(() => {
   const scrollRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    return () => {
-      postStore.resetUserTrxIds();
-    }
-  }, []);
-
-  React.useEffect(() => {
     if (state.fetched) {
       state.fetchedProfile = false;
       state.fetchedPosts = false;
@@ -197,6 +191,9 @@ export default observer(() => {
           followerCount: user.followerCount + (type === 'follow' ? 1 : -1),
           following: !user.following
         });
+        userStore.updateUser(userStore.address, {
+          followingCount: userStore.user.followingCount + (type === 'follow' ? 1 : -1),
+        });
       }
       if (type.includes('mute')) {
         user.muted = !user.muted;
@@ -233,7 +230,7 @@ export default observer(() => {
     <div className="pt-[40px] md:pt-[42px] box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent" ref={scrollRef}>
       <div className="w-full md:w-[600px] box-border mx-auto md:pt-5">
         <div>
-          <div className="flex items-stretch overflow-hidden relative p-6 px-5 md:px-8 md:rounded-12">
+          <div className="flex items-stretch overflow-hidden relative p-6 pb-5 md:pb-6 px-5 md:px-8 md:rounded-12">
             <div
               className="absolute top-0 left-0 w-full h-full overflow-hidden bg-cover bg-center md:rounded-12"
               style={{
@@ -251,10 +248,10 @@ export default observer(() => {
                   src={profile.avatar}
                   alt={profile.name}
                 />
-                <div className="font-bold mt-2 text-18 md:text-24 pt-1 leading-snug w-[230px] md:w-[320px] break-words">
+                <div className="font-bold mt-2 text-19 md:text-24 pt-1 leading-snug w-[230px] md:w-[320px] break-words">
                   {profile.name}
                 </div>
-                <div className="text-14 md:text-16 flex items-center">
+                <div className="text-14 md:text-16 flex items-center pt-1 md:pt-0">
                   <span className="mt-2">
                     {' '}
                     <span className="text-16 font-bold">
@@ -348,12 +345,13 @@ export default observer(() => {
                           confirmDialogStore.show({
                             content: `确定屏蔽 ${state.profile.name} 吗？`,
                             ok: async () => {
+                              confirmDialogStore.setLoading(true);
                               await changeRelation('mute');
                               confirmDialogStore.hide();
                             },
                           });
                         }}>
-                          <div className="py-1 pl-2 pr-3 flex items-center text-red-400">
+                          <div className="py-1 pl-3 pr-4 flex items-center text-red-400">
                             <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽
                           </div>
                         </MenuItem>
@@ -363,11 +361,20 @@ export default observer(() => {
                   {!isMyself && !user.muted && (
                     <div>
                       {user.following ? (
-                        <Button color="white" outline onClick={() => changeRelation('unfollow')}>
+                        <Button
+                          isDoing={state.submitting && !confirmDialogStore.open}
+                          color="white"
+                          outline
+                          onClick={() => changeRelation('unfollow')}>
                           已关注
                         </Button>
                       ) : (
-                        <Button color='white' onClick={() => changeRelation('follow')}>关注</Button>
+                        <Button
+                          isDoing={state.submitting && !confirmDialogStore.open}
+                          color='white'
+                          onClick={() => changeRelation('follow')}>
+                          关注
+                        </Button>
                       )}
                     </div>
                   )}
@@ -381,7 +388,7 @@ export default observer(() => {
                       <div className="flex items-center text-16 mr-1">
                         <BiEditAlt />
                       </div>
-                      编辑资料
+                      {isMobile ? '编辑' : '编辑资料'}
                     </Button>
                   )}
                   {!isMyself && user.muted && (
@@ -423,6 +430,9 @@ export default observer(() => {
                     scrollRef.current?.scrollTo(0, 0);
                     await sleep(200);
                     postStore.addUserPost(post);
+                    if (postStore.feedType === 'latest') {
+                      postStore.addPost(post);
+                    }
                     userStore.updateUser(userAddress, {
                       postCount: user.postCount + 1
                     });
