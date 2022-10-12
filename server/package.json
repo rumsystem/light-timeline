@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
+    "reset": "node reset.js",
     "start": "node index.js",
-    "reset": "node reset.js"
+    "start-prod": "export NODE_ENV='production' && ./node_modules/.bin/pm2-runtime index.js"
   },
   "keywords": [],
   "author": "rum",
@@ -26,6 +27,7 @@
     "nodemon": "^2.0.19",
     "pg": "8.5.1",
     "pg-hstore": "2.3.3",
+    "pm2": "^5.2.0",
     "quorum-light-node-sdk-nodejs": "0.1.29",
     "sequelize": "6.3.5",
     "socket.io": "^4.5.1"
