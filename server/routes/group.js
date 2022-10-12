@@ -9,6 +9,7 @@ const { Op } = require("sequelize");
 router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', shuffleChainApi);
+router.get('/:groupId/ping', ping);
 router.get('/', list);
 
 async function get(ctx) {
@@ -82,5 +83,17 @@ const pack = group => {
     }
   };
 }
+
+async function ping(ctx) {
+  const group = await Group.findOne({
+    where: {
+      groupId: ctx.params.groupId
+    }
+  });
+  assert(group, Errors.ERR_NOT_FOUND('group'));
+  assert(group.status === 'connected', Errors.ERR_IS_REQUEST_FAILED());
+  ctx.body = true;
+}
+
 
 module.exports = router;
