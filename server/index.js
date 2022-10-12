@@ -30,6 +30,7 @@ const comment = require('./routes/comment');
 const profile = require('./routes/profile');
 const notification = require('./routes/notification');
 const user = require('./routes/user');
+const trx = require('./routes/trx');
 
 const {
   errorHandler,
@@ -60,6 +61,7 @@ router.use('/api/ping', ping.routes(), ping.allowedMethods());
 router.use('/api/groups', group.routes(), group.allowedMethods());
 router.use('/api/contents', content.routes(), content.allowedMethods());
 router.use('/api/seeds', seed.routes(), seed.allowedMethods());
+router.use('/api/trx', trx.routes(), trx.allowedMethods());
 router.use('/api/:groupId/posts', post.routes(), post.allowedMethods());
 router.use('/api/:groupId/comments', comment.routes(), comment.allowedMethods());
 router.use('/api/:groupId/profiles', profile.routes(), profile.allowedMethods());

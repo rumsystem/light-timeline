@@ -15,7 +15,6 @@ import { BsFillCaretDownFill } from 'react-icons/bs';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 import Base64 from 'utils/base64';
 import Images from 'components/Images';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
 import { isMobile, isPc } from 'utils/env';
 import Fade from '@material-ui/core/Fade';
 import { IObject } from 'quorum-light-node-sdk';
@@ -24,6 +23,7 @@ import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
 import openLoginModal from 'components/openLoginModal';
 import sleep from 'utils/sleep';
+import { TrxApi } from 'apis';
 
 import './item.css';
 
@@ -104,24 +104,32 @@ export default observer((props: IProps) => {
       return;
     }
     state.submitting = true;
-    await QuorumLightNodeSDK.chain.Trx.create({
-      groupId: groupStore.groupId,
-      object: {
-        id: trxId,
-        type: comment.extra.liked ? 'Dislike' : 'Like'
-      },
-      aesKey: groupStore.cipherKey,
-      privateKey: userStore.privateKey,
-    });
-    commentStore.updateComment({
-      ...comment,
-      likeCount: comment.likeCount + (comment.extra.liked ? -1 : 1),
-      extra: {
-        ...comment.extra,
-        liked: !comment.extra.liked
-      }
-    });
-    await sleep(2000);
+    try {  
+      const res = await TrxApi.createObject({
+        groupId: groupStore.groupId,
+        object: {
+          id: trxId,
+          type: comment.extra.liked ? 'Dislike' : 'Like'
+        },
+        aesKey: groupStore.cipherKey,
+        privateKey: userStore.privateKey,
+      });
+      console.log(res);
+      commentStore.updateComment({
+        ...comment,
+        likeCount: comment.likeCount + (comment.extra.liked ? -1 : 1),
+        extra: {
+          ...comment.extra,
+          liked: !comment.extra.liked
+        }
+      });
+      await sleep(2000);
+    } catch (err) {
+      snackbarStore.show({
+        message: lang.somethingWrong,
+        type: 'error',
+      });
+    }
     state.submitting = false;
   }
 

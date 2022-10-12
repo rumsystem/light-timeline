@@ -9,7 +9,7 @@ import Avatar from 'components/Avatar';
 import Dialog from 'components/Dialog';
 import { IPost } from 'apis/types';
 import { TrxStorage } from 'apis/common';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
+import { TrxApi } from 'apis';
 import { useStore } from 'store';
 import { toJS } from 'mobx';
 import { isMobile, isPc } from 'utils/env';
@@ -27,7 +27,7 @@ const PostEditor = observer((props: {
       openLoginModal();
       return;
     }
-    const res = await QuorumLightNodeSDK.chain.Trx.create({
+    const res = await TrxApi.createObject({
       groupId: groupStore.groupId,
       object: payload,
       aesKey: groupStore.cipherKey,

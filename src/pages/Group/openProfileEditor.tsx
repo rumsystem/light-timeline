@@ -8,7 +8,8 @@ import Button from 'components/Button';
 import { useStore } from 'store';
 import { toJS } from 'mobx';
 import { IProfile } from 'apis/types';
-import QuorumLightNodeSDK, { IPerson } from 'quorum-light-node-sdk';
+import { TrxApi } from 'apis';
+import { IPerson } from 'quorum-light-node-sdk';
 import ImageEditor from 'components/ImageEditor';
 import { lang } from 'utils/lang';
 import { TextField } from '@material-ui/core';
@@ -64,7 +65,7 @@ const Modal = observer((props: IModalProps) => {
           content: Base64.getContent(state.profile.avatar),
         }
       }
-      const res = await QuorumLightNodeSDK.chain.Trx.createPerson({
+      const res = await TrxApi.createPerson({
         groupId: groupStore.groupId,
         person,
         aesKey: groupStore.cipherKey,

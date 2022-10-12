@@ -187,19 +187,21 @@ export default observer(() => {
                   )}
                 </div>
               </div>
-              <Button
-                className="mr-2"
-                outline
-                color="white"
-                size={isMobile ? 'small' : 'normal'}
-                onClick={openProfileEditor}
-              >
-                <div className="flex items-center text-16 mr-1">
-                  <BiEditAlt />
-                </div>
-                <span className="hidden md:block">编辑资料</span>
-                <span className="md:hidden">编辑</span>
-              </Button>
+              {isMyself && (
+                <Button
+                  className="mr-2"
+                  outline
+                  color="white"
+                  size={isMobile ? 'small' : 'normal'}
+                  onClick={openProfileEditor}
+                >
+                  <div className="flex items-center text-16 mr-1">
+                    <BiEditAlt />
+                  </div>
+                  <span className="hidden md:block">编辑资料</span>
+                  <span className="md:hidden">编辑</span>
+                </Button>
+              )}
             </div>
             <div className="justify-between z-10 w-full box-border pt-8 md:pt-8 px-5 md:px-16 text-white relative hidden">
               <div className="w-10/12 md:w-auto">

@@ -29,6 +29,12 @@ const errors = {
       message: `no permission of ${field}`
     };
   },
+  ERR_IS_REQUEST_FAILED() {
+    return {
+      code: 'ERR_NOT_REQUEST_FAILED',
+      message: `FAIL TO REQUEST`
+    };
+  },
 }
 
 module.exports = errors;

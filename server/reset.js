@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const sleep = require('./utils/sleep');
 const Group = require('./database/sequelize/group');
 // const Seed = require('./database/sequelize/seed');
@@ -36,7 +34,4 @@ const Notification = require('./database/sequelize/notification');
     console.log(err);
   }
   console.log("Reset all database tables ✅ ");
-  const localStoragePath = path.join(__dirname, 'localStorage');
-  fs.rmSync(localStoragePath, { recursive: true, force: true });
-  console.log('Removed localStorage ✅ ');
 })();

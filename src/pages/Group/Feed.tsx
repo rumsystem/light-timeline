@@ -1,11 +1,10 @@
 import React from 'react';
 import { runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
 import { IPost, IProfile } from 'apis/types';
 import { TrxStorage } from 'apis/common';
 import PostItem from 'components/Post/Item';
-import { PostApi } from 'apis';
+import { PostApi, TrxApi } from 'apis';
 import Editor from 'components/Editor';
 import { lang } from 'utils/lang';
 import { useStore } from 'store';
@@ -90,7 +89,7 @@ export default observer((props: Props) => {
       openLoginModal();
       return;
     }
-    const res = await QuorumLightNodeSDK.chain.Trx.create({
+    const res = await TrxApi.createObject({
       groupId: groupStore.groupId,
       object: payload,
       aesKey: groupStore.cipherKey,

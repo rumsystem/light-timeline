@@ -2,7 +2,6 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { FaRegComment, FaComment } from 'react-icons/fa';
 import { IPost } from 'apis/types';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
 import Comment from 'components/Comment';
 import CommentMobile from 'components/Comment/Mobile';
 import { TrxStorage, OBJECT_STATUS_DELETED_LABEL } from 'apis/common';
@@ -21,6 +20,7 @@ import { AiOutlineLink } from 'react-icons/ai';
 import { lang } from 'utils/lang';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
+import { TrxApi } from 'apis';
 
 interface IProps {
   post: IPost
@@ -57,7 +57,7 @@ export default observer((props: IProps) => {
     }
     state.submitting = true;
     try {
-      await QuorumLightNodeSDK.chain.Trx.create({
+      const res = await TrxApi.createObject({
         groupId: groupStore.groupId,
         object: {
           id: trxId,
@@ -66,6 +66,7 @@ export default observer((props: IProps) => {
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
       });
+      console.log(res);
       postStore.updatePost({
         ...post,
         likeCount: post.likeCount + (post.extra.liked ? -1 : 1),
@@ -76,6 +77,10 @@ export default observer((props: IProps) => {
       });
     } catch (err) {
       console.log(err);
+      snackbarStore.show({
+        message: lang.somethingWrong,
+        type: 'error',
+      });
     }
     await sleep(2000);
     state.submitting = false;
@@ -91,7 +96,7 @@ export default observer((props: IProps) => {
     }
     state.submitting = true;
     try {
-      const res = await QuorumLightNodeSDK.chain.Trx.create({
+      const res = await TrxApi.createObject({
         groupId: groupStore.groupId,
         object: {
           type: 'Note',

@@ -7,7 +7,6 @@ import PostDetail from './pages/PostDetail';
 import User from './pages/User';
 import SnackBar from 'components/SnackBar';
 import ConfirmDialog from './components/ConfirmDialog';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
 import { AliveScope } from 'react-activation';
 import KeepAlive from 'react-activation'
 import CommentReplyModal from 'components/CommentReplyModal';
@@ -62,8 +61,6 @@ const Preload = observer(() => {
       groupStore.setLoading(true);      
       try {
         const group = await GroupApi.get(groupId);
-        QuorumLightNodeSDK.cache.Group.clear();
-        QuorumLightNodeSDK.cache.Group.add(group.seedUrl);
         groupStore.setGroup(group);
         document.title = group.groupName;
         if (userStore.isLogin) {

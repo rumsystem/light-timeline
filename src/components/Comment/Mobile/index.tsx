@@ -8,9 +8,8 @@ import { useStore } from 'store';
 import { TrxStorage } from 'apis/common';
 import { IObject } from 'quorum-light-node-sdk';
 import { IComment, IPost } from 'apis/types';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
 import openLoginModal from 'components/openLoginModal';
-import { CommentApi } from 'apis';
+import { CommentApi, TrxApi } from 'apis';
 import { FaComment } from 'react-icons/fa';
 import { lang } from 'utils/lang';
 import Query from 'utils/query';
@@ -137,7 +136,7 @@ export default observer((props: IProps) => {
       openLoginModal();
       return;
     }
-    const res = await QuorumLightNodeSDK.chain.Trx.create({
+    const res = await TrxApi.createObject({
       groupId: groupStore.groupId,
       object: payload,
       aesKey: groupStore.cipherKey,

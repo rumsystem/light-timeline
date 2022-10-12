@@ -7,7 +7,6 @@ import urlify from 'utils/urlify';
 import { FaRegComment } from 'react-icons/fa';
 import { useStore } from 'store';
 import { IComment, IPost } from 'apis/types';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
 import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
 import { AiOutlineLink } from 'react-icons/ai';
@@ -19,6 +18,7 @@ import Images from 'components/Images';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 import Base64 from 'utils/base64';
 import sleep from 'utils/sleep';
+import { TrxApi } from 'apis';
 
 import './Item.css';
 
@@ -131,24 +131,32 @@ export default observer((props: IProps) => {
       return;
     }
     state.submitting = true;
-    await QuorumLightNodeSDK.chain.Trx.create({
-      groupId: groupStore.groupId,
-      object: {
-        id: trxId,
-        type: comment.extra.liked ? 'Dislike' : 'Like',
-      },
-      aesKey: groupStore.cipherKey,
-      privateKey: userStore.privateKey,
-    });
-    commentStore.updateComment({
-      ...comment,
-      likeCount: comment.likeCount + (comment.extra.liked ? -1 : 1),
-      extra: {
-        ...comment.extra,
-        liked: !comment.extra.liked
-      }
-    });
-    await sleep(2000);
+    try {
+      const res = await TrxApi.createObject({
+        groupId: groupStore.groupId,
+        object: {
+          id: trxId,
+          type: comment.extra.liked ? 'Dislike' : 'Like',
+        },
+        aesKey: groupStore.cipherKey,
+        privateKey: userStore.privateKey,
+      });
+      console.log(res);
+      commentStore.updateComment({
+        ...comment,
+        likeCount: comment.likeCount + (comment.extra.liked ? -1 : 1),
+        extra: {
+          ...comment.extra,
+          liked: !comment.extra.liked
+        }
+      });
+      await sleep(2000);
+    } catch (err) {
+      snackbarStore.show({
+        message: lang.somethingWrong,
+        type: 'error',
+      });
+    }
     state.submitting = false;
   }
 
