@@ -74,7 +74,7 @@ const Preload = observer(() => {
   const token = Query.get('token');
   if (token) {
     console.log({ token });
-    Query.remove('mixin_access_token');
+    Query.remove('access_token');
     Query.remove('token');
   }
 
