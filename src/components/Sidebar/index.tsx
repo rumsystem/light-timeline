@@ -59,6 +59,7 @@ export default observer(() => {
 
   const isHomePage = location.pathname === `/${groupStore.groupId}`;
   const isSearchPage = location.pathname === `/${groupStore.groupId}/search`;
+  const isUserPage = location.pathname.startsWith(`/${groupStore.groupId}/users`);
   const isMyUserPage = location.pathname === `/${groupStore.groupId}/users/${userStore.address}`;
 
   const fetchUnreadCount = async () => {
@@ -285,16 +286,15 @@ export default observer(() => {
           {(isHomePage || isMyUserPage) && userStore.isLogin && (
             <Fade in={true} timeout={350}>
               <div
-                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black bg-black'
+                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black bg-black z-10'
                 onClick={onOpenEditor}
               >
                 <BsPencil className="text-20 opacity-90 text-white" />
               </div>
             </Fade>
           )}
-          {(isHomePage || isMyUserPage || isSearchPage) && (
+          {(isHomePage || isUserPage || isSearchPage) && (
             <div>
-              <div className="h-12 w-screen"></div>
               <div className="pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around text-gray-88 text-12 border-t border-neutral-100 bg-white z-50">
                 <div
                   className={classNames(

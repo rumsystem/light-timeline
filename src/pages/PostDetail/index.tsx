@@ -9,6 +9,7 @@ import { isMobile } from 'utils/env';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
 import Button from 'components/Button';
+import TopPlaceHolder from 'components/TopPlaceHolder';
 
 export default observer(() => {
   const { postStore, groupStore, userStore } = useStore();
@@ -56,6 +57,7 @@ export default observer(() => {
   if (!post) {
     return (
       <div>
+        <TopPlaceHolder />
         <div className="pt-[30vh] text-base text-15 md:text-16 text-center text-gray-600">
           抱歉，找不到这条内容
         </div>
@@ -83,6 +85,7 @@ export default observer(() => {
 
   return (
     <div className="box-border w-full overflow-y-auto h-screen" id="post-detail-page">
+      <TopPlaceHolder />
       <div className="w-full md:w-[600px] box-border mx-auto min-h-screen md:py-5">
         <PostItem
           post={post as IPost}

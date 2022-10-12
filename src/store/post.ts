@@ -101,6 +101,10 @@ export function createPostStore() {
       });
     },
 
+    removePostByUser(address: string) {
+      this.trxIds = this.trxIds.filter(trxId => this.map[trxId].userAddress !== address);
+    },
+
     updatePost(post: IPost) {
       const item = this.map[post.trxId];
       if (item) {

@@ -127,9 +127,9 @@ export default observer(() => {
   }
 
   return (
-    <div className="box-border w-full h-screen overflow-auto" ref={rootRef}>
+    <div className="box-border w-full h-screen overflow-auto bg-white md:bg-transparent" ref={rootRef}>
       <TopPlaceHolder />
-      <div className="w-full md:w-[600px] box-border mx-auto relative">
+      <div className="w-full md:w-[600px] box-border mx-auto relative pb-16">
         <div className="md:pt-5">
           <div className="hidden md:block">
             <Editor

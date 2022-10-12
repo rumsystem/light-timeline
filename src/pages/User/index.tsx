@@ -194,6 +194,9 @@ export default observer(() => {
       if (type.includes('mute')) {
         user.muted = !user.muted;
       }
+      if (type === 'mute') {
+        postStore.removePostByUser(userAddress);
+      }
     } catch (err) {
       console.log(err);
       snackbarStore.show({
@@ -223,7 +226,7 @@ export default observer(() => {
   }
 
   return (
-    <div className="box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent" ref={rootRef}>
+    <div className="box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent pb-16" ref={rootRef}>
       <TopPlaceHolder />
       <div className="w-full md:w-[600px] box-border mx-auto md:pt-5">
         <div>
@@ -340,7 +343,7 @@ export default observer(() => {
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
                           confirmDialogStore.show({
-                            content: `确定屏蔽 ${state.profile.name} 吗？`,
+                            content: `确定屏蔽吗？`,
                             ok: async () => {
                               confirmDialogStore.setLoading(true);
                               await changeRelation('mute');

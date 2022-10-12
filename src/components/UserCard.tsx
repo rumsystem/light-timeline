@@ -197,6 +197,7 @@ export default observer((props: IProps) => {
       disableHoverListener={props.disableHover}
       enterDelay={500}
       enterNextDelay={500}
+      leaveDelay={300}
       classes={{
         tooltip: 'no-style',
       }}
