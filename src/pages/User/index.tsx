@@ -48,6 +48,12 @@ export default observer(() => {
   const postCount = postStore.userPosts.length;
 
   React.useEffect(() => {
+    return () => {
+      postStore.resetUserTrxIds();
+    }
+  }, [])
+
+  React.useEffect(() => {
     (async () => {
       state.fetchingProfile = true;
       try {
@@ -87,7 +93,6 @@ export default observer(() => {
           offset: (state.postPage - 1) * limit,
           limit: limit
         });
-        postStore.addPosts(posts);
         state.hasMorePosts = posts.length === limit;
         postStore.addUserPosts(posts);
         const showImageSmoothly = !state.fetchedPosts && postStore.userRrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
@@ -112,7 +117,7 @@ export default observer(() => {
   const [sentryRef, { rootRef }] = useInfiniteScroll({
     loading: state.fetchingPosts,
     hasNextPage: state.hasMorePosts,
-    rootMargin: '0px 0px 200px 0px',
+    rootMargin: '0px 0px 300px 0px',
     onLoadMore: async () => {
       state.postPage += 1;
     },

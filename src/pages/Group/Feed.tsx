@@ -74,7 +74,7 @@ export default observer((props: Props) => {
   const [sentryRef, { rootRef }] = useInfiniteScroll({
     loading: state.fetching,
     hasNextPage: state.hasMore,
-    rootMargin: '0px 0px 200px 0px',
+    rootMargin: '0px 0px 300px 0px',
     onLoadMore: async () => {
       state.page += 1;
     },
