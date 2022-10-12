@@ -1,0 +1,16 @@
+definitions:
+  services:
+    docker:
+      memory: 4096
+
+pipelines:
+  branches:
+    master:
+      - step:
+          name: build
+          size: 2x
+          services:
+            - docker
+          script:
+            - ssh -tt huoju@103.61.37.242 "cd /data/deploy/build-server/build_shortcuts && git pull && ./09_build_light_timeline.sh"
+            - ssh -tt huoju@103.61.39.166 "cd /data/deploy/xue-testing && git pull && ./redeploy_light_timeline.sh"
