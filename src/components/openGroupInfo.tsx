@@ -9,7 +9,6 @@ import { IGroup, IContent } from 'apis/types';
 import { GroupApi, ContentApi } from 'apis';
 import Loading from 'components/Loading';
 import { useStore } from 'store';
-import sleep from 'utils/sleep';
 import Tooltip from '@material-ui/core/Tooltip';
 import copy from 'copy-to-clipboard';
 import DrawerModal from 'components/DrawerModal';
