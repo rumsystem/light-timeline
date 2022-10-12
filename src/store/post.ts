@@ -5,7 +5,9 @@ export function createPostStore() {
   return {
     trxIds: [] as string[],
 
-    userRrxIds: [] as string[],
+    userTrxIds: [] as string[],
+
+    searchedTrxIds: [] as string[],
 
     map: {} as Record<string, IPost>,
 
@@ -18,7 +20,11 @@ export function createPostStore() {
     },
 
     get userPosts() {
-      return this.userRrxIds.map((rId: string) => this.map[rId]);
+      return this.userTrxIds.map((rId: string) => this.map[rId]);
+    },
+
+    get searchedPosts() {
+      return this.searchedTrxIds.map((rId: string) => this.map[rId]);
     },
 
     clear() {
@@ -49,8 +55,19 @@ export function createPostStore() {
     addUserPosts(posts: IPost[]) {
       runInAction(() => {
         for (const post of posts) {
-          if (!this.userRrxIds.includes(post.trxId)) {
-            this.userRrxIds.push(post.trxId);
+          if (!this.userTrxIds.includes(post.trxId)) {
+            this.userTrxIds.push(post.trxId);
+          }
+          this.map[post.trxId] = post;
+        }
+      });
+    },
+
+    addSearchedPosts(posts: IPost[]) {
+      runInAction(() => {
+        for (const post of posts) {
+          if (!this.searchedTrxIds.includes(post.trxId)) {
+            this.searchedTrxIds.push(post.trxId);
           }
           this.map[post.trxId] = post;
         }
@@ -59,7 +76,7 @@ export function createPostStore() {
 
     addUserPost(post: IPost) {
       runInAction(() => {
-        this.userRrxIds.unshift(post.trxId);
+        this.userTrxIds.unshift(post.trxId);
         this.map[post.trxId] = post;
       })
     },
@@ -71,7 +88,8 @@ export function createPostStore() {
     removePost(trxId: string) {
       runInAction(() => {
         this.trxIds = this.trxIds.filter(t => t !== trxId);
-        this.userRrxIds = this.userRrxIds.filter(t => t !== trxId);
+        this.userTrxIds = this.userTrxIds.filter(t => t !== trxId);
+        this.searchedTrxIds = this.searchedTrxIds.filter(t => t !== trxId);
         delete this.map[trxId];
       });
     },
@@ -87,7 +105,11 @@ export function createPostStore() {
     },
 
     resetUserTrxIds() {
-      this.userRrxIds = [];
-    }
+      this.userTrxIds = [];
+    },
+
+    resetSearchedTrxIds() {
+      this.searchedTrxIds = [];
+    },
   }
 }

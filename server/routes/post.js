@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const Post = require('../database/post');
 const truncate = require('../utils/truncate');
 const { assert, Errors } = require('../utils/validator');
+const { Op } = require("sequelize");
 
 router.get('/:trxId', get);
 router.get('/', list);
@@ -21,6 +22,24 @@ async function list(ctx) {
 
   if (ctx.query.userAddress) {
     where.userAddress = ctx.query.userAddress;
+  }
+
+  if (ctx.query.q) {
+    where.content = {
+      [Op.like]: `%${ctx.query.q}%`
+    }
+  }
+
+  if (ctx.query.minLike) {
+    where.likeCount = {
+      [Op.gte]: ~~ctx.query.minLike
+    }
+  }
+
+  if (ctx.query.minComment) {
+    where.commentCount = {
+      [Op.gte]: ~~ctx.query.minComment
+    }
   }
   
   let posts = await Post.list({

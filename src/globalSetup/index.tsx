@@ -11,7 +11,6 @@ export default observer(() => {
   const location = useLocation();
 
   React.useEffect(() => {
-    console.log(location.pathname);
     if (location.pathname === `/${groupStore.groupId}`) {
       document.title = groupStore.group.groupName;
     }

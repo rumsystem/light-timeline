@@ -5,6 +5,9 @@ import qs from 'query-string';
 
 export default {
   async list(groupId: string, options: {
+    q?: string;
+    minLike?: string;
+    minComment?: string;
     userAddress?: string
     viewer?: string
     offset?: number

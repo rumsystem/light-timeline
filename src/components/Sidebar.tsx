@@ -17,12 +17,13 @@ import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import store from 'store2';
 import { isPc, getMixinContext } from 'utils/env';
+import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
 import {
   IoPersonOutline,
   IoPerson,
   IoChatbubbleEllipsesOutline,
 } from 'react-icons/io5';
-import { AiOutlineHome, AiFillHome } from 'react-icons/ai';
+import { AiOutlineHome, AiFillHome, AiOutlineSearch } from 'react-icons/ai';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
 import openLoginModal from 'components/openLoginModal';
@@ -30,6 +31,10 @@ import MessagesModal from 'components/Notification/NotificationModal';
 import VConsole from 'vconsole';
 import { getSocket } from 'utils/socket';
 import { NotificationApi } from 'apis';
+import openSearchModal from 'components/openSearchModal';
+import qs from 'query-string';
+import { useAliveController } from 'react-activation';
+
 
 interface IProps {
   scrollRef: React.RefObject<HTMLElement>
@@ -54,7 +59,11 @@ export default observer((props: IProps) => {
   }));
   const history = useHistory();
   const location = useLocation();
+  const aliveController = useAliveController();
+
   const isHomePage = location.pathname === `/${groupStore.groupId}`;
+  const isSearchPage = location.pathname === `/${groupStore.groupId}/search`;
+  const isUserPage = location.pathname.startsWith(`/${groupStore.groupId}/users/`);
   const isMyUserPage = location.pathname === `/${groupStore.groupId}/users/${userStore.address}`;
 
   useScroll({
@@ -153,7 +162,7 @@ export default observer((props: IProps) => {
               <div
                 className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center border border-gray-9c'
               >
-                <AiOutlineHome className="text-18 text-gray-88" />
+                <AiOutlineHome className="text-20 text-gray-88" />
               </div>
             </div>
           )}
@@ -161,7 +170,7 @@ export default observer((props: IProps) => {
           {userStore.isLogin && (
             <Fade in={true} timeout={350}>
               <div
-                className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-gray-c4'
+                className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-gray-9c'
                 onClick={() => {
                   if (!userStore.isLogin) {
                     openLoginModal();
@@ -187,6 +196,25 @@ export default observer((props: IProps) => {
                 </div>
               </div>
             </Fade>
+          )}
+
+          {(isHomePage || isUserPage) && (
+            <div className='cursor-pointer' onClick={async () => {
+              const result = await openSearchModal();
+              if (result) {
+                postStore.resetSearchedTrxIds();
+                await aliveController.drop('search');
+                history.push(`${groupStore.groupId}/search?${qs.stringify(result!, {
+                  skipEmptyString: true
+                })}`);
+              }
+            }}>
+              <div
+                className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center border border-gray-9c'
+              >
+                <AiOutlineSearch className="text-20 text-gray-88" />
+              </div>
+            </div>
           )}
 
           {isMyUserPage && (
@@ -218,7 +246,7 @@ export default observer((props: IProps) => {
           {(isMyUserPage || (isHomePage && userStore.isLogin && state.showPostEditorEntry)) && (
             <Fade in={true} timeout={350}>
               <div
-                className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-gray-c4 bg-black'
+                className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-black bg-black'
                 onClick={onOpenEditor}
               >
                 <BsPencil className="text-16 text-white" />
@@ -286,14 +314,14 @@ export default observer((props: IProps) => {
       {(isHomePage || isMyUserPage) && userStore.isLogin && (
         <Fade in={true} timeout={350}>
           <div
-            className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer bg-black'
+            className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black bg-black'
             onClick={onOpenEditor}
           >
             <BsPencil className="text-20 opacity-90 text-white" />
           </div>
         </Fade>
       )}
-      {(isHomePage || isMyUserPage) && (
+      {(isHomePage || isMyUserPage || isSearchPage) && (
         <div>
           <div className="h-12 w-screen"></div>
           <div className="pt-2 fixed bottom-0 left-0 w-screen flex justify-around text-gray-88 text-12 border-t border-gray-ec bg-white z-50">
@@ -324,6 +352,28 @@ export default observer((props: IProps) => {
                 {isHomePage ? <AiFillHome /> : <AiOutlineHome />}
               </div>
               <div className="transform scale-90">首页</div>
+            </div>
+            <div
+              className={classNames(
+                {
+                  'text-black': isSearchPage,
+                },
+                'px-4 text-center',
+              )}
+              onClick={async () => {
+                if (!userStore.isLogin) {
+                  openLoginModal();
+                  return;
+                }
+                postStore.resetSearchedTrxIds();
+                await aliveController.drop('search');
+                history.push(`/${groupStore.groupId}/search`);
+              }}
+            >
+              <div className="flex items-center justify-center text-24 h-6 w-6">
+                {isSearchPage ? <RiSearchFill /> : <RiSearchLine />}
+              </div>
+              <div className="transform scale-90">搜索</div>
             </div>
             <div
               className='px-4 text-center relative'

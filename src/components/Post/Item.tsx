@@ -16,6 +16,9 @@ import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
 import urlify from 'utils/urlify';
 import { useHistory } from 'react-router-dom';
+import BFSReplace from 'utils/BFSReplace';
+import Query from 'utils/query';
+import escapeStringRegexp from 'escape-string-regexp';
 
 import './index.css';
 
@@ -139,8 +142,7 @@ export default observer((props: IProps) => {
     expandContent: inPostDetail || false,
   }));
   const postBoxRef = React.useRef<HTMLDivElement>(null);
-  const objectRef = React.useRef<HTMLDivElement>(null);
-  const searchText = '';
+  const contentRef = React.useRef<HTMLDivElement>(null);
   const profile = post.extra!.userProfile;
   const history = useHistory();
 
@@ -149,14 +151,35 @@ export default observer((props: IProps) => {
       return;
     }
     if (
-      objectRef.current
-      && objectRef.current.scrollHeight > objectRef.current.clientHeight
+      contentRef.current
+      && contentRef.current.scrollHeight > contentRef.current.clientHeight
     ) {
       state.canExpandContent = true;
     } else {
       state.canExpandContent = false;
     }
   }, [post.content]);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (!Query.get('q')) {
+        return; 
+      }
+      const box = contentRef.current;
+      if (box) {
+        BFSReplace(
+          box,
+          new RegExp(escapeStringRegexp(Query.get('q')), 'ig'),
+          (text: string) => {
+            const span = document.createElement('span');
+            span.textContent = text;
+            span.className = 'text-amber-500 font-bold';
+            return span;
+          },
+        );
+      }
+    }, 10);
+  }, []);
 
   return (
     <Fade in={true} timeout={350}>          
@@ -205,8 +228,8 @@ export default observer((props: IProps) => {
             {post.content && (
               <div className="pb-2 relative">
                 <div
-                  ref={objectRef}
-                  key={post.content + searchText}
+                  ref={contentRef}
+                  key={post.content}
                   className={classNames(
                     {
                       expandContent: state.expandContent,

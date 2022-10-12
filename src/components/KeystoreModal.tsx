@@ -40,12 +40,9 @@ const Keystore = observer((props: IProps) => {
       />
       <div className="mt-4" />
       <TextField
-        multiline
         name='password'
         label={props.switchingAccount ? '输入 Password' : "Password"}
         value={state.password}
-        minRows={2}
-        maxRows={2}
         onChange={(e) => { state.password = e.target.value; }}
         variant="outlined"
         fullWidth

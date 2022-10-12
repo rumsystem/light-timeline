@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Index from './pages/Index';
 import Group from './pages/Group';
+import Search from './pages/Search';
 import PostDetail from './pages/PostDetail';
 import User from './pages/User';
 import SnackBar from 'components/SnackBar';
@@ -33,6 +34,11 @@ const App = observer(() => {
               <Route path="/:groupId" exact component={() => (
                 <KeepAlive>
                   <Group />
+                </KeepAlive>
+              )} />
+              <Route path="/:groupId/search" exact component={() => (
+                <KeepAlive name='search'>
+                  <Search />
                 </KeepAlive>
               )} />
               <Route path="/:groupId/posts/:trxId" exact component={PostDetail} />

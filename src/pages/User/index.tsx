@@ -95,7 +95,7 @@ export default observer(() => {
         });
         state.hasMorePosts = posts.length === limit;
         postStore.addUserPosts(posts);
-        const showImageSmoothly = !state.fetchedPosts && postStore.userRrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+        const showImageSmoothly = !state.fetchedPosts && postStore.userTrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
           if (showImageSmoothly) {
             runInAction(() => {
               state.invisibleOverlay = true;

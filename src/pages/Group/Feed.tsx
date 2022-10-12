@@ -24,8 +24,6 @@ export default observer((props: Props) => {
   const { userStore, postStore, groupStore } = useStore();
   const state = useLocalObservable(() => ({
     content: '',
-    searchInput: '',
-    searchText: '',
     profileMap: {} as Record<string, IProfile>,
     invisibleOverlay: false,
     fetching: false,
@@ -44,7 +42,7 @@ export default observer((props: Props) => {
       }
       state.fetching = true;
       try {
-        const limit = 10;
+        const limit = 15;
         const posts = await PostApi.list(groupStore.groupId, {
           viewer: userStore.address,
           offset: (state.page - 1) * limit,

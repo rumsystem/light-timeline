@@ -17,6 +17,7 @@
     "copy-to-clipboard": "^3.3.2",
     "date-fns": "^2.29.2",
     "dexie": "^3.2.2",
+    "escape-string-regexp": "^5.0.0",
     "ethers": "^5.6.9",
     "lodash": "^4.17.21",
     "mixin-node-sdk": "3.0.31",
