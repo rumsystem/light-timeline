@@ -7,7 +7,7 @@ import { useStore } from 'store';
 import { useParams } from 'react-router-dom';
 import { ProfileApi, UserApi, PostApi } from 'apis';
 import { IProfile } from 'apis/types';
-import openProfileEditor from 'pages/Group/openProfileEditor';
+import openProfileEditor from 'components/openProfileEditor';
 import PostItem from 'components/Post/Item';
 import classNames from 'classnames';
 import { runInAction } from 'mobx';

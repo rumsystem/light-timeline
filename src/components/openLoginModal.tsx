@@ -13,7 +13,7 @@ import sleep from 'utils/sleep';
 import * as Vault from 'utils/vault';
 
 const Main = observer(() => {
-  const { userStore } = useStore();
+  const { userStore, modalStore } = useStore();
   const state = useLocalObservable(() => ({
     loadingMixin: false,
     loadingGithub: false,
@@ -80,13 +80,14 @@ const Main = observer(() => {
                 N: 64
               }
             });
+            modalStore.pageLoading.show();
             userStore.setKeystore(keystore.replaceAll('\\', ''));
             userStore.setPassword(password);
             userStore.setAddress(wallet.address);
             userStore.setPrivateKey(wallet.privateKey);
             store.remove('groupStatusMap');
             store.remove('lightNodeGroupMap');
-            window.location.reload();
+            window.location.href += '?action=openProfileEditor';
           }}
         >
           {state.loadingRandom ? '正在创建帐号...' : '使用随机帐号'}

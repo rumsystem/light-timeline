@@ -18,7 +18,7 @@ import Base64 from 'utils/base64';
 import sleep from 'utils/sleep';
 import Modal from 'components/Modal';
 
-interface IModalProps {
+interface IModalProps extends IProps {
   rs: () => void
 }
 
@@ -27,7 +27,10 @@ const ModalWrapper = observer((props: IModalProps) => {
   const state = useLocalObservable(() => ({
     open: false,
     loading: false,
-    profile: toJS(userStore.profile)
+    profile: {
+      ...toJS(userStore.profile),
+      name: props.emptyName ? '' : toJS(userStore.profile).name
+    }
   }));
 
   React.useEffect(() => {
@@ -93,12 +96,18 @@ const ModalWrapper = observer((props: IModalProps) => {
       handleClose();
       await sleep(400);
       snackbarStore.show({
-        message: '修改成功',
+        message: props.emptyName ? '已保存' : '修改成功',
       });
     } catch (err) {
       console.log(err);
     }
     state.loading = false;
+  }
+
+  const onKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      updateProfile();
+    }
   }
 
   return (
@@ -145,6 +154,7 @@ const ModalWrapper = observer((props: IModalProps) => {
                     }
                     state.profile.name = e.target.value.trim();
                   }}
+                  onKeyDown={onKeyDown}
                   margin="dense"
                   variant="outlined"
                 />
@@ -184,7 +194,11 @@ const ModalWrapper = observer((props: IModalProps) => {
   )
 });
 
-export default async () => {
+interface IProps {
+  emptyName?: boolean
+}
+
+export default async (props?: IProps) => {
   const div = document.createElement('div');
   document.body.append(div);
   const unmount = () => {
@@ -196,6 +210,7 @@ export default async () => {
       <ThemeRoot>
         <StoreProvider>
           <ModalWrapper
+            {...(props || {})}
             rs={() => {
               setTimeout(unmount, 500);
             }}

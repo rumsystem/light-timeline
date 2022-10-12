@@ -25,6 +25,8 @@ import { TrxApi } from 'apis';
 import Base64 from 'utils/base64';
 import { IVaultAppUser } from 'apis/types';
 import { isEmpty } from 'lodash';
+import openProfileEditor from 'components/openProfileEditor';
+import sleep from 'utils/sleep';
 
 (window as any).Base64 = Base64;
 
@@ -103,6 +105,7 @@ const Preload = observer(() => {
         }
         groupStore.setLoading(false);
         initRelationGroup();
+        tryOpenProfileModal();
       } catch (err: any) {
         console.log(err);
         if (err.message === 'group not found') {
@@ -183,6 +186,19 @@ const Preload = observer(() => {
       groupStore.setRelationGroupId(relationGroup.groupId);
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  const tryOpenProfileModal = async () => {
+    const action = Query.get('action');
+    if (action) {
+      Query.remove('action');
+      if (action === 'openProfileEditor') {
+        await sleep(1000);
+        openProfileEditor({
+          emptyName: true
+        });
+      }
     }
   }
 
