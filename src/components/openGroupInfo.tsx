@@ -148,7 +148,7 @@ const Modal = observer((props: IModalProps) => {
                   </div>
                 </div>
                 <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
-                  {state.contents.map((content) => (
+                  {state.contents.map((content, index) => (
                     <Tooltip
                       key={content.id}
                       enterDelay={300}
@@ -168,8 +168,8 @@ const Modal = observer((props: IModalProps) => {
                           message: lang.copied,
                         });
                       }}>
-                        <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{content.id}</div>
-                        <span className="text-12 md:text-13 text-gray-88">{content.TrxId}</span>
+                        <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{state.group.contentCount - index}</div>
+                        <span className="text-12 md:text-13 text-gray-88 truncate">{content.TrxId}</span>
                       </div>
                     </Tooltip>
                   ))}

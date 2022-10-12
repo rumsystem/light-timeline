@@ -97,8 +97,10 @@ export default observer(() => {
               </div>
               {isPc && (group.status === 'connected' || group.contentCount > 0) && <BiChevronRight className="text-18 ml-[2px]" />}
               {isMobile && group.status === 'disconnected' && (
-                <div className="flex items-center bg-red-400 text-white p-1 px-2 text-12 rounded-12 mt-[10px] text-center">
-                  <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
+                <div className="flex">
+                  <div className="flex items-center bg-red-400 text-white p-1 px-2 text-12 rounded-12 mt-[10px] text-center">
+                    <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
+                  </div>
                 </div>
               )}
             </div>
