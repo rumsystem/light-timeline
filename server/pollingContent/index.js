@@ -44,7 +44,7 @@ module.exports = (duration) => {
       for (const group of groups) {
         if (!jobMap[group.groupId]) {
           jobMap[group.groupId] = startJob(group.groupId, duration);
-          await sleep(10 * 1000);
+          await sleep(500);
         }
       }
       await sleep(5 * 1000);
@@ -56,6 +56,10 @@ const startJob = async (groupId, duration) => {
   while (true) {
     const group = jobShareData.activeGroupMap[groupId];
     if (group) {
+      const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
+      if (isLazyGroup) {
+        await sleep(5 * 60 * 1000);
+      }
       const where = { groupId: group.groupId };
       try {
         const listOptions = {
@@ -91,10 +95,6 @@ const startJob = async (groupId, duration) => {
         await Group.update({ status: 'disconnected' }, { where });
       }
       await sleep(duration);
-      const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
-      if (isLazyGroup) {
-        await sleep(5 * 60 * 1000);
-      }
     }
     await sleep(duration);
   }
