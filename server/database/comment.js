@@ -28,11 +28,15 @@ exports.replaceObjectId = async (objectId, newObjectId) => {
 };
 
 exports.get = async (trxId, options = {}) => {
-  const item = await Comment.findOne({
+  const query = {
     where: {
       trxId
     }
-  });
+  };
+  if (options.withReplacedImage) {
+    query.attributes = { exclude: ['images'] };
+  }
+  const item = await Comment.findOne(query);
   if (!item) {
     return null;
   }
@@ -54,6 +58,9 @@ exports.destroy = async (trxId) => {
 };
 
 exports.list = async (query, options = {}) => {
+  if (options.withReplacedImage) {
+    query.attributes = { exclude: ['images'] };
+  }
   const items = await Comment.findAll(query);
   const result = items.map(item => options.withReplacedImage ? replaceImages(item.toJSON()) : item.toJSON());
   if (options.withExtra) {
@@ -114,8 +121,11 @@ const getCounterMap = async (p) => {
 }
 
 const replaceImages = item => {
-  if (item.images) {
-    item.images = item.images.map((_, index) => `${config.serverOrigin || ''}/api/${item.groupId}/images/comments/${item.trxId}/${index}`);
+  if (item.imageCount > 0) {
+    item.images = [];
+    for (let i = 0; i < item.imageCount; i++) {
+      item.images.push(`${config.serverOrigin || ''}/api/${item.groupId}/images/comments/${item.trxId}/${i}`);
+    }
   }
   return item;
 }

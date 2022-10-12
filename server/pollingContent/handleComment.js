@@ -131,6 +131,7 @@ const pack = async item => {
   };
   if (image) {
     comment.images = image;
+    comment.imageCount = image.length;
   }
   if (inreplyto) {
     const toTrxId = inreplyto.trxid;

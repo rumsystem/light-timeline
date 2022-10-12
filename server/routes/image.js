@@ -3,6 +3,7 @@ const Profile = require('../database/profile');
 const Post = require('../database/post');
 const Comment = require('../database/comment');
 const { assert, Errors } = require('../utils/validator');
+const getDefaultProfile = require('../utils/getDefaultProfile');
 
 router.get('/posts/:trxId/:index', getPostImage);
 router.get('/comments/:trxId/:index', getCommentImage);
@@ -10,7 +11,6 @@ router.get('/profiles/:userAddress', getProfileImage);
 
 async function getPostImage(ctx) {
   const post = await Post.get(ctx.params.trxId);
-  console.log({ post });
   assert(post, Errors.ERR_NOT_FOUND('post'));
   assert(post.images, Errors.ERR_NOT_FOUND('post.images'));
   const image = post.images[ctx.params.index];
@@ -40,8 +40,10 @@ async function getProfileImage(ctx) {
     groupId: ctx.params.groupId,
     userAddress: ctx.params.userAddress
   });
-  assert(profile, Errors.ERR_NOT_FOUND('profile'));
-  assert(profile.avatar, Errors.ERR_NOT_FOUND('profile.avatar'));
+  if (!profile || !profile.avatar) {
+    ctx.redirect(getDefaultProfile(ctx.params.userAddress).avatar);
+    return;
+  }
   const url = profile.avatar;
   const buffer = Buffer.from(getContent(url), 'base64');
   ctx.set('Content-Type', getMimeType(url));

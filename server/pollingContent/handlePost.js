@@ -71,6 +71,7 @@ const pack = async item => {
   }
   if (image) {
     post.images = image;
+    post.imageCount = image.length;
   }
   const extra = {};
   if (id) {

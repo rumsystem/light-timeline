@@ -57,6 +57,10 @@ const Comment = sequelize.define('comments', {
     type: Sequelize.INTEGER,
     allowNull: false
   },
+  imageCount: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  }
 }, {
   charset: 'utf8mb4',
   timestamps: false,

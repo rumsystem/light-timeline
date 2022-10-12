@@ -46,6 +46,7 @@ const PostEditor = observer((props: {
       commentCount: 0,
       hotCount: 0,
       likeCount: 0,
+      imageCount: (payload.image || []).length,
       timestamp: Date.now(),
       extra: {
         userProfile: toJS(userStore.profile)

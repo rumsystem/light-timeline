@@ -1,5 +1,3 @@
-
-
 const { Sequelize } = require('sequelize');
 const sequelize = require('../index');
 
@@ -51,6 +49,10 @@ const Post = sequelize.define('posts', {
   hotCount: {
     type: Sequelize.INTEGER,
     allowNull: false
+  },
+  imageCount: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
 }, {
   charset: 'utf8mb4',
