@@ -43,9 +43,9 @@ module.exports = (duration) => {
           }
         } catch (err) {
           await Group.update({ status: 'disconnected' }, { where });
-          if (err.code !== 'ECONNREFUSED') {
-            console.log(err);
-          }
+          // if (err.code !== 'ECONNREFUSED' || err.code !== 'ERR_BAD_REQUEST') {
+          //   console.log(err);
+          // }
         }
       }
       await sleep(duration);

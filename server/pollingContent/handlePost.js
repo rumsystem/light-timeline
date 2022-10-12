@@ -1,5 +1,5 @@
 const Post = require('../database/post');
-const Comment = require('../database/Comment');
+const Comment = require('../database/comment');
 const UniqueCounter = require('../database/uniqueCounter');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { getSocketIo } = require('../socket');
