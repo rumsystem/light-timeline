@@ -28,6 +28,7 @@ const Main = observer(() => {
       </div>
       <div className="flex justify-center w-full mt-[30px] md:mt-6">
         <Button
+          className="tracking-widest"
           fullWidth
           onClick={async () => {
             state.loadingMixin = true;
@@ -45,8 +46,9 @@ const Main = observer(() => {
           Mixin 登录{state.loadingMixin && '...'}
         </Button>
       </div>
-      <div className="justify-center mt-6 md:mt-4 w-full hidden">
+      <div className="justify-center mt-6 md:mt-4 w-full">
         <Button
+          className="tracking-widest"
           fullWidth
           onClick={async () => {
             state.loadingGithub = true;
@@ -66,6 +68,7 @@ const Main = observer(() => {
       </div>
       <div className="flex justify-center mt-6 md:mt-4 w-full">
         <Button
+          className="tracking-widest"
           fullWidth
           onClick={async () => {
             state.loadingRandom = true;
