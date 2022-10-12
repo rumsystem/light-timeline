@@ -43,7 +43,6 @@ export default observer(() => {
     notFound: false,
     postPage: 1,
     invisibleOverlay: false,
-    fetchingProfile: false,
     fetchedProfile: false,
     fetchingPosts: false,
     fetchedPosts: false,
@@ -65,8 +64,12 @@ export default observer(() => {
 
   React.useEffect(() => {
     if (state.fetched) {
-      state.fetchedProfile = false;
-      state.fetchedPosts = false;
+      runInAction(() => {
+        state.fetchingPosts = true;
+        state.postPage = 1;
+        state.fetchedProfile = false;
+        state.fetchedPosts = false;
+      });
       postStore.resetUserTrxIds();
       fetchProfile();
       fetchPosts();
@@ -74,7 +77,6 @@ export default observer(() => {
   }, [userAddress]);
 
   const fetchProfile = async () => {
-    state.fetchingProfile = true;
     try {
       if (isMyself) {
         state.profile = userStore.profile;
@@ -92,7 +94,6 @@ export default observer(() => {
       console.log(err);
       state.notFound = true;
     }
-    state.fetchingProfile = false;
     state.fetchedProfile = true;
     document.title = state.profile.name;
   }
@@ -102,9 +103,6 @@ export default observer(() => {
   }, []);
 
   const fetchPosts = async () => {
-    if (state.fetchingPosts) {
-      return;
-    }
     state.fetchingPosts = true;
     try {
       if (state.postPage === 1) {
@@ -138,6 +136,9 @@ export default observer(() => {
   }
 
   React.useEffect(() => {
+    if (state.fetchingPosts) {
+      return;
+    }
     fetchPosts();
   }, [state.postPage]);
 
