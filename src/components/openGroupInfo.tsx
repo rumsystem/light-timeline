@@ -12,6 +12,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import copy from 'copy-to-clipboard';
 import Modal from 'components/Modal';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import sleep from 'utils/sleep';
 
 interface IModalProps {
   groupId: string
@@ -55,21 +56,9 @@ const Main = observer((props: IModalProps) => {
     try {
       const contents = await ContentApi.list(props.groupId, {
         offset: state.contents.length,
-        limit: 10
+        limit: 10,
+        minimal: true
       });
-      for (const content of contents) {
-        try {
-          if (content.Data.content && content.Data.content.length > 30) {
-            content.Data.content = content.Data.content.slice(0, 20) + '...';
-          }
-          if (content.Data.image && content.Data.image.length > 0) {
-            (content.Data.image as any) = [{ content: '...' }];
-          }
-          if ((content.Data.image as any).content) {
-            (content.Data.image as any) = { content: '...' }
-          }
-        } catch (_) {}
-      }
       state.contents.push(...contents);
       if (contents.length < 10) {
         state.hasMoreContent = false;
@@ -151,21 +140,13 @@ const Main = observer((props: IModalProps) => {
                         key={content.id}
                         enterDelay={300}
                         enterNextDelay={300}
+                        leaveDelay={300}
                         placement="left"
-                        title={
-                          <div className="py-5 mx-4 text-12 tracking-wide text-left w-[200px] overflow-x-auto leading-5" >
-                            <pre dangerouslySetInnerHTML={{ __html: JSON.stringify(content.Data, null, 2) }} />
-                          </div>
-                        }
+                        title={<ContentDetail content={content} />}
                         arrow
                         interactive
                         >
-                        <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
-                          copy(JSON.stringify(content.Data));
-                          snackbarStore.show({
-                            message: lang.copied,
-                          });
-                        }}>
+                        <div className="flex items-center py-[2px]">
                           <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{state.group.contentCount - index}</div>
                           <span className="text-12 md:text-13 text-gray-88 truncate">{content.TrxId}</span>
                         </div>
@@ -184,6 +165,46 @@ const Main = observer((props: IModalProps) => {
         </div>
       </div>
     </Modal>
+  )
+});
+
+const ContentDetail = observer((props: {
+  content: IContent
+}) => {
+  const state = useLocalObservable(() => ({
+    loading: true,
+    content: null as (IContent | null),
+  }));
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        state.content = await ContentApi.get(props.content.groupId, props.content.TrxId);
+      } catch (err) {
+        console.log(err);
+      }
+      state.loading = false;
+    })();
+  }, []);
+
+  return (
+    <div className="py-5 mx-4 text-12 tracking-wide text-left w-[250px] overflow-x-auto leading-5 min-h-[100px]">
+      {state.loading && (
+        <div className="py-2 flex justify-center">
+          <Loading />
+        </div>
+      )}
+      {!state.loading && (
+        <div>
+          {state.content && <pre dangerouslySetInnerHTML={{ __html: JSON.stringify(state.content.Data, null, 2) }} />}
+          {!state.content && (
+            <div className="text-center py-2 opacity-70">
+              没有找到内容
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   )
 });
 
