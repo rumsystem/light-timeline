@@ -2108,7 +2108,7 @@ moment-timezone@^0.5.31:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.26.0:
+"moment@>= 2.9.0", moment@^2.26.0, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -2597,10 +2597,10 @@ qs@^6.5.2:
   dependencies:
     side-channel "^1.0.4"
 
-quorum-light-node-sdk-nodejs@0.1.29:
-  version "0.1.29"
-  resolved "https://registry.npmjs.org/quorum-light-node-sdk-nodejs/-/quorum-light-node-sdk-nodejs-0.1.29.tgz#eeffc01c3e0e6666bff28cbf7aa49f9ca1bfb350"
-  integrity sha512-E5JyeEs4NqLyUNytHafsVvarq6pentQuz5007Nl0MTP1X7v4EBoq+R4BKJBNWQJeMFnXjFlj3YOq7uLv5uxn3A==
+quorum-light-node-sdk-nodejs@0.1.30:
+  version "0.1.30"
+  resolved "https://registry.npmjs.org/quorum-light-node-sdk-nodejs/-/quorum-light-node-sdk-nodejs-0.1.30.tgz#919ceda00210212a3a52eb8d64911c601e1a549b"
+  integrity sha512-OYuhda1Eg3vEe8NwH96vejfyBd56A6ShozXj/4C9lRbnPI/QqfMMLPq4BWCkpHxF61SD7ux/OA1xbrfLGzIakA==
   dependencies:
     "@types/crypto-js" "^4.1.1"
     "@types/node-localstorage" "^1.3.0"

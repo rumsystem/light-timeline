@@ -7,11 +7,21 @@ const handleProfile = require('./handleProfile');
 const getTrxType = require('../utils/getTrxType');
 const Content = require('../database/sequelize/content');
 const Group = require('../database/sequelize/group');
+const config = require('../config');
+const { shuffle } = require('lodash');
+const moment = require('moment');
 
-const LIMIT = 500;
+const jobShareData = {
+  limit: 0,
+  activeGroupMap: {},
+  handling: false
+}
+
+const DEBUG = false;
 
 module.exports = (duration) => {
   let stop = false;
+  const jobMap = {};
 
   QuorumLightNodeSDK.cache.Group.clear();
 
@@ -28,36 +38,62 @@ module.exports = (duration) => {
         console.log('==================================================');
         return;
       }
+      jobShareData.activeGroupMap = await getActiveGroupMap(groups);
+      jobShareData.limit = getLimit(groups);
+      DEBUG && console.log({ limit: jobShareData.limit });
       for (const group of groups) {
-        const where = { groupId: group.groupId };
+        if (!jobMap[group.groupId]) {
+          jobMap[group.groupId] = startJob(group.groupId, duration);
+          await sleep(500);
+        }
+      }
+      await sleep(10 * 1000);
+    }
+  })();
+}
+
+const startJob = async (groupId, duration) => {
+  while (true) {
+    const group = jobShareData.activeGroupMap[groupId];
+    if (group) {
+      const where = { groupId: group.groupId };
+      try {
+        const listOptions = {
+          groupId: group.groupId,
+          count: jobShareData.limit,
+        };
+        if (group.startTrx) {
+          listOptions.startTrx = group.startTrx;
+        }
+        const contents = await QuorumLightNodeSDK.chain.Content.list(listOptions);
+        while (jobShareData.handling) {
+          console.log(`${group.groupName}: 别人正在 handling，我等待 ...`);
+          await sleep(200);
+        }
+        jobShareData.handling = true;
         try {
-          const listOptions = {
-            groupId: group.groupId,
-            count: LIMIT,
-          };
-          if (group.startTrx) {
-            listOptions.startTrx = group.startTrx;
-          }
-          const contents = await QuorumLightNodeSDK.chain.Content.list(listOptions);
           if (contents.length > 0) {
             await handleContents(group, contents.sort((a, b) => a.TimeStamp - b.TimeStamp));
             const contentCount = await Content.count({ where });
             await Group.update({ contentCount }, { where });
           }
           await Group.update({ status: 'connected' }, { where });
-          if (!group.loaded && (contents.length === 0 || contents.length < LIMIT)) {
+          if (!group.loaded && contents.length === 0) {
             await Group.update({ loaded: true }, { where });
           }
-        } catch (err) {
-          await Group.update({ status: 'disconnected' }, { where });
-          // if (err.code !== 'ECONNREFUSED' || err.code !== 'ERR_BAD_REQUEST') {
-          //   console.log(err);
-          // }
+          DEBUG && console.log(`处理 ${group.groupId} ${group.groupName}, 本次 ${contents.length} 条`);
+        } catch(err) {
+          throw err;
+        } finally {
+          jobShareData.handling = false;
         }
+      } catch (err) {
+        await Group.update({ status: 'disconnected' }, { where });
       }
       await sleep(duration);
     }
-  })();
+    await sleep(duration);
+  }
 }
 
 const handleContents = async (group, contents) => {
@@ -82,7 +118,7 @@ const handleContents = async (group, contents) => {
           case 'profile': await handleProfile(content); break;
           default: break;
         }
-        console.log(`${content.TrxId} ✅`);
+        !DEBUG && console.log(`${content.TrxId} ✅`);
       } catch (err) {
         console.log(content);
         console.log(err);
@@ -109,4 +145,52 @@ const handleContents = async (group, contents) => {
   } catch (err) {
     console.log(err);
   }
+}
+
+
+const getActiveGroupMap = async groups => {
+  const map = {};
+  const loadedGroups = groups.filter(group => group.loaded);
+  const unloadedGroups = groups.filter(group => !group.loaded);
+  const temRandomUnloadedGroups = shuffle(unloadedGroups).slice(0, config.polling?.maxIndexingUnloadedGroup || 3);
+  for (const group of temRandomUnloadedGroups) {
+    map[group.groupId] = group;
+  }
+
+  const towRandomLoadedGroups = shuffle(loadedGroups).slice(0, 2);
+  for (const group of towRandomLoadedGroups) {
+    map[group.groupId] = group;
+  }
+
+  for (const group of loadedGroups) {
+    if (map[group.groupId]) {
+      continue;
+    }
+    const latestContent = await Content.findOne({
+      attributes: ['TimeStamp'],
+      where: {
+        TrxId: group.startTrx
+      }
+    });
+    if (!latestContent) {
+      continue;
+    }
+    const timestamp = parseInt(String(latestContent.TimeStamp / 1000000), 10);
+    const hours = Math.abs(moment(timestamp).diff(new Date(), 'hours'));
+    if (hours < 72) {
+      map[group.groupId] = group;
+    } else {
+      DEBUG && console.log(`（大于 48 小时，跳过 ${group.groupId} ${group.groupName}）`);
+    }
+  }
+  return map;
+}
+
+const getLimit = groups => {
+  const unloadedCount = groups.filter(group => !group.loaded).length;
+  DEBUG && console.log('活跃群组');
+  DEBUG && console.log(groups.filter(group => !group.loaded).map(group => group.groupName))
+  const configLimit = config.polling?.limit || 50;
+  const limit = unloadedCount >= 2 ? Math.max(Math.round(configLimit/Math.pow(2, unloadedCount)), 10) : configLimit
+  return limit;
 }

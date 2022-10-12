@@ -19,9 +19,7 @@ const Notification = require('./database/sequelize/notification');
       loaded: false,
       contentCount: 0
     }, {
-      where: {
-        loaded: true
-      }
+      where: {}
     });
     await Content.sync({ force: true });
     await Post.sync({ force: true });

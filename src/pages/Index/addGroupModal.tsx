@@ -67,7 +67,6 @@ const Main = observer((props: IProps) => {
       state.loading = true;
       state.stopPolling = false;
       let disconnectedCount = 0;
-      await sleep(3000);
       while (!state.stopPolling) {
         await sleep(2000);
         if (state.stopPolling) {
