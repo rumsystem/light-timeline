@@ -23,6 +23,7 @@ import Query from 'utils/query';
 import * as Vault from 'utils/vault';
 import { TrxApi } from 'apis';
 import Base64 from 'utils/base64';
+import { IVaultAppUser } from 'apis/types';
 
 (window as any).Base64 = Base64;
 
@@ -128,37 +129,46 @@ const Preload = observer(() => {
     userStore.setJwt(jwt);
     const vaultUser = await VaultApi.getUser(jwt);
     console.log({ vaultUser });
+    let vaultAppUser = {} as IVaultAppUser;
     try {
-      const vaultAppUser = await VaultApi.getAppUser(jwt, vaultUser.id);
+      vaultAppUser = await VaultApi.getAppUser(jwt, vaultUser.id);
       console.log({ vaultAppUser });
       userStore.setVaultAppUser(vaultAppUser);
     } catch (err) {
       console.log(err);
-      const vaultAppUser = await VaultApi.createAppUser(jwt);
+      vaultAppUser = await VaultApi.createAppUser(jwt);
       console.log({ vaultAppUser });
       userStore.setVaultAppUser(vaultAppUser);
-      const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
-      const res = await TrxApi.createPerson({
-        groupId: groupStore.groupId,
-        person: {
-          name: vaultUser.display_name,
-          image: {
-            mediaType: Base64.getMimeType(avatar.url),
-            content: Base64.getContent(avatar.url),
-          },
-        },
-        aesKey: groupStore.cipherKey,
-        privateKey: userStore.privateKey,
-        ...(userStore.jwt ? { eth_pub_key: vaultAppUser.eth_pub_key, jwt } : {})
-      });
-      console.log(res);
-      userStore.setProfile({
-        name: vaultUser.display_name,
-        avatar: avatar.url,
-        groupId: groupStore.groupId,
-        userAddress: vaultAppUser.eth_address
-      });
       isCreatedByToken = true;
+    }
+    try {
+      const profileExist = await ProfileApi.exist(groupStore.groupId, userStore.address);
+      console.log({ profileExist });
+      if (!profileExist) {
+        const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
+        const res = await TrxApi.createPerson({
+          groupId: groupStore.groupId,
+          person: {
+            name: vaultUser.display_name,
+            image: {
+              mediaType: Base64.getMimeType(avatar.url),
+              content: Base64.getContent(avatar.url),
+            },
+          },
+          aesKey: groupStore.cipherKey,
+          privateKey: userStore.privateKey,
+          ...(userStore.jwt ? { eth_pub_key: vaultAppUser.eth_pub_key, jwt } : {})
+        });
+        console.log(res);
+        userStore.setProfile({
+          name: vaultUser.display_name,
+          avatar: avatar.url,
+          groupId: groupStore.groupId,
+          userAddress: vaultAppUser.eth_address
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
     return isCreatedByToken;
   }
