@@ -5,7 +5,7 @@ definitions:
 
 pipelines:
   branches:
-    master:
+    main:
       - step:
           name: build
           size: 2x
