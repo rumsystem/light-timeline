@@ -111,7 +111,7 @@ const Main = observer((props: IModalProps) => {
       )}
       <Button
         size="large"
-        className="w-full mt-6"
+        className="w-full mt-10"
         onClick={submit}
       >
         确定

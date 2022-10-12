@@ -13,6 +13,8 @@ export default observer(() => {
   React.useEffect(() => {
     if (location.pathname === `/${groupStore.groupId}`) {
       document.title = groupStore.group.groupName;
+    } else if (location.pathname === `/${groupStore.groupId}/search`) {
+      document.title = '搜索';
     }
     pathStore.push(location.pathname);
   }, [location.pathname]);
