@@ -91,6 +91,10 @@ const startJob = async (groupId, duration) => {
         await Group.update({ status: 'disconnected' }, { where });
       }
       await sleep(duration);
+      const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
+      if (isLazyGroup) {
+        await sleep(5 * 60 * 1000);
+      }
     }
     await sleep(duration);
   }
