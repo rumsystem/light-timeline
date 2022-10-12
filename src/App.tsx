@@ -67,7 +67,7 @@ const App = observer(() => {
 });
 
 const Preload = observer(() => {
-  const { userStore, groupStore, confirmDialogStore } = useStore();
+  const { userStore, groupStore, confirmDialogStore, modalStore } = useStore();
   const { groupId } = useParams() as { groupId: string };
   const token = Query.get('token');
   if (token) {
@@ -84,7 +84,9 @@ const Preload = observer(() => {
         groupStore.setGroup(group);
         let isCreatedByToken = false;
         if (token) {
+          modalStore.pageLoading.show();
           isCreatedByToken = await handleToken(token);
+          modalStore.pageLoading.hide();
         }
         if (userStore.isLogin && !isCreatedByToken) {
           const [profile, user] = await Promise.all([
