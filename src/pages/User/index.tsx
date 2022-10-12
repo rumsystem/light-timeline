@@ -253,7 +253,7 @@ export default observer(() => {
                     {' '}
                     <span className="text-16 font-bold">
                       {user.postCount}
-                    </span> 内容{' '}
+                    </span> 条内容{' '}
                   </span>
                   <span className="mx-3 mt-[10px] opacity-50">|</span>
                   <span

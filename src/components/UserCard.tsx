@@ -122,7 +122,7 @@ const UserCard = observer((props: IUserCardProps) => {
               {' '}
               <span className="text-14 font-bold">
                 {user.postCount}
-              </span> 内容{' '}
+              </span> 条内容{' '}
             </span>
             <span className="mx-[10px] opacity-50">|</span>
             <span>
