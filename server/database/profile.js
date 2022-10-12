@@ -13,7 +13,8 @@ exports.upsert = async (item) => {
   if (exist) {
     await Profile.update({
       name: item.name,
-      avatar: item.avatar
+      avatar: item.avatar,
+      updatedAt: item.updatedAt
     }, {
       where
     })
@@ -56,10 +57,15 @@ const pack = (profile, options = {}) => {
   if (options.withReplacedImage) {
     return replaceImage(profile);
   }
+  delete profile.updatedAt;
   return profile;
 }
 
 const replaceImage = profile => {
   profile.avatar = `${config.serverOrigin || ''}/api/${profile.groupId}/images/profiles/${profile.userAddress}`
+  if (profile.updatedAt) {
+    profile.avatar += `?${new Date(profile.updatedAt).getTime()}`;
+  }
+  delete profile.updatedAt;
   return profile;
 }

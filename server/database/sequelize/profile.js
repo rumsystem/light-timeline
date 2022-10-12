@@ -26,6 +26,10 @@ const Profile = sequelize.define('profiles', {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+  }
 }, {
   charset: 'utf8mb4',
   timestamps: false,
