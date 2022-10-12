@@ -7,7 +7,7 @@ import Dialog from 'components/Dialog';
 import { isMobile, isPc } from 'utils/env';
 import DrawerModal from 'components/DrawerModal';
 import Button from 'components/Button';
-import { MdKeyboardArrowDown } from 'react-icons/md';
+import { FiFilter } from 'react-icons/fi';
 import { TextField } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
 
@@ -67,7 +67,7 @@ const Main = observer((props: IModalProps) => {
         <div className="flex justify-center mt-5 text-gray-9c" onClick={() => {
           state.showCondition = true;
         }}>
-          <span className="cursor-pointer flex items-center">条件筛选 <MdKeyboardArrowDown className="text-20" /></span>
+          <span className="cursor-pointer flex items-center">条件筛选 <FiFilter className="text-14 ml-1" /></span>
         </div>
       )}
       {state.showCondition && (

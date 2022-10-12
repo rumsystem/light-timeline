@@ -42,6 +42,9 @@ export default observer((props: Props) => {
     searched: false,
     get myProfile () {
       return this.profileMap[userStore.address]
+    },
+    get isEmptyInput() {
+      return !this.q && !this.minLike && !this.minComment
     }
   }));
 
@@ -53,7 +56,7 @@ export default observer((props: Props) => {
     if (state.fetching) {
       return;
     }
-    if (!state.searched && !state.q) {
+    if (!state.searched && state.isEmptyInput) {
       return;
     }
     state.fetching = true;
@@ -113,7 +116,7 @@ export default observer((props: Props) => {
     state.page = 1;
     state.fetched = false;
     postStore.resetSearchedTrxIds();
-    history.push(`/${groupStore.groupId}/search?${qs.stringify({
+    history.replace(`/${groupStore.groupId}/search?${qs.stringify({
       q: state.q,
       minLike: state.minLike,
       minComment: state.minComment,
