@@ -3,9 +3,23 @@ const Profile = require('./sequelize/profile');
 const getDefaultProfile = require('../utils/getDefaultProfile');
 
 exports.upsert = async (item) => {
-  await Profile.upsert(item, {
-    fields: ["name", "avatar"]
+  const where = {
+    groupId: item.groupId,
+    userAddress: item.userAddress,
+  };
+  const exist = await Profile.findOne({
+    where
   });
+  if (exist) {
+    await Profile.update({
+      name: item.name,
+      avatar: item.avatar
+    }, {
+      where
+    })
+  } else {
+    await Profile.create(item);
+  }
 };
 
 exports.get = async (index) => {

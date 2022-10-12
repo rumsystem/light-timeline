@@ -4,6 +4,12 @@ const { Sequelize } = require('sequelize');
 const sequelize = require('../index');
 
 const Profile = sequelize.define('profiles', {
+  id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true
+  },
   name: {
     type: Sequelize.STRING,
     allowNull: false
@@ -19,14 +25,14 @@ const Profile = sequelize.define('profiles', {
   userAddress: {
     type: Sequelize.STRING,
     allowNull: false,
-    primaryKey: true
   },
 }, {
   charset: 'utf8mb4',
   timestamps: false,
   indexes: [{
-    unique: true,
-    fields: ['groupId', 'userAddress']
+    fields: ['groupId']
+  }, {
+    fields: ['userAddress']
   }]
 });
 
