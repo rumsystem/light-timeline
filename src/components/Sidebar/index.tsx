@@ -168,7 +168,7 @@ export default observer(() => {
                     if (result) {
                       postStore.resetSearchedTrxIds();
                       await aliveController.drop('search');
-                      history.push(`${groupStore.groupId}/search?${qs.stringify(result!, {
+                      history.push(`/${groupStore.groupId}/search?${qs.stringify(result!, {
                         skipEmptyString: true
                       })}`);
                     }
