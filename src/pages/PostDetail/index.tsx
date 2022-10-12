@@ -8,7 +8,6 @@ import { useStore } from 'store';
 import { isMobile } from 'utils/env';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
-import BackBar from 'components/BackBar';
 import Sidebar from 'components/Sidebar';
 import Button from 'components/Button';
 
@@ -85,8 +84,7 @@ export default observer(() => {
   }
 
   return (
-    <div className="w-full overflow-y-auto h-screen" id="post-detail-page" ref={scrollRef}>
-      {isMobile && <BackBar />}
+    <div className="pt-[40px] md:pt-[42px] box-border w-full overflow-y-auto h-screen" id="post-detail-page" ref={scrollRef}>
       <div className="w-full md:w-[600px] box-border mx-auto min-h-screen md:py-5">
         <PostItem
           post={post as IPost}

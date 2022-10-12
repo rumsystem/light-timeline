@@ -18,7 +18,10 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Sidebar from 'components/Sidebar';
 import openEditor from 'components/Post/OpenEditor';
 import sleep from 'utils/sleep';
-import BackBar from 'components/BackBar';
+import { RiMoreFill } from 'react-icons/ri';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { BsFillMicMuteFill } from 'react-icons/bs';
 
 import './index.css';
 
@@ -35,6 +38,7 @@ export default observer(() => {
     fetchingPosts: false,
     fetchedPosts: false,
     hasMorePosts: false,
+    anchorEl: null,
     get fetched() {
       return this.fetchedProfile && this.fetchedPosts
     }
@@ -144,7 +148,6 @@ export default observer(() => {
   if (state.fetched && state.notFound) {
     return (
       <div className="h-screen flex justify-center items-center">
-        {isMobile && <BackBar />}
         <div className="-mt-20 text-base md:text-xl text-center text-gray-600">
           抱歉，你访问的用户不存在
         </div>
@@ -153,8 +156,7 @@ export default observer(() => {
   }
 
   return (
-    <div className="w-full h-screen overflow-auto user-page bg-white md:bg-transparent" ref={scrollRef}>
-      {isMobile && <BackBar />}
+    <div className="pt-[40px] md:pt-[42px] box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent" ref={scrollRef}>
       <div className="w-full md:w-[600px] box-border mx-auto md:pt-5">
         {/* {isMobile && (
           <div>
@@ -172,52 +174,16 @@ export default observer(() => {
             >
               <div className="absolute top-0 left-0 right-0 bottom-0 blur-layer md:rounded-12" />
             </div>
-            <div className="w-full flex justify-between items-center z-10">
-              <div className="flex items-center">
+            <div className="justify-between z-10 w-full box-border pt-2 px-5 md:px-8 text-white relative">
+              <div>
                 <img
-                  width={isMobile ? 64 : 70}
-                  height={isMobile ? 64 : 70}
+                  width={isMobile ? 74 : 100}
+                  height={isMobile ? 74 : 100}
                   className="rounded-full avatar bg-white"
                   src={profile.avatar}
                   alt={profile.name}
                 />
-                <div className="pt-2 pl-3 pr-1 md:px-4 text-white ml-1">
-                  <div className="font-bold text-20 md:text-24 md:pt-1 leading-none truncate w-[42vw] md:w-auto">
-                    {profile.name}
-                  </div>
-                  {user.postCount > 0 && (
-                    <div className="mt-[6px] opacity-70 text-14">
-                      {user.postCount}  条内容
-                    </div>
-                  )}
-                </div>
-              </div>
-              {isMyself && (
-                <Button
-                  className="mr-2"
-                  outline
-                  color="white"
-                  size={isMobile ? 'small' : 'normal'}
-                  onClick={openProfileEditor}
-                >
-                  <div className="flex items-center text-16 mr-1">
-                    <BiEditAlt />
-                  </div>
-                  <span className="hidden md:block">编辑资料</span>
-                  <span className="md:hidden">编辑</span>
-                </Button>
-              )}
-            </div>
-            <div className="justify-between z-10 w-full box-border pt-8 md:pt-8 px-5 md:px-16 text-white relative hidden">
-              <div className="w-10/12 md:w-auto">
-                <img
-                  width={isMobile ? 74 : 120}
-                  height={isMobile ? 74 : 120}
-                  className="rounded-full avatar bg-white"
-                  src={profile.avatar}
-                  alt={profile.name}
-                />
-                <div className="font-bold mt-3 md:mt-2 text-18 md:text-24 pt-1 leading-snug w-[230px] md:w-[320px] break-words">
+                <div className="font-bold mt-2 text-18 md:text-24 pt-1 leading-snug w-[230px] md:w-[320px] break-words">
                   {profile.name}
                 </div>
                 <div className="text-14 md:text-16 flex items-center">
@@ -226,11 +192,11 @@ export default observer(() => {
                       {' '}
                       <span className="text-16 font-bold">
                         {user.postCount}
-                      </span> 篇文章{' '}
+                      </span> 内容{' '}
                     </span>
                   )}
                   {user.postCount > 0 && (
-                    <span className="mx-3 mt-2 opacity-50">|</span>
+                    <span className="mx-3 mt-[10px] opacity-50">|</span>
                   )}
                   {user.postCount > 0 && (
                     <span
@@ -243,7 +209,7 @@ export default observer(() => {
                     </span>
                   )}
                   {user.postCount > 0 && (
-                    <span className="opacity-50 mx-3 mt-2">|</span>
+                    <span className="opacity-50 mx-3 mt-[10px]">|</span>
                   )}
                   {user.postCount > 0 && (
                     <span
@@ -258,41 +224,70 @@ export default observer(() => {
                   {profile.intro && <div className="text-13 whitespace-pre-line">{profile.intro}</div>}
                 </div> */}
               </div>
-              <div className="mt-16 md:mt-12 pt-4 mr-6 md:mr-0 absolute md:static top-0 right-0">
-                {/* {!isMyself && (
-                  <div>
-                    {false ? (
-                      <Button onClick={unsubscribe} outline color="white">
-                        已关注
-                      </Button>
-                    ) : (
-                      <Button onClick={subscribe}>关注</Button>
-                    )}
+              <div className="mt-8 md:mt-12 pt-4 mr-3 md:mr-5 absolute top-0 right-0">
+                <div className="flex items-center">
+                  <div
+                    className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-80"
+                    onClick={(e: any) => {
+                      state.anchorEl = e.currentTarget
+                    }}>
+                    <RiMoreFill className="text-20 text-white cursor-pointer" />
                   </div>
-                )} */}
-                {isPc && isMyself && (
-                  <Button
-                    outline
-                    color="white"
-                    size={isMobile ? 'small' : 'normal'}
-                    onClick={openProfileEditor}
-                  >
-                    <div className="flex items-center text-16 mr-1">
-                      <BiEditAlt />
+                  {!isMyself && (
+                    <div>
+                      {true ? (
+                        <Button color="white" outline onClick={() => {}}>
+                          已关注
+                        </Button>
+                      ) : (
+                        <Button color='white' onClick={() => {}}>关注</Button>
+                      )}
                     </div>
-                    编辑资料
-                  </Button>
-                )}
-                {isMobile && isMyself && (
-                  <Link to="/settings">
-                    <Button outline color="white" size={isMobile ? 'small' : 'normal'}>
+                  )}
+                  {isMyself && (
+                    <Button
+                      outline
+                      color="white"
+                      size={isMobile ? 'small' : 'normal'}
+                      onClick={openProfileEditor}
+                    >
                       <div className="flex items-center text-16 mr-1">
-                        <RiSettings4Fill />
+                        <BiEditAlt />
                       </div>
-                      账号设置
+                      编辑资料
                     </Button>
-                  </Link>
-                )}
+                  )}
+                   <Menu
+                      anchorEl={state.anchorEl}
+                      getContentAnchorEl={null}
+                      open={Boolean(state.anchorEl)}
+                      onClose={() => {
+                        state.anchorEl = null;
+                      }}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    >
+                      {isMyself && (
+                        <MenuItem onClick={() => {
+                          state.anchorEl = null;
+                        }}>  
+                          <div className="py-1 pl-2 pr-3 flex items-center text-red-400">
+                            <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽列表
+                          </div>
+                        </MenuItem>
+                      )}
+                      {!isMyself && (
+                        <MenuItem onClick={() => {
+                          state.anchorEl = null;
+                        }}>
+                          <div className="py-1 pl-2 pr-3 flex items-center text-red-400">
+                            <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽
+                          </div>
+                        </MenuItem>
+                      )}
+                    </Menu>
+                  {/* <Button color='red' onClick={() => {}}>已屏蔽</Button> */}
+                </div>
               </div>
             </div>
           </div>

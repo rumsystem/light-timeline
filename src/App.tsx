@@ -25,6 +25,8 @@ import { TrxApi } from 'apis';
 import Base64 from 'utils/base64';
 import { IVaultAppUser } from 'apis/types';
 import { isEmpty } from 'lodash';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 (window as any).Base64 = Base64;
 
@@ -34,7 +36,6 @@ const App = observer(() => {
     <Router>
       <AliveScope>
         <div>
-
           <Route path="/" exact component={Index} />
 
           <Route path="/:groupId" component={Preload} />

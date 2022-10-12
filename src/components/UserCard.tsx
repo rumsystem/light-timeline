@@ -5,7 +5,6 @@ import Avatar from 'components/Avatar';
 // import { lang } from 'utils/lang';
 // import { GoMute } from 'react-icons/go';
 // import { HiOutlineBan } from 'react-icons/hi';
-// import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { ProfileApi, UserApi } from 'apis';
 import { IProfile, IUser } from 'apis/types';
 import Loading from 'components/Loading';
@@ -14,7 +13,7 @@ import { useStore } from 'store';
 import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { isPc, isMobile } from 'utils/env';
-// import Button from 'components/Button';
+import Button from 'components/Button';
 
 interface IProps {
   disableHover?: boolean
@@ -48,7 +47,7 @@ const UserCard = observer((props: IUserCardProps) => {
   }, []);
 
   return (
-    <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-64 p-4 pb-3 px-5 min-h-[70px]">
+    <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-[250px] p-4 pb-3 px-5 min-h-[70px]">
       <div
         className="cursor-pointer"
       >
@@ -58,16 +57,15 @@ const UserCard = observer((props: IUserCardProps) => {
             url={profile.avatar}
             size={50}
           />
-          <div className="pl-16 pt-2">
-            {user.postCount === 0 && <div className="pt-2" />}
+          <div className="pt-16">
             <div className="font-bold text-15 truncate w-44 text-gray-6d">
               {profile.name}
             </div>
-            {user.postCount > 0 && (
+            {/* {user.postCount > 0 && (
               <div className="mt-[10px] text-gray-6d opacity-60 text-13">
                 {user.postCount}  条内容
               </div>
-            )}
+            )} */}
             {user.postCount === 0 && <div className="pb-2" />}
           </div>
         </div>
@@ -79,21 +77,24 @@ const UserCard = observer((props: IUserCardProps) => {
         </div>
       )} */}
 
-      <div className="text-13 flex items-center text-gray-9b pt-3">
-        {/* {user.postCount > 0 && (
-          <span className="mt-2">
+      <div className="text-13 flex items-center text-neutral-400 pt-4 pb-3">
+        {user.postCount === 0 && (
+          <span className="mr-1">发布了</span>
+        )}
+        {user.postCount > 0 && (
+          <span>
             {' '}
             <span className="text-14 font-bold">
               {user.postCount}
-            </span> 条内容{' '}
+            </span> 内容{' '}
           </span>
-        )} */}
-        {/* {user.postCount > 0 && (
-          <span className="mx-3 mt-2 opacity-50">|</span>
+        )}
+        {user.postCount > 0 && (
+          <span className="mx-[10px] opacity-50">|</span>
         )}
         {user.postCount > 0 && (
           <span
-            className="cursor-pointer mt-2"
+            className="cursor-pointer"
           >
             <span className="text-14 font-bold">
               {user.postCount}
@@ -102,21 +103,21 @@ const UserCard = observer((props: IUserCardProps) => {
           </span>
         )}
         {user.postCount > 0 && (
-          <span className="opacity-50 mx-3 mt-2">|</span>
+          <span className="opacity-50 mx-[10px]">|</span>
         )}
         {user.postCount > 0 && (
           <span
-            className="cursor-pointer mt-2"
+            className="cursor-pointer"
           >
             <span className="text-14 font-bold">{user.postCount}</span>{' '}
             被关注
           </span>
-        )} */}
+        )}
       </div>
 
-      {/* <div className="absolute top-6 right-5">
+      <div className="absolute top-6 right-5">
         <Button>关注</Button>
-      </div> */}
+      </div>
 
       {!state.fetched && (
         <div className="absolute inset-0 flex items-center justify-center bg-white">

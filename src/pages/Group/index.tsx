@@ -7,7 +7,7 @@ export default observer(() => {
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <div className="w-full h-screen overflow-auto" ref={scrollRef}>
+    <div className="pt-[40px] md:pt-[42px] box-border w-full h-screen overflow-auto" ref={scrollRef}>
       <div className="w-full md:w-[600px] box-border mx-auto relative">
         <div />
         <Feed scrollRef={scrollRef} />

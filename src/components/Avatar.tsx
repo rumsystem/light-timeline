@@ -6,7 +6,7 @@ interface IProps {
   size?: number
   className?: string
   loading?: boolean
-  onClick?: () => void
+  onClick?: (e: any) => void
   'data-test-id'?: string
 }
 
