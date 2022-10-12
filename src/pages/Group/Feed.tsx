@@ -36,39 +36,52 @@ export default observer((props: Props) => {
     }
   }));
 
-  React.useEffect(() => {
-    (async () => {
-      if (state.fetching) {
-        return;
-      }
-      state.fetching = true;
-      try {
-        const limit = 15;
-        const posts = await PostApi.list(groupStore.groupId, {
-          viewer: userStore.address,
-          offset: (state.page - 1) * limit,
-          limit
-        });
-        postStore.addPosts(posts);
-        state.hasMore = posts.length === limit;
-        const showImageSmoothly = !state.fetched && postStore.trxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
-          if (showImageSmoothly) {
+  const fetchData = async () => {
+    state.fetching = true;
+    try {
+      const limit = 15;
+      const posts = await PostApi.list(groupStore.groupId, {
+        type: postStore.feedType,
+        viewer: userStore.address,
+        offset: (state.page - 1) * limit,
+        limit,
+      });
+      postStore.addPosts(posts);
+      state.hasMore = posts.length === limit;
+      const showImageSmoothly = !state.fetched && postStore.trxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+        if (showImageSmoothly) {
+          runInAction(() => {
+            state.invisibleOverlay = true;
+          });
+          setTimeout(() => {
             runInAction(() => {
-              state.invisibleOverlay = true;
+              state.invisibleOverlay = false;
             });
-            setTimeout(() => {
-              runInAction(() => {
-                state.invisibleOverlay = false;
-              });
-            }, 100);
-          }
-      } catch (err) {
-        console.log(err);
-      }
-      state.fetching = false;
-      state.fetched = true;
-    })();
+          }, 100);
+        }
+    } catch (err) {
+      console.log(err);
+    }
+    state.fetching = false;
+    state.fetched = true;
+  }
+
+  React.useEffect(() => {
+    if (state.fetching) {
+      return;
+    }
+    fetchData();
   }, [state.page]);
+
+  React.useEffect(() => {
+    if (state.fetched) {
+      state.fetched = false;
+      state.fetching = true;
+      state.page = 1;
+      postStore.resetTrxIds();
+      fetchData();
+    }
+  }, [postStore.feedType])
 
   const [sentryRef, { rootRef }] = useInfiniteScroll({
     loading: state.fetching,

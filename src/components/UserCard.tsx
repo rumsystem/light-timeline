@@ -35,6 +35,7 @@ const UserCard = observer((props: IUserCardProps) => {
   }));
   const { profile } = state;
   const user = userStore.userMap[props.userAddress]!;
+  const isMyself = props.userAddress === userStore.address;
 
   React.useEffect(() => {
     (async () => {
@@ -88,7 +89,6 @@ const UserCard = observer((props: IUserCardProps) => {
         type: 'error',
       });
     }
-    await sleep(2000);
     state.submitting = false;
   }
 
@@ -135,12 +135,16 @@ const UserCard = observer((props: IUserCardProps) => {
             </span>
           </div>
 
-          <div className="absolute top-8 right-5">
-            {user.following ?
-              <Button outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
-              <Button onClick={() => changeRelation('follow')}>关注</Button>
-            }
-          </div>
+          {!isMyself && (
+            <div className="absolute top-8 right-5">
+              <div>
+                {user.following ?
+                  <Button outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
+                  <Button onClick={() => changeRelation('follow')}>关注</Button>
+                }
+              </div>
+            </div>
+          )}
         </div>
       )}
 

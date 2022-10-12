@@ -10,6 +10,7 @@ export default {
     minComment?: string;
     userAddress?: string
     viewer?: string
+    type?: string
     offset?: number
     limit?: number
   } = {}) {

@@ -22,7 +22,7 @@ interface IProps {
 const LIMIT = 20;
 
 const UserList = observer((props: IProps) => {
-  const { groupStore, userStore, snackbarStore } = useStore();
+  const { groupStore, userStore, snackbarStore, confirmDialogStore } = useStore();
   const state = useLocalStore(() => ({
     hasMore: false,
     page: 0,
@@ -75,7 +75,7 @@ const UserList = observer((props: IProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.groupId,
+        groupId: groupStore.relationGroupId,
         object: {
           type: 'Note',
           content: JSON.stringify({
@@ -103,7 +103,6 @@ const UserList = observer((props: IProps) => {
         type: 'error',
       });
     }
-    await sleep(2000);
     state.submitting = false;
   }
 
@@ -152,12 +151,28 @@ const UserList = observer((props: IProps) => {
                       {isMyList && (
                         <div>
                           {props.type === 'following' && (  
-                            <Button size="small" onClick={() => changeRelation('unfollow', relation)} outline>
+                            <Button size="small" onClick={() => {
+                              confirmDialogStore.show({
+                                content: '确定取消关注吗？',
+                                ok: async () => {
+                                  await changeRelation('unfollow', relation)
+                                  confirmDialogStore.hide();
+                                },
+                              });
+                            }} outline>
                               取消关注
                             </Button>
                           )}
                           {props.type === 'muted' && (  
-                            <Button size="small" color="red" onClick={() => changeRelation('unmute', relation)} outline>
+                            <Button size="small" color="red" onClick={() => {
+                              confirmDialogStore.show({
+                                content: '确定解除屏蔽吗？',
+                                ok: async () => {
+                                  await changeRelation('unmute', relation);
+                                  confirmDialogStore.hide();
+                                },
+                              });
+                            }} outline>
                               解除屏蔽
                             </Button>
                           )}

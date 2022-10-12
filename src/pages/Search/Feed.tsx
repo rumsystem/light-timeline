@@ -16,7 +16,7 @@ import qs from 'query-string';
 import sleep from 'utils/sleep';
 import { useHistory } from 'react-router-dom';
 import { MdChevronLeft } from 'react-icons/md';
-import { isMobile } from 'utils/env';
+import { isPc } from 'utils/env';
 import { useAliveController } from 'react-activation';
 
 interface Props {
@@ -130,15 +130,14 @@ export default observer((props: Props) => {
     <div className="pt-[63px] md:pt-[80px] pb-12 md:pb-4">
       <div className="fixed top-0 left-0 md:left-[50%] md:ml-[-300px] z-[100] w-full md:w-[600px]">
         <div className="bg-white flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b border-gray-ec md:rounded-12 shadow-sm">
-          {isMobile && (
-            <div className="flex items-center text-30 ml-1 mr-3 text-gray-88 mt-1" onClick={async () => {
-              history.push(`/${groupStore.groupId}`);
-              postStore.resetSearchedTrxIds();
-              await aliveController.drop('search');
-            }}>
-              <MdChevronLeft />
-            </div>
-          )}
+          <div className="flex items-center text-30 ml-1 mr-3 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
+            history.push(`/${groupStore.groupId}`);
+            postStore.resetSearchedTrxIds();
+            await aliveController.drop('search');
+          }}>
+            <MdChevronLeft />
+            {isPc && <span className="text-14 mr-5">返回</span>}
+          </div>
           <TextField
             autoFocus
             className="flex-1 md:flex-initial md:w-64"

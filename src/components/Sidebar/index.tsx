@@ -394,19 +394,6 @@ export default observer((props: IProps) => {
                   <div className="transform scale-90">我的</div>
                 </div>
               </div>
-              {isMyUserPage && (
-                <div className={classNames({
-                  'right-[10px]': !getMixinContext().isMixinImmersive,
-                  'left-[70px]': getMixinContext().isMixinImmersive
-                }, 'px-4 cursor-pointer fixed top-[12px] z-[21] flex items-center justify-center')} onClick={() => {
-                  logout();
-                }}>
-                  {getMixinContext().isMixinImmersive && (
-                    <div className="text-gray-88 opacity-80 mr-4">|</div>
-                  )}
-                  <span className="text-14 text-red-500">退出</span>
-                </div>
-              )}
             </div>
           )}
         </div>

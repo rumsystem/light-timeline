@@ -1,5 +1,8 @@
 import { runInAction } from 'mobx';
 import { IPost } from 'apis/types';
+import store from 'store2';
+
+export type FeedType = 'following' | 'latest' | 'random';
 
 export function createPostStore() {
   return {
@@ -10,6 +13,8 @@ export function createPostStore() {
     searchedTrxIds: [] as string[],
 
     map: {} as Record<string, IPost>,
+
+    feedType: (store('feedType') || 'latest') as FeedType,
 
     get total() {
       return this.trxIds.length;
@@ -106,6 +111,10 @@ export function createPostStore() {
       }
     },
 
+    resetTrxIds() {
+      this.trxIds = [];
+    },
+
     resetUserTrxIds() {
       this.userTrxIds = [];
     },
@@ -113,5 +122,10 @@ export function createPostStore() {
     resetSearchedTrxIds() {
       this.searchedTrxIds = [];
     },
+
+    setFeedType(feedType: FeedType) {
+      this.feedType = feedType;
+      store('feedType', feedType);
+    }
   }
 }

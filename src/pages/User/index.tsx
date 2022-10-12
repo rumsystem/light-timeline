@@ -20,15 +20,24 @@ import { RiMoreFill } from 'react-icons/ri';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
+import { BiLogOutCircle } from 'react-icons/bi';
 import UserListModal from './UserListModal';
 import openLoginModal from 'components/openLoginModal';
 import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
+import store from 'store2';
 
 import './index.css';
 
 export default observer(() => {
-  const { userStore, groupStore, postStore, snackbarStore, confirmDialogStore } = useStore();
+  const {
+    userStore,
+    groupStore,
+    postStore,
+    snackbarStore,
+    confirmDialogStore,
+    modalStore
+  } = useStore();
   const state = useLocalObservable(() => ({
     profile: {} as IProfile,
     notFound: false,
@@ -199,7 +208,6 @@ export default observer(() => {
         type: 'error',
       });
     }
-    await sleep(2000);
     state.submitting = false;
   }
 
@@ -285,13 +293,15 @@ export default observer(() => {
               </div>
               <div className="mt-8 md:mt-12 pt-4 mr-3 md:mr-5 absolute top-0 right-0">
                 <div className="flex items-center">
-                  <div
-                    className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-80"
-                    onClick={(e: any) => {
-                      state.anchorEl = e.currentTarget
-                    }}>
-                    <RiMoreFill className="text-20 text-white cursor-pointer" />
-                  </div>
+                  {!user.muted && (
+                    <div
+                      className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-80"
+                      onClick={(e: any) => {
+                        state.anchorEl = e.currentTarget
+                      }}>
+                      <RiMoreFill className="text-20 text-white cursor-pointer" />
+                    </div>
+                  )}
                   {(isMyself || !user.muted) && (
                     <Menu
                       anchorEl={state.anchorEl}
@@ -308,8 +318,27 @@ export default observer(() => {
                           state.userListType = 'muted';
                           state.showUserListModal = true;
                         }}>  
-                          <div className="py-1 pl-2 pr-3 flex items-center text-red-400">
+                          <div className="py-1 pl-1 pr-3 flex items-center text-neutral-700">
                             <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽列表
+                          </div>
+                        </MenuItem>
+                      )}
+                      {isMyself && (
+                        <MenuItem onClick={() => {
+                          state.anchorEl = null;
+                          confirmDialogStore.show({
+                            content: '确定退出帐号吗？',
+                            ok: async () => {
+                              confirmDialogStore.hide();
+                              await sleep(400);
+                              store.clear();
+                              modalStore.pageLoading.show();
+                              window.location.href = `/${groupStore.groupId}`;
+                            },
+                          });
+                        }}>  
+                          <div className="py-1 pl-1 pr-3 flex items-center text-red-400">
+                            <BiLogOutCircle className="mr-2 text-16" /> 退出帐号
                           </div>
                         </MenuItem>
                       )}
@@ -319,7 +348,6 @@ export default observer(() => {
                           confirmDialogStore.show({
                             content: `确定屏蔽 ${state.profile.name} 吗？`,
                             ok: async () => {
-                              confirmDialogStore.setLoading(true);
                               await changeRelation('mute');
                               confirmDialogStore.hide();
                             },
@@ -332,7 +360,7 @@ export default observer(() => {
                       )}
                     </Menu>
                   )}
-                  {!isMyself && (
+                  {!isMyself && !user.muted && (
                     <div>
                       {user.following ? (
                         <Button color="white" outline onClick={() => changeRelation('unfollow')}>
@@ -358,7 +386,6 @@ export default observer(() => {
                   )}
                   {!isMyself && user.muted && (
                     <Button
-                      isDoing={state.submitting}
                       color='red'
                       onClick={() => changeRelation('unmute')}>
                         已屏蔽

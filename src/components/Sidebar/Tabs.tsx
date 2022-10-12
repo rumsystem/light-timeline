@@ -3,11 +3,11 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { isPc } from 'utils/env';
-import store from 'store2';
+import { useStore } from 'store';
 
 export default observer(() => {
+  const { postStore } = useStore();
   const state = useLocalObservable(() => ({
-    feedType: store('feedType') || 'latest',
     loading: true
   }));
 
@@ -20,10 +20,9 @@ export default observer(() => {
   return (
     <Tabs
       className={`px-4 md:px-0 ${isPc ? '' : 'small'}`}
-      value={state.feedType}
+      value={postStore.feedType}
       onChange={(_e, newType) => {
-        state.feedType = newType;
-        store.set('feedType', newType);
+        postStore.setFeedType(newType)
       }}
       TabIndicatorProps={{
         style: {
@@ -33,7 +32,7 @@ export default observer(() => {
     >
       <Tab value={'following'} label={<div>关注</div>} />
       <Tab value={'latest'} label={<div>最新</div>} />
-      <Tab value={'random'} label={<div>发现</div>} />
+      {/* <Tab value={'random'} label={<div>发现</div>} /> */}
     </Tabs>
   )
 })

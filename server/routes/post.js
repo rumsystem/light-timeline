@@ -7,7 +7,6 @@ const { Op } = require("sequelize");
 
 router.get('/:trxId', get);
 router.get('/', list);
-router.get('/following', listByFollowing);
 
 async function get(ctx) {
   const trxId = ctx.params.trxId;
@@ -28,6 +27,44 @@ async function list(ctx) {
 
   if (ctx.query.userAddress) {
     where.userAddress = ctx.query.userAddress;
+  }
+
+  if (ctx.query.viewer && ctx.query.type === 'following') {
+    where[Op.and] ||= [];
+    const following = await Relation.findAll({
+      raw: true,
+      where: {
+        type: 'following',
+        from: ctx.query.viewer
+      }
+    });
+
+    if (following.length > 0) {
+      where[Op.and].push({
+        userAddress: {
+          [Op.in]: following.map(item => item.to)
+        }
+      })
+    };    
+  }
+
+  if (ctx.query.viewer) {
+    where[Op.and] ||= [];
+    const muted = await Relation.findAll({
+      raw: true,
+      where: {
+        type: 'muted',
+        from: ctx.query.viewer
+      }
+    });
+
+    if (muted.length > 0) {
+      where[Op.and].push({
+        userAddress: {
+          [Op.notIn]: muted.map(item => item.to)
+        }
+      })
+    };
   }
 
   if (ctx.query.q) {
@@ -69,59 +106,5 @@ async function list(ctx) {
   ctx.body = posts;
 }
 
-
-async function listByFollowing(ctx) {
-  const [following, muted] = await Promise.all([
-    Relation.findAll({
-      attributes: ['to'],
-      where: {
-        type: 'following',
-        from: ctx.query.viewer
-      }
-    }),
-    Relation.findAll({
-      attributes: ['to'],
-      where: {
-        type: 'muted',
-        from: ctx.query.viewer
-      }
-    })
-  ]);
-
-  const where = {
-    [Op.and]: [{
-      userAddress: {
-        [Op.or]: following
-      }
-    },
-    {
-      userAddress: {
-        [Op.ne]: muted
-      }
-    }],
-    groupId: ctx.params.groupId,
-    latestTrxId: '',
-  };
-  
-  let posts = await Post.list({
-    where,
-    order: [
-      ['timestamp', ctx.query.order === 'ASC' ? 'ASC' : 'DESC']
-    ],
-    limit: Math.min(~~ctx.query.limit || 10, 100),
-    offset: ctx.query.offset || 0
-  }, {
-    withReplacedImage: true,
-    withExtra: true,
-    viewer: ctx.query.viewer
-  });
-  if (ctx.query.truncatedLength) {
-    posts = posts.map((item) => {
-      item.content = truncate(item.content, ~~ctx.query.truncatedLength)
-      return item;
-    })
-  }
-  ctx.body = posts;
-}
 
 module.exports = router;
