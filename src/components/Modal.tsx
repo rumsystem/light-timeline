@@ -25,7 +25,10 @@ export default (props: IProps) => {
   }
 
   return (
-    <Dialog {...DialogProps} className="flex items-center justify-center">
+    <Dialog
+      {...DialogProps}
+      maxWidth={false}
+      className="flex items-center justify-center">
       <div className="bg-white rounded-12">
         {!hideCloseButton && (
           <div

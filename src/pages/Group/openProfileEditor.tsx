@@ -79,7 +79,7 @@ const ModalWrapper = observer((props: IModalProps) => {
       };
       runInAction(() => {
         userStore.setProfile(profile);
-        for (const post of postStore.posts) {
+        for (const post of [...postStore.posts, ...postStore.userPosts]) {
           if (post.userAddress === userStore.address) {
             post.extra.userProfile = profile;
           }
