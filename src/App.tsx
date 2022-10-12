@@ -21,7 +21,7 @@ import { lang } from 'utils/lang';
 import { useParams } from 'react-router-dom';
 
 const App = observer(() => {
-  const { groupStore } = useStore();
+  const { groupStore, userStore } = useStore();
   return (
     <Router>
       <AliveScope>
@@ -45,9 +45,9 @@ const App = observer(() => {
               <Route path="/:groupId/posts/:trxId" exact component={PostDetail} />
               <Route path="/:groupId/users/:userAddress" exact component={User} />
               <GlobalSetup />
-              <CommentReplyModal />
               <PostDetailModal />
-              <NewFeaturesModal />
+              {userStore.isLogin && <CommentReplyModal />}
+              {userStore.isLogin && <NewFeaturesModal />}
             </div>
           )}
 

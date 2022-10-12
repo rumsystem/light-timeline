@@ -8,6 +8,8 @@ const Profile = require('./database/sequelize/profile');
 const Counter = require('./database/sequelize/counter');
 const UniqueCounter = require('./database/sequelize/uniqueCounter');
 const Notification = require('./database/sequelize/notification');
+const Feature = require('./database/sequelize/feature');
+const Activity = require('./database/sequelize/activity');
 
 (async () => {
   await sleep(5000);
@@ -28,6 +30,8 @@ const Notification = require('./database/sequelize/notification');
     await Counter.sync({ force: true });
     await UniqueCounter.sync({ force: true });
     await Notification.sync({ force: true });
+    await Feature.sync({ force: true });
+    await Activity.sync({ force: true });
   } catch (err) {
     console.log(err);
   }
