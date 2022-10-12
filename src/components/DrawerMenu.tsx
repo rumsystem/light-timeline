@@ -32,6 +32,7 @@ export default (props: IProps) => {
 
   return (
     <DrawerModal
+      hideCloseButton
       smallRadius
       open={open}
       onClose={() => {

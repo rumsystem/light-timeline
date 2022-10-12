@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import ButtonProgress from 'components/ButtonProgress';
-import { isMobile } from 'utils/env';
 
 import './index.css';
 
@@ -40,7 +39,6 @@ export default (props: Props) => {
         {
           'w-full': fullWidth,
           [size]: size,
-          'mobile': isMobile,
           'bg-black text-white': !outline && color === 'primary',
           'bg-gray-bd text-white': !outline && color === 'gray',
           'bg-green-500 text-white': !outline && color === 'green',

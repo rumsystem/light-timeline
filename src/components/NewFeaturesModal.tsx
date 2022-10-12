@@ -11,7 +11,7 @@ export default observer(() => {
 
   React.useEffect(() => {
     setTimeout(() => {
-      state.open = true;
+      state.open = false;
     }, 2000);
   }, []);
 

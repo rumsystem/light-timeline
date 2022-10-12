@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import { useStore } from 'store';
+import { isPc, isMobile } from 'utils/env';
 
 export default observer(() => {
   const { confirmDialogStore } = useStore();
@@ -11,7 +12,7 @@ export default observer(() => {
     cancel,
     content,
     cancelText,
-    cancelDisabled,
+    cancelDisabled = false,
     okText = '确定',
     contentClassName,
     loading,
@@ -20,6 +21,7 @@ export default observer(() => {
   return (
     <Modal
       hideCloseButton
+      useDialog
       open={open}
       onClose={() => {
         if (!cancel) {
@@ -27,33 +29,63 @@ export default observer(() => {
         }
       }}
     >
-      <div className="pt-10 pb-8 px-12">
-        <div className="flex items-center justify-center min-h-[70px] md:min-h-[60px]">
-          <div
-            className={`text-slate-600 leading-7 ${contentClassName} md:min-w-[160px] md:max-w-[250px] text-center text-16`}
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-        </div>
-        <div className="flex mt-[26px] items-center justify-center w-full">
-          {!cancelDisabled && (
-            <Button
-              size="large"
-              className="w-[110px] mr-5 opacity-70"
-              outline
-              onClick={() => {
-                if (cancel) {
-                  cancel();
-                } else {
-                  confirmDialogStore.hide();
-                }
-              }}>
-              {cancelText}
-            </Button>
+      <div className="min-w-[70vw] md:min-w-[auto]">
+        <div className="pt-8 md:pt-10 pb-6 md:pb-8 px-8 md:px-12">
+          <div className="flex items-center justify-center md:min-h-[60px]">
+            <div
+              className={`text-neutral-500 leading-7 ${contentClassName} md:min-w-[160px] md:max-w-[250px] text-center text-16`}
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </div>
+          {isPc && (
+            <div className="flex mt-[26px] items-center justify-center w-full">
+              {!cancelDisabled && (
+                <Button
+                  size="large"
+                  className="w-[110px] mr-5 opacity-70"
+                  outline
+                  onClick={() => {
+                    if (cancel) {
+                      cancel();
+                    } else {
+                      confirmDialogStore.hide();
+                    }
+                  }}>
+                  {cancelText}
+                </Button>
+              )}
+              <Button
+                size="large"
+                className={`${cancelDisabled ? 'w-[150px]' : 'w-[110px]'}`}
+                onClick={() => ok()}
+                isDoing={loading}>
+                {okText}
+              </Button>
+            </div>
           )}
-          <Button size="large" className={`${cancelDisabled ? 'w-[150px]' : 'w-[110px]'}`} onClick={() => ok()} isDoing={loading}>
-            {okText}
-          </Button>
         </div>
+        {isMobile && (
+          <div className="border-t border-slate-200 w-full flex">
+            {!cancelDisabled && (
+              <div
+                className="text-15 py-3 flex-1 border-r border-slate-200 text-center text-slate-500"
+                onClick={() => {
+                  if (cancel) {
+                    cancel();
+                  } else {
+                    confirmDialogStore.hide();
+                  }
+                }}>
+                {cancelText}
+              </div>
+            )}
+            <div
+              className="text-15 py-3 flex-1 border-r border-slate-200 text-center text-neutral-700 font-bold"
+              onClick={() => ok()}>
+              {okText}{loading && '...'}
+            </div>
+          </div>
+        )}
       </div>
     </Modal>
   );

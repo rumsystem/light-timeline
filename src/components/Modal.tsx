@@ -5,12 +5,13 @@ import { isMobile } from 'utils/env';
 
 interface IProps extends DialogProps {
   hideCloseButton?: boolean
+  useDialog?: boolean
 }
 
 export default (props: IProps) => {
-  const { hideCloseButton, ...DialogProps } = props;
+  const { hideCloseButton, useDialog, ...DialogProps } = props;
   
-  if (isMobile) {
+  if (isMobile && !useDialog) {
     return (
       <DrawerModal
         hideCloseButton={hideCloseButton}
