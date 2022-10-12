@@ -90,3 +90,9 @@ exports.getUnreadCount = async (query) => {
   });
   return count || 0;
 };
+
+exports.destroy = async (where) => {
+  return await Notification.destroy({
+    where
+  });
+};

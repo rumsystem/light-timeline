@@ -114,6 +114,9 @@ export default observer((props: Props) => {
       }
     };
     postStore.addPost(post);
+    userStore.updateUser(userStore.address, {
+      postCount: userStore.user.postCount + 1
+    });
     state.content = '';
   }
 

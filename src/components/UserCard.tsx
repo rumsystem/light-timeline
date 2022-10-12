@@ -3,7 +3,7 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from 'components/Avatar';
 import { ProfileApi, UserApi } from 'apis';
-import { IProfile, IUser } from 'apis/types';
+import { IProfile } from 'apis/types';
 import Loading from 'components/Loading';
 import sleep from 'utils/sleep';
 import { useStore } from 'store';
@@ -41,7 +41,9 @@ const UserCard = observer((props: IUserCardProps) => {
       try {
         state.profile = await ProfileApi.get(groupStore.groupId, props.userAddress);
         if (!user) {
-          const user = await UserApi.get(groupStore.groupId, props.userAddress);
+          const user = await UserApi.get(groupStore.groupId, props.userAddress, {
+            viewer: userStore.address
+          });
           userStore.setUser(props.userAddress, user);
         }
       } catch (_) {}
@@ -65,6 +67,7 @@ const UserCard = observer((props: IUserCardProps) => {
         object: {
           type: 'Note',
           content: JSON.stringify({
+            groupId: groupStore.groupId,
             type,
             to: props.userAddress
           })
@@ -90,56 +93,56 @@ const UserCard = observer((props: IUserCardProps) => {
   }
 
   return (
-    <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-[250px] p-4 pb-3 px-5 min-h-[70px]">
-      <div
-        className="cursor-pointer"
-      >
-        <div className="relative flex items-center" onClick={props.goToUserPage}>
-          <Avatar
-            className="absolute top-0 left-0 cursor-pointer"
-            url={profile.avatar}
-            size={50}
-          />
-          <div className="pt-16">
-            <div className="font-bold text-15 truncate w-44 text-gray-6d">
-              {profile.name}
+    <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-[250px] pt-5 pb-5 px-[22px] min-h-[175px]">
+      {state.fetched && (
+        <div>
+          <div
+            className="cursor-pointer"
+          >
+            <div className="relative flex items-center" onClick={props.goToUserPage}>
+              <Avatar
+                className="absolute top-0 left-0 cursor-pointer"
+                url={profile.avatar}
+                size={70}
+              />
+              <div className="pt-[88px]">
+                <div className="font-bold text-15 truncate w-44 text-gray-6d">
+                  {profile.name}
+                </div>
+                {user.postCount === 0 && <div className="pb-2" />}
+              </div>
             </div>
-            {user.postCount === 0 && <div className="pb-2" />}
+          </div>
+
+          <div className="text-13 flex items-center text-neutral-400 pt-4">
+            <span>
+              {' '}
+              <span className="text-14 font-bold">
+                {user.postCount}
+              </span> 内容{' '}
+            </span>
+            <span className="mx-[10px] opacity-50">|</span>
+            <span>
+              <span className="text-14 font-bold">
+                {user.followingCount}
+              </span>{' '}
+              关注{' '}
+            </span>
+            <span className="opacity-50 mx-[10px]">|</span>
+            <span>
+              <span className="text-14 font-bold">{user.followerCount}</span>{' '}
+              被关注
+            </span>
+          </div>
+
+          <div className="absolute top-8 right-5">
+            {user.following ?
+              <Button outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
+              <Button onClick={() => changeRelation('follow')}>关注</Button>
+            }
           </div>
         </div>
-      </div>
-
-      <div className="text-13 flex items-center text-neutral-400 pt-4 pb-3">
-        <span>
-          {' '}
-          <span className="text-14 font-bold">
-            {user.postCount}
-          </span> 内容{' '}
-        </span>
-        <span className="mx-[10px] opacity-50">|</span>
-        <span
-          className="cursor-pointer"
-        >
-          <span className="text-14 font-bold">
-            {user.followingCount}
-          </span>{' '}
-          关注{' '}
-        </span>
-        <span className="opacity-50 mx-[10px]">|</span>
-        <span
-          className="cursor-pointer"
-        >
-          <span className="text-14 font-bold">{user.followerCount}</span>{' '}
-          被关注
-        </span>
-      </div>
-
-      <div className="absolute top-6 right-5">
-        {user.following ?
-          <Button outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
-          <Button onClick={() => changeRelation('follow')}>关注</Button>
-        }
-      </div>
+      )}
 
       {!state.fetched && (
         <div className="absolute inset-0 flex items-center justify-center bg-white">

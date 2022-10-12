@@ -13,7 +13,8 @@ import { lang } from 'utils/lang';
 import { TrxApi } from 'apis';
 
 interface IProps {
-  type: 'following' | 'muted'
+  userAddress: string
+  type: 'following' | 'followers' | 'muted'
   open: boolean
   onClose: () => void
 }
@@ -25,32 +26,37 @@ const UserList = observer((props: IProps) => {
   const state = useLocalStore(() => ({
     hasMore: false,
     page: 0,
-    isFetching: false,
+    loading: false,
     submitting: false,
-    relations: {} as IRelation[],
+    relations: [] as IRelation[],
   }));
-  const loading = false;
   const scrollRef = React.useRef<HTMLInputElement>(null);
   const history = useHistory();
+  const isMyList = props.userAddress === userStore.address;
 
   React.useEffect(() => {
     (async () => {
-      state.isFetching = true;
+      state.loading = true;
       try {
-        const relations = await (props.type === 'following' ?
-          RelationApi.listFollowing(groupStore.groupId, userStore.address, { offset: state.page * LIMIT, limit: LIMIT }) :
-          RelationApi.listMuted(groupStore.groupId, userStore.address, { offset: state.page * LIMIT, limit: LIMIT }))
+        let relations = [] as IRelation[];
+        if (props.type === 'following') {
+          relations = await RelationApi.listFollowing(groupStore.groupId, props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
+        } else if (props.type === 'followers') {
+          relations = await RelationApi.listFollowers(groupStore.groupId, props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
+        } else if (props.type === 'muted') {
+          relations = await RelationApi.listMuted(groupStore.groupId, props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
+        }
         state.relations.push(...relations);
         state.hasMore = relations.length === LIMIT;
       } catch (err) {
         console.log(err);
       }
-      state.isFetching = false;
+      state.loading = false;
     })();
   }, [state, state.page]);
 
   const [sentryRef, { rootRef }] = useInfiniteScroll({
-    loading: state.isFetching,
+    loading: state.loading,
     hasNextPage: state.hasMore,
     rootMargin: '0px 0px 300px 0px',
     onLoadMore: async () => {
@@ -73,6 +79,7 @@ const UserList = observer((props: IProps) => {
         object: {
           type: 'Note',
           content: JSON.stringify({
+            groupId: groupStore.groupId,
             type,
             to: relation.to
           })
@@ -103,16 +110,17 @@ const UserList = observer((props: IProps) => {
   return (
     <div className="bg-white rounded-12 text-gray-4a">
       <div className="px-5 py-4 leading-none text-16 border-b border-gray-d8 border-opacity-75 flex justify-between items-center">
-        {props.type === 'following' && '我关注的人'}
-        {props.type === 'muted' && '我屏蔽的人'}
+        {props.type === 'following' && `${isMyList ? '我' : 'Ta '}关注的人`}
+        {props.type === 'followers' && `关注${isMyList ? '我' : ' Ta '}的人`}
+        {props.type === 'muted' && '我屏蔽掉的人'}
       </div>
       <div className="w-full md:w-[330px] h-[80vh] md:h-[400px] overflow-y-auto" ref={scrollRef}>
-        {loading && (
+        {state.loading && (
           <div className="pt-24 flex items-center justify-center">
             <Loading />
           </div>
         )}
-        {!loading && (
+        {!state.loading && (
           <div>
             {state.relations.map((relation) => {
               const isMyself = relation.to === userStore.address;
@@ -135,28 +143,49 @@ const UserList = observer((props: IProps) => {
                         alt={relation.extra.userProfile.name}
                       />
                       <div className="ml-3">
-                        <div className="text-14 truncate w-48 md:w-[200px]">{relation.extra.userProfile.name}</div>
+                        <div className="text-14 truncate w-48 md:w-[155px]">{relation.extra.userProfile.name}</div>
                       </div>
                     </div>
                   </div>
                   {!isMyself && (
                     <div>
-                      {props.type === 'following' && (  
-                        <Button size="small" onClick={() => changeRelation('unfollow', relation)} outline>
-                          取消关注
-                        </Button>
-                      )}
-                      {props.type === 'muted' && (  
-                        <Button size="small" color="red" onClick={() => changeRelation('unmute', relation)} outline>
-                          解除屏蔽
-                        </Button>
+                      {isMyList && (
+                        <div>
+                          {props.type === 'following' && (  
+                            <Button size="small" onClick={() => changeRelation('unfollow', relation)} outline>
+                              取消关注
+                            </Button>
+                          )}
+                          {props.type === 'muted' && (  
+                            <Button size="small" color="red" onClick={() => changeRelation('unmute', relation)} outline>
+                              解除屏蔽
+                            </Button>
+                          )}
+                        </div>  
                       )}
                     </div>
+                  )}
+                  {(!isMyList ||props.type === 'followers') && (  
+                    <Button
+                      size="small"
+                      outline 
+                      onClick={async () => {
+                        props.onClose();
+                        await sleep(200);
+                        history.push(`/${groupStore.groupId}/users/${relation.extra.userProfile.userAddress}`);
+                      }}>
+                      打开主页
+                    </Button>
                   )}
                 </div>
               );
             })}
-            {!loading && state.hasMore && (
+            {!state.loading && state.relations.length === 0 && (
+              <div className="py-28 text-center text-14 text-gray-400 opacity-80">
+                空空如也 ~
+              </div>
+            )}
+            {!state.loading && state.hasMore && (
               <div className="py-8 flex items-center justify-center">
                 <Loading />
               </div>

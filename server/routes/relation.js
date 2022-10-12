@@ -6,10 +6,15 @@ const getDefaultProfile = require('../utils/getDefaultProfile');
 const { keyBy } = require('lodash');
 
 router.get('/:userAddress/following', listFollowing);
+router.get('/:userAddress/followers', listFollowers);
 router.get('/:userAddress/muted', listMuted);
 
 async function listFollowing(ctx) {
   ctx.body = await list(ctx, 'following');
+}
+
+async function listFollowers(ctx) {
+  ctx.body = await list(ctx, 'followers');
 }
 
 async function listMuted(ctx) {
@@ -17,26 +22,33 @@ async function listMuted(ctx) {
 }
 
 async function list(ctx, type) {
+  const where = {};
+  if (type === 'followers') {
+    where.type = 'following';
+    where.to = ctx.params.userAddress;
+  } else {
+    where.type = type;
+    where.from = ctx.params.userAddress;
+  }
   let items = await Relation.findAll({
-    where: {
-      type,
-      from: ctx.params.userAddress
-    }
+    where
   });
+  items = items.map(item => item.toJSON());
   const profiles = await Profile.bulkGet(items.map((item) => ({
     groupId: ctx.params.groupId,
-    userAddress: item.to
+    userAddress: type === 'followers' ? item.from : item.to
   })), {
     withReplacedImage: true
   });
   const profileMap = keyBy(profiles, 'userAddress');
   items = items.map((item) => {
+    const address = type === 'followers' ? item.from : item.to;
     item.extra = {
-      userProfile: profileMap[item.userAddress] || getDefaultProfile(item.userAddress)
+      userProfile: profileMap[address] || getDefaultProfile(address)
     }
     return item;
   });
-  ctx.body = items
+  return items;
 }
 
 module.exports = router;

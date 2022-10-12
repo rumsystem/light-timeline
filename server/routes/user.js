@@ -31,12 +31,14 @@ async function get(ctx) {
     Relation.findOne({
       where: {
         type: 'following',
+        to: ctx.params.userAddress,
         from: ctx.query.viewer || ''
       }
     }),
     Relation.findOne({
       where: {
         type: 'muted',
+        to: ctx.params.userAddress,
         from: ctx.query.viewer || ''
       }
     })

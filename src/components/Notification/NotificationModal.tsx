@@ -9,6 +9,7 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { lang } from 'utils/lang';
 import CommentMessages from './CommentMessages';
 import LikeMessages from './LikeMessages';
+import FollowMessages from './FollowMessages';
 import { INotification, NotificationType } from 'apis/types';
 import { NotificationApi } from 'apis';
 import sleep from 'utils/sleep';
@@ -58,6 +59,11 @@ const Notification = observer((props: IProps) => {
       unreadCount: 0,
       text: lang.comment,
       type: 'comment',
+    },
+    {
+      unreadCount: 0,
+      text: '关注',
+      type: 'follow',
     }
   ] as ITab[];
   const state = useLocalObservable(() => ({
@@ -180,6 +186,14 @@ const Notification = observer((props: IProps) => {
             }
             {state.tab.type === 'comment' && 
               <CommentMessages
+                notifications={state.notifications}
+                unreadCount={state.unreadCount}
+                close={props.onClose}
+                toUserPage={toUserPage}
+              />
+            }
+            {state.tab.type === 'follow' && 
+              <FollowMessages
                 notifications={state.notifications}
                 unreadCount={state.unreadCount}
                 close={props.onClose}

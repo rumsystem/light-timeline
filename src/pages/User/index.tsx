@@ -6,7 +6,7 @@ import { BiEditAlt } from 'react-icons/bi';
 import { useStore } from 'store';
 import { useParams } from 'react-router-dom';
 import { ProfileApi, UserApi, PostApi } from 'apis';
-import { IProfile, IUser } from 'apis/types';
+import { IProfile } from 'apis/types';
 import openProfileEditor from 'pages/Group/openProfileEditor';
 import PostItem from 'components/Post/Item';
 import classNames from 'classnames';
@@ -42,7 +42,7 @@ export default observer(() => {
     anchorEl: null,
     showUserListModal: false,
     submitting: false,
-    userListType: 'following' as ('following' | 'muted'),
+    userListType: 'following' as ('following' | 'followers' | 'muted'),
     get fetched() {
       return this.fetchedProfile && this.fetchedPosts
     }
@@ -54,74 +54,89 @@ export default observer(() => {
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
   const scrollRef = React.useRef<HTMLInputElement>(null);
-  const postCount = postStore.userPosts.length;
 
   React.useEffect(() => {
     return () => {
       postStore.resetUserTrxIds();
     }
-  }, [])
-
-  React.useEffect(() => {
-    (async () => {
-      state.fetchingProfile = true;
-      try {
-        if (isMyself) {
-          state.profile = userStore.profile;
-        } else {
-          const profile = await ProfileApi.get(groupStore.groupId, userAddress);
-          state.profile = profile;
-        }
-        if (!user) {
-          const user = await UserApi.get(groupStore.groupId, userAddress);
-          userStore.setUser(userAddress, user);
-        }
-      } catch (err) {
-        console.log(err);
-        state.notFound = true;
-      }
-      state.fetchingProfile = false;
-      state.fetchedProfile = true;
-      document.title = state.profile.name;
-    })();
   }, []);
 
   React.useEffect(() => {
-    (async () => {
-      if (state.fetchingPosts) {
-        return;
+    if (state.fetched) {
+      state.fetchedProfile = false;
+      state.fetchedPosts = false;
+      postStore.resetUserTrxIds();
+      fetchProfile();
+      fetchPosts();
+    }
+  }, [userAddress]);
+
+  const fetchProfile = async () => {
+    state.fetchingProfile = true;
+    try {
+      if (isMyself) {
+        state.profile = userStore.profile;
+      } else {
+        const profile = await ProfileApi.get(groupStore.groupId, userAddress);
+        state.profile = profile;
       }
-      state.fetchingPosts = true;
-      try {
-        if (state.postPage === 1) {
-          postStore.resetUserTrxIds();
-        }
-        const limit = 10;
-        const posts = await PostApi.list(groupStore.groupId, {
-          userAddress,
-          viewer: userStore.address,
-          offset: (state.postPage - 1) * limit,
-          limit: limit
+      if (!user) {
+        const user = await UserApi.get(groupStore.groupId, userAddress, {
+          viewer: userStore.address
         });
-        state.hasMorePosts = posts.length === limit;
-        postStore.addUserPosts(posts);
-        const showImageSmoothly = !state.fetchedPosts && postStore.userTrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
-          if (showImageSmoothly) {
-            runInAction(() => {
-              state.invisibleOverlay = true;
-            });
-            setTimeout(() => {
-              runInAction(() => {
-                state.invisibleOverlay = false;
-              });
-            });
-          }
-      } catch (err) {
-        console.log(err);
+        userStore.setUser(userAddress, user);
       }
-      state.fetchingPosts = false;
-      state.fetchedPosts = true;
-    })();
+    } catch (err) {
+      console.log(err);
+      state.notFound = true;
+    }
+    state.fetchingProfile = false;
+    state.fetchedProfile = true;
+    document.title = state.profile.name;
+  }
+
+  React.useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchPosts = async () => {
+    if (state.fetchingPosts) {
+      return;
+    }
+    state.fetchingPosts = true;
+    try {
+      if (state.postPage === 1) {
+        postStore.resetUserTrxIds();
+      }
+      const limit = 10;
+      const posts = await PostApi.list(groupStore.groupId, {
+        userAddress,
+        viewer: userStore.address,
+        offset: (state.postPage - 1) * limit,
+        limit: limit
+      });
+      state.hasMorePosts = posts.length === limit;
+      postStore.addUserPosts(posts);
+      const showImageSmoothly = !state.fetchedPosts && postStore.userTrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+        if (showImageSmoothly) {
+          runInAction(() => {
+            state.invisibleOverlay = true;
+          });
+          setTimeout(() => {
+            runInAction(() => {
+              state.invisibleOverlay = false;
+            });
+          });
+        }
+    } catch (err) {
+      console.log(err);
+    }
+    state.fetchingPosts = false;
+    state.fetchedPosts = true;
+  }
+
+  React.useEffect(() => {
+    fetchPosts();
   }, [state.postPage]);
 
   const [sentryRef, { rootRef }] = useInfiniteScroll({
@@ -158,6 +173,7 @@ export default observer(() => {
         object: {
           type: 'Note',
           content: JSON.stringify({
+            groupId: groupStore.groupId,
             type,
             to: userAddress
           })
@@ -187,7 +203,7 @@ export default observer(() => {
     state.submitting = false;
   }
 
-  if (!state.fetched) {
+  if (!state.fetched || !user) {
     return (
       <div className="pt-[30vh] flex justify-center">
         <Loading />
@@ -241,8 +257,10 @@ export default observer(() => {
                   <span
                     className="cursor-pointer mt-2"
                     onClick={() => {
-                      state.userListType = 'following';
-                      state.showUserListModal = true;
+                      if (user.followingCount > 0) {
+                        state.userListType = 'following';
+                        state.showUserListModal = true;
+                      }
                     }}
                   >
                     <span className="text-16 font-bold">
@@ -253,6 +271,12 @@ export default observer(() => {
                   <span className="opacity-50 mx-3 mt-[10px]">|</span>
                   <span
                     className="cursor-pointer mt-2"
+                    onClick={() => {
+                      if (user.followerCount > 0) {
+                        state.userListType = 'followers';
+                        state.showUserListModal = true;
+                      }
+                    }}
                   >
                     <span className="text-16 font-bold">{user.followerCount}</span>{' '}
                     被关注
@@ -268,31 +292,7 @@ export default observer(() => {
                     }}>
                     <RiMoreFill className="text-20 text-white cursor-pointer" />
                   </div>
-                  {!isMyself && (
-                    <div>
-                      {user.following ? (
-                        <Button color="white" outline onClick={() => changeRelation('unfollow')}>
-                          已关注
-                        </Button>
-                      ) : (
-                        <Button color='white' onClick={() => changeRelation('follow')}>关注</Button>
-                      )}
-                    </div>
-                  )}
-                  {isMyself && (
-                    <Button
-                      outline
-                      color="white"
-                      size={isMobile ? 'small' : 'normal'}
-                      onClick={openProfileEditor}
-                    >
-                      <div className="flex items-center text-16 mr-1">
-                        <BiEditAlt />
-                      </div>
-                      编辑资料
-                    </Button>
-                  )}
-                  {!isMyself && user.muted && (
+                  {(isMyself || !user.muted) && (
                     <Menu
                       anchorEl={state.anchorEl}
                       getContentAnchorEl={null}
@@ -305,7 +305,7 @@ export default observer(() => {
                       {isMyself && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
-                          state.userListType = 'following';
+                          state.userListType = 'muted';
                           state.showUserListModal = true;
                         }}>  
                           <div className="py-1 pl-2 pr-3 flex items-center text-red-400">
@@ -332,7 +332,31 @@ export default observer(() => {
                       )}
                     </Menu>
                   )}
-                  {user.muted && (
+                  {!isMyself && (
+                    <div>
+                      {user.following ? (
+                        <Button color="white" outline onClick={() => changeRelation('unfollow')}>
+                          已关注
+                        </Button>
+                      ) : (
+                        <Button color='white' onClick={() => changeRelation('follow')}>关注</Button>
+                      )}
+                    </div>
+                  )}
+                  {isMyself && (
+                    <Button
+                      outline
+                      color="white"
+                      size={isMobile ? 'small' : 'normal'}
+                      onClick={openProfileEditor}
+                    >
+                      <div className="flex items-center text-16 mr-1">
+                        <BiEditAlt />
+                      </div>
+                      编辑资料
+                    </Button>
+                  )}
+                  {!isMyself && user.muted && (
                     <Button
                       isDoing={state.submitting}
                       color='red'
@@ -361,7 +385,7 @@ export default observer(() => {
               </div>
             ))}
           </div>
-          {isMyself && state.fetchedPosts && !state.fetchingPosts && postCount === 0 && (
+          {isMyself && state.fetchedPosts && !state.fetchingPosts && user.postCount === 0 && (
             <div className="flex justify-center py-16">
               <Button
                 outline
@@ -382,7 +406,7 @@ export default observer(() => {
               </Button>
             </div>
           )}
-          {!isMyself && state.fetchedPosts && postCount === 0 && (
+          {!isMyself && state.fetchedPosts && user.postCount === 0 && (
             <div className="py-32 text-center text-gray-500 text-14">
               还没有发布过内容
             </div>
@@ -395,6 +419,7 @@ export default observer(() => {
         </div>
       </div>
       <UserListModal
+        userAddress={userAddress}
         type={state.userListType}
         open={state.showUserListModal}
         onClose={() => {

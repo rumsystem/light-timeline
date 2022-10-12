@@ -81,7 +81,8 @@ export default observer((props: IProps) => {
         userStore.address,
         'like');
       const count2 = await NotificationApi.getUnreadCount(groupStore.groupId, userStore.address, 'comment');
-      state.unreadCount = count1 + count2;
+      const count3 = await NotificationApi.getUnreadCount(groupStore.groupId, userStore.address, 'follow');
+      state.unreadCount = count1 + count2 + count3;
     } catch (err) {
       console.log(err);
     }
@@ -167,7 +168,7 @@ export default observer((props: IProps) => {
           )}
           {isPc && !userStore.isLogin && (
             <div className="px-2 opacity-70">
-              <Button outline size="mini">登录</Button>
+              <Button outline size="mini" onClick={openLoginModal}>登录</Button>
             </div>
           )}
           {userStore.isLogin && (

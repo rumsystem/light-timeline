@@ -12,6 +12,15 @@ export default {
     return item as IRelation[];
   },
 
+
+  async listFollowers(groupId: string, userAddress: string, options: {
+    limit: number,
+    offset: number
+  }) {
+    const item = await request(`${API_BASE_URL}/${groupId}/relations/${userAddress}/followers?${qs.stringify(options || {})}`);
+    return item as IRelation[];
+  },
+
   async listMuted(groupId: string, userAddress: string, options: {
     limit: number,
     offset: number

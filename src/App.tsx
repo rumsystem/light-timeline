@@ -92,12 +92,14 @@ const Preload = observer(() => {
         if (userStore.isLogin && !createdByToken) {
           const [profile, user] = await Promise.all([
             ProfileApi.get(groupStore.groupId, userStore.address),
-            UserApi.get(groupStore.groupId, userStore.address)
+            UserApi.get(groupStore.groupId, userStore.address, {
+              viewer: userStore.address
+            })
           ]);
           if (isEmpty(userStore.profile)) {
             userStore.setProfile(profile);
           }
-          userStore.setUser(user);
+          userStore.setUser(userStore.address, user);
         }
         groupStore.setLoading(false);
         initRelationGroup();

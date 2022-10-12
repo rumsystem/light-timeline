@@ -8,7 +8,7 @@ import { useStore } from 'store';
 import { isMobile } from 'utils/env';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
-import Sidebar from 'components/Sidebar';
+import Sidebar from 'components';
 import Button from 'components/Button';
 
 export default observer(() => {

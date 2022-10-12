@@ -10,6 +10,7 @@ const UniqueCounter = require('./database/sequelize/uniqueCounter');
 const Notification = require('./database/sequelize/notification');
 const Feature = require('./database/sequelize/feature');
 const Activity = require('./database/sequelize/activity');
+const Relation = require('./database/sequelize/relation');
 
 (async () => {
   await sleep(5000);
@@ -32,6 +33,7 @@ const Activity = require('./database/sequelize/activity');
     await Notification.sync({ force: true });
     await Feature.sync({ force: true });
     await Activity.sync({ force: true });
+    await Relation.sync({ force: true });
   } catch (err) {
     console.log(err);
   }

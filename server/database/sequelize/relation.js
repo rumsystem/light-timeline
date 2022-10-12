@@ -8,6 +8,9 @@ const relation = sequelize.define('relations', {
     primaryKey: true,
     autoIncrement: true
   },
+  groupId: {
+    type: Sequelize.STRING,
+  },
   type: {
     type: Sequelize.STRING,
     allowNull: false,

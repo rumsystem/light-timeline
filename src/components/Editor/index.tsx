@@ -511,36 +511,26 @@ const Editor = observer((props: IProps) => {
                 />
               )}
             </div>
-            {userStore.isLogin && (
-              <Tooltip
-                enterDelay={1500}
-                enterNextDelay={1500}
-                placement="left"
-                title="快捷键：Ctrl + Enter 或 Cmd + Enter"
-                arrow
-                interactive
-              >
-                <div className={props.buttonClassName || ''}>
-                  <Button
-                    size="small"
-                    className={classNames({
-                      'opacity-30': !readyToSubmit,
-                    })}
-                    onClick={submit}
-                  >
-                    {props.submitButtonText || (isUpdating ? lang.update : lang.publish)}
-                  </Button>
-                </div>
-              </Tooltip>
-            )}
-            {!userStore.isLogin && (
-              <Button
-                size="small"
-                onClick={openLoginModal}
-              >
-                登录
-              </Button>
-            )}
+            <Tooltip
+              enterDelay={1500}
+              enterNextDelay={1500}
+              placement="left"
+              title="快捷键：Ctrl + Enter 或 Cmd + Enter"
+              arrow
+              interactive
+            >
+              <div className={props.buttonClassName || ''}>
+                <Button
+                  size="small"
+                  className={classNames({
+                    'opacity-30': !readyToSubmit,
+                  })}
+                  onClick={submit}
+                >
+                  {props.submitButtonText || (isUpdating ? lang.update : lang.publish)}
+                </Button>
+              </div>
+            </Tooltip>
           </div>
         </div>
       )}
