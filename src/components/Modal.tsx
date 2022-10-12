@@ -14,6 +14,7 @@ export default (props: IProps) => {
     return (
       <DrawerModal
         hideCloseButton={hideCloseButton}
+        transitionDuration={DialogProps.transitionDuration}
         open={props.open}
         onClose={props.onClose as any}
       >

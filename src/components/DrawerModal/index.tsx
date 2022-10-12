@@ -1,11 +1,11 @@
 import React from 'react';
-import Drawer from '@material-ui/core/Drawer';
+import { Drawer, DrawerProps } from '@material-ui/core';
 import { MdClear } from 'react-icons/md';
 import classNames from 'classnames';
 
 import './index.css';
 
-interface Props {
+interface Props extends DrawerProps {
   open: boolean;
   onClose: () => unknown;
   hideCloseButton?: boolean;
@@ -29,6 +29,7 @@ export default (props: Props) => {
       anchor="bottom"
       open={open}
       onClose={onClose}
+      transitionDuration={props.transitionDuration}
       ModalProps={{ className: `drawer-modal ${useCustomZIndex ? 'custom-z-index' : ''}` }}
     >
       <div
