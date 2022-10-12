@@ -4,12 +4,13 @@ import { initSocket, getSocket } from 'utils/socket';
 import { useStore } from 'store';
 import { TrxStorage } from 'apis/common';
 import { IComment, IPost } from 'apis/types';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import Sidebar from 'components/Sidebar';
 
 export default observer(() => {
   const { userStore, commentStore, postStore, groupStore, pathStore } = useStore();
   const location = useLocation();
+  const history = useHistory();
   const state = useLocalObservable(() => ({
     ready: false,
   }));
@@ -90,6 +91,16 @@ export default observer(() => {
       };
       body.addEventListener('click', listener);
       body.addEventListener('touchstart', listener, { passive: false });
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const { push } = history;
+    history.push = (path: string) => {
+      if (path === window.location.pathname) {
+        return;
+      }
+      push(path);
     }
   }, []);
 

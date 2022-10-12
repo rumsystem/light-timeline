@@ -181,7 +181,9 @@ export default observer((props: IProps) => {
             {likeCount ? (
               <span className="mr-[10px] md:mr-1">{likeCount || ''}</span>
             )
-              : <span className="invisible md:visible">赞</span>}
+              : <span className={classNames({
+                'invisible': isMobile
+              })}>赞</span>}
           </div>
           <div
             className='flex items-center p-2 mr-5 cursor-pointer tracking-wide hover:text-gray-33'

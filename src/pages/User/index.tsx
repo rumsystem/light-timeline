@@ -4,7 +4,6 @@ import { isMobile } from 'utils/env';
 import Button from 'components/Button';
 import { BiEditAlt } from 'react-icons/bi';
 import { useStore } from 'store';
-import { useParams } from 'react-router-dom';
 import { ProfileApi, UserApi, PostApi } from 'apis';
 import { IProfile } from 'apis/types';
 import openProfileEditor from 'components/openProfileEditor';
@@ -26,11 +25,12 @@ import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
 import store from 'store2';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
-import { useActivate } from 'react-activation';
+import { useActivate, useUnactivate } from 'react-activation';
+import { RouteChildrenProps } from 'react-router-dom';
 
 import './index.css';
 
-export default observer(() => {
+export default observer((props: RouteChildrenProps) => {
   const {
     userStore,
     groupStore,
@@ -43,43 +43,59 @@ export default observer(() => {
     profile: {} as IProfile,
     notFound: false,
     postPage: 1,
+    invisible: false,
     invisibleOverlay: false,
-    fetchedProfile: false,
+    fetched: false,
     fetchingPosts: false,
-    fetchedPosts: false,
     hasMorePosts: false,
     anchorEl: null,
     showUserListModal: false,
     submitting: false,
     userListType: 'following' as ('following' | 'followers' | 'muted'),
-    get fetched() {
-      return this.fetchedProfile && this.fetchedPosts
-    }
+    userAddressChanged: false,
   }));
-  let { userAddress } = useParams() as { userAddress: string };
+  const { userAddress } = props.match?.params as any;
   const { profile } = state;
   const user = userStore.userMap[userAddress]!;
   const isMyself = userStore.address === userAddress;
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
 
+  React.useEffect(() => {
+    (async () => {
+      const fetched = state.fetched;
+      state.fetched = false;
+      state.fetchingPosts = true;
+      state.postPage = 1;
+      postStore.resetUserTrxIds();
+      await Promise.all([
+        fetchProfile(),
+        fetchPosts(),
+      ]);
+      if (fetched) {
+        await sleep(200);
+      }
+      state.fetched = true;
+      if (fetched) {
+        await sleep(200);
+        scrollToTop();
+        state.invisible = false;
+      }
+    })();
+  }, [userAddress]);
+  
   useActivate(() => {
-    userAddress = window.location.pathname.split('/users/')[1];
+    if (state.fetched) {
+      (async () => {
+        await sleep(200);
+        state.invisible = false;
+      })();
+    }
   });
 
-  React.useEffect(() => {
-    if (state.fetched) {
-      runInAction(() => {
-        state.fetchingPosts = true;
-        state.postPage = 1;
-        state.fetchedProfile = false;
-        state.fetchedPosts = false;
-      });
-      postStore.resetUserTrxIds();
-      fetchProfile();
-      fetchPosts();
-    }
-  }, [userAddress]);
+  useUnactivate(() => {
+    state.invisible = true;
+  });
 
   const fetchProfile = async () => {
     try {
@@ -99,7 +115,6 @@ export default observer(() => {
       console.log(err);
       state.notFound = true;
     }
-    state.fetchedProfile = true;
     document.title = state.profile.name;
   }
 
@@ -122,7 +137,7 @@ export default observer(() => {
       });
       state.hasMorePosts = posts.length === limit;
       postStore.addUserPosts(posts);
-      const showImageSmoothly = !state.fetchedPosts && postStore.userTrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+      const showImageSmoothly = !state.fetched && postStore.userTrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
         if (showImageSmoothly) {
           runInAction(() => {
             state.invisibleOverlay = true;
@@ -137,7 +152,6 @@ export default observer(() => {
       console.log(err);
     }
     state.fetchingPosts = false;
-    state.fetchedPosts = true;
   }
 
   React.useEffect(() => {
@@ -234,7 +248,9 @@ export default observer(() => {
   return (
     <div className="box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent pb-16" ref={rootRef}>
       <TopPlaceHolder />
-      <div className="w-full md:w-[600px] box-border mx-auto md:pt-5">
+      <div className={classNames({
+        'invisible': state.invisible
+      }, "w-full md:w-[600px] box-border mx-auto md:pt-5")}>
         <div>
           <div className="flex items-stretch overflow-hidden relative p-6 pb-5 md:pb-6 px-5 md:px-8 md:rounded-12">
             <div
@@ -425,7 +441,7 @@ export default observer(() => {
               </div>
             ))}
           </div>
-          {isMyself && state.fetchedPosts && !state.fetchingPosts && user.postCount === 0 && (
+          {isMyself && state.fetched && !state.fetchingPosts && user.postCount === 0 && (
             <div className="flex justify-center py-16">
               <Button
                 outline
@@ -449,12 +465,12 @@ export default observer(() => {
               </Button>
             </div>
           )}
-          {!isMyself && state.fetchedPosts && user.postCount === 0 && (
+          {!isMyself && state.fetched && user.postCount === 0 && (
             <div className="py-32 text-center text-gray-500 text-14">
               还没有发布过内容
             </div>
           )}
-          {state.fetchedPosts && state.fetchingPosts && (
+          {state.fetched && state.fetchingPosts && (
             <div className="pt-6 md:pt-3 pb-12 md:pb-5">
               <Loading />
             </div>

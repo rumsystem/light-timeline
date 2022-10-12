@@ -178,6 +178,10 @@ export default observer((props: IProps) => {
           <div className="avatar absolute top-0 left-0">
             <Link to={`/${comment.groupId}/users/${comment.userAddress}`}>
               <img
+                onClick={async () => {
+                  await sleep(400);
+                  commentStore.mobile.topCommentPage.setOpen(false);
+                }}
                 src={comment.extra.userProfile.avatar}
                 width={34}
                 height={34}
@@ -191,8 +195,12 @@ export default observer((props: IProps) => {
               <div className="flex items-center leading-none text-14 text-gray-99 relative">
                 <div>
                   <div className="flex items-center">
-                    <Link to={`/${comment.groupId}/users/${comment.userAddress}`}>
+                    <Link to={`/${comment.groupId}/users/${comment.userAddress}`} >
                       <span
+                        onClick={async () => {
+                          await sleep(400);
+                          commentStore.mobile.topCommentPage.setOpen(false);
+                        }}
                         className='truncate text-14 text-gray-88 name-max-width block'
                       >
                         {comment.extra.userProfile.name}
