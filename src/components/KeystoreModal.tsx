@@ -24,7 +24,7 @@ const Keystore = observer((props: IProps) => {
     percent: 0
   }));
   return (
-    <div className="p-8 w-full md:w-[560px]">
+    <div className="p-8 w-full md:w-[560px] bg-white rounded-12">
        <TextField
         multiline
         name='keystore'

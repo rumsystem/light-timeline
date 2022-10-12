@@ -21,7 +21,7 @@ const Main = observer(() => {
   }));
 
   return (
-    <div className="box-border px-16 py-12 pb-10">
+    <div className="box-border px-16 py-12 pb-10 bg-white rounded-12">
       <div className="flex justify-center">
         <Button
           size="large"

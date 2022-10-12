@@ -103,7 +103,7 @@ const Modal = observer((props: IModalProps) => {
   }
 
   const main = () => (
-    <div className="w-full md:w-[450px] bg-white text-center pb-8 pt-12 px-4 md:px-10">
+    <div className="w-full md:w-[450px] bg-white text-center pb-8 pt-12 px-4 md:px-10 rounded-12">
       <div>
         <div className="text-18 font-bold text-gray-4a">{lang.editProfile}</div>
         <div className="mt-3">

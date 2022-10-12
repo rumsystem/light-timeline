@@ -50,7 +50,7 @@ const Main = observer((props: IModalProps) => {
   }
 
   return (
-    <div className="box-border px-12 py-12 pb-10 w-full md:w-[330px]">
+    <div className="box-border px-12 py-12 pb-10 w-full md:w-[330px] bg-white rounded-12">
       <TextField
         autoFocus={isPc}
         label="输入关键词"

@@ -55,7 +55,7 @@ const Modal = observer((props: IModalProps) => {
   }, [props.trxId]);
 
   const main = () => (
-    <div className="bg-white rounded-0 p-8 relative w-full md:w-[540px] h-[90vh] md:h-auto box-border">
+    <div className="bg-white rounded-12 p-8 relative w-full md:w-[540px] h-[90vh] md:h-auto box-border">
       <div className="pt-2 px-6 pb-5">
         <div className="text-18 font-bold text-gray-700 text-center pb-5">
           {lang.blockInfo}

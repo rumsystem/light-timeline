@@ -36,7 +36,7 @@ const PostDetail = observer(() => {
   }, []);
 
   return (
-    <div className="bg-white rounded-0">
+    <div className="bg-white rounded-12">
       <div className="w-full md:w-[600px] box-border mx-auto h-[90vh] md:h-[80vh] relative">
         {!state.loading && (
           <PostItem

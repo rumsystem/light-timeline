@@ -45,7 +45,7 @@ const Editor = observer((props: IProps) => {
   };
 
   return (
-    <div className="mt-2 md:mt-0 comment-editor-container">
+    <div className="mt-2 md:mt-0 comment-editor-container bg-white rounded-12">
       <div className="mb-2">
         {replyingComment && (
           <div style={{ marginLeft: '1px' }} className="md:pl-3 pt-1">

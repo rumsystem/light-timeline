@@ -54,7 +54,7 @@ const PostEditor = observer((props: {
   }
 
   return (
-    <div className="w-full md:w-[600px] box-border px-5 md:px-8 py-5">
+    <div className="w-full md:w-[600px] box-border px-5 md:px-8 py-5 bg-white rounded-12">
       <div className="items-center pb-3 hidden md:flex">
         <Avatar
           className="cursor-pointer"

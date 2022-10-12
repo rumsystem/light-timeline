@@ -87,7 +87,7 @@ const Modal = observer((props: IModalProps) => {
   };
 
   const main = () => (
-    <div className="h-[90vh] md:h-[70vh] overflow-y-auto bg-white rounded-0 p-8 px-5 md:px-10 box-border">
+    <div className="h-[90vh] md:h-[70vh] overflow-y-auto bg-white rounded-12 p-8 px-5 md:px-10 box-border">
       <div className="w-full md:w-[455px]">
         {state.loading && (
           <div className="py-32">
