@@ -3,7 +3,7 @@ const Post = require('../database/post');
 const truncate = require('../utils/truncate');
 const { assert, Errors } = require('../utils/validator');
 const Relation = require('../database/sequelize/relation');
-const { Op } = require("sequelize");
+const { Op, fn } = require("sequelize");
 
 router.get('/:trxId', get);
 router.get('/', list);
@@ -87,12 +87,10 @@ async function list(ctx) {
       [Op.gte]: ~~ctx.query.minComment
     }
   }
-  
+
   let posts = await Post.list({
     where,
-    order: [
-      ['timestamp', ctx.query.order === 'ASC' ? 'ASC' : 'DESC']
-    ],
+    order: [ctx.query.type === 'random' ? [ fn('RANDOM') ] : ['timestamp', ctx.query.order === 'ASC' ? 'ASC' : 'DESC']],
     limit: Math.min(~~ctx.query.limit || 10, 100),
     offset: ctx.query.offset || 0
   }, {

@@ -14,6 +14,9 @@ const tabs: ITab[] = [{
 }, {
   text: '关注',
   value: 'following'
+}, {
+  text: '发现',
+  value: 'random'
 }];
 
 export default observer(() => {

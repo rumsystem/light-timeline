@@ -175,7 +175,7 @@ export default observer(() => {
           )}
           {state.fetched && postStore.total === 0 && (
             <div className="py-[30vh] text-center text-gray-500 text-14 tracking-wider opacity-80">
-              {postStore.feedType === 'latest' && '来发布一条内容吧 ~'}
+              {['latest', 'random'].includes(postStore.feedType) && '来发布一条内容吧 ~'}
               {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
               {postStore.feedType === 'latest' && isMobile && !userStore.isLogin && (
                 <div className="flex justify-center mt-5">
