@@ -10,7 +10,6 @@ import { BsInfo } from 'react-icons/bs';
 import openGroupInfo from 'components/openGroupInfo';
 import Avatar from 'components/Avatar';
 import sleep from 'utils/sleep';
-import useScroll from 'hooks/useScroll';
 import { MdArrowUpward } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
@@ -34,12 +33,9 @@ import Button from 'components/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from './Tabs';
+import { scrollToTop } from 'components/TopPlaceHolder';
 
-interface IProps {
-  scrollRef: React.RefObject<HTMLElement>
-}
-
-export default observer((props: IProps) => {
+export default observer(() => {
   const {
     userStore,
     postStore,
@@ -49,8 +45,8 @@ export default observer((props: IProps) => {
     pathStore
   } = useStore();
   const state = useLocalObservable(() => ({
-    showBackToTop: false,
-    showPostEditorEntry: false,
+    showBackToTop: true,
+    showPostEditorEntry: true,
     openMessageModal: false,
     consoleClickCount: 0,
     unreadCount: 0,
@@ -63,17 +59,7 @@ export default observer((props: IProps) => {
 
   const isHomePage = location.pathname === `/${groupStore.groupId}`;
   const isSearchPage = location.pathname === `/${groupStore.groupId}/search`;
-  // const isUserPage = location.pathname.startsWith(`/${groupStore.groupId}/users/`);
   const isMyUserPage = location.pathname === `/${groupStore.groupId}/users/${userStore.address}`;
-
-  useScroll({
-    scrollRef: props.scrollRef,
-    threshold: window.innerHeight,
-    callback: (yes) => {
-      state.showBackToTop = yes;
-      state.showPostEditorEntry = yes;
-    }
-  });
 
   const fetchUnreadCount = async () => {
     try {
@@ -116,11 +102,9 @@ export default observer((props: IProps) => {
     }
     const post = await openEditor();
     if (post) {
-      await sleep(300);
-      if ((props.scrollRef.current?.scrollTop || 0) > 0) {
-        props.scrollRef.current?.scrollTo(0, 0);
-        await sleep(400);
-      }
+      await sleep(200);
+      scrollToTop();
+      await sleep(200);
       if (isMyUserPage) {
         postStore.addUserPost(post);
         if (postStore.feedType === 'latest') {
@@ -193,7 +177,7 @@ export default observer((props: IProps) => {
                 </div>
               )}
               <div
-                className="mr-5 px-1 py-2 cursor-pointer"
+                className="px-6 md:mr-5 md:px-1 py-2 cursor-pointer"
                 onClick={() => { 
                   state.openMessageModal = true;
                 }}>
@@ -269,23 +253,12 @@ export default observer((props: IProps) => {
           )}
           {state.showBackToTop && (
             <Fade in={true} timeout={350}>
-              <Tooltip
-                enterDelay={200}
-                enterNextDelay={200}
-                placement="left"
-                title="回到顶部"
-                arrow
-                interactive
-                >
-                <div
-                  className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center cursor-pointer border border-gray-c4'
-                  onClick={() => {
-                    props.scrollRef.current?.scroll(0, 0);
-                  }}
-                >
-                  <MdArrowUpward className="text-20 text-gray-af" />
-                </div>
-              </Tooltip>
+              <div
+                className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center cursor-pointer border border-gray-c4'
+                onClick={scrollToTop}
+              >
+                <MdArrowUpward className="text-20 text-gray-af" />
+              </div>
             </Fade>
           )}
 
@@ -298,7 +271,7 @@ export default observer((props: IProps) => {
             interactive
             >
               <div
-                className='mt-8 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer border border-gray-c4'
+                className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border border-gray-c4 hidden'
                 onClick={() => openGroupInfo(groupStore.groupId)}
               >
                 <BsInfo className="text-24 text-gray-af" />

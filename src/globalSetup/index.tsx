@@ -1,14 +1,18 @@
 import React from 'react';
-import { observer } from 'mobx-react-lite';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { initSocket, getSocket } from 'utils/socket';
 import { useStore } from 'store';
 import { TrxStorage } from 'apis/common';
 import { IComment, IPost } from 'apis/types';
 import { useLocation } from 'react-router-dom';
+import Sidebar from 'components/Sidebar';
 
 export default observer(() => {
   const { userStore, commentStore, postStore, groupStore, pathStore } = useStore();
   const location = useLocation();
+  const state = useLocalObservable(() => ({
+    ready: false,
+  }));
 
   React.useEffect(() => {
     if (location.pathname === `/${groupStore.groupId}` || !pathStore.prevPath) {
@@ -21,6 +25,7 @@ export default observer(() => {
   
   React.useEffect(() => {
     initSocket();
+    state.ready = true;
   }, []);
 
   React.useEffect(() => {
@@ -86,5 +91,9 @@ export default observer(() => {
     }
   }, []);
 
-  return null;
+  if (!state.ready) {
+    return null
+  }
+  
+  return <Sidebar />;
 });

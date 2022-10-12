@@ -39,6 +39,7 @@ const App = observer(() => {
           <Route path="/:groupId" component={Preload} />
           {!groupStore.loading && (
             <div>
+              <GlobalSetup />
               <Route path="/:groupId" exact component={() => (
                 <KeepAlive>
                   <Group />
@@ -51,7 +52,6 @@ const App = observer(() => {
               )} />
               <Route path="/:groupId/posts/:trxId" exact component={PostDetail} />
               <Route path="/:groupId/users/:userAddress" exact component={User} />
-              <GlobalSetup />
               <PostDetailModal />
               {userStore.isLogin && <CommentReplyModal />}
               {userStore.isLogin && <NewFeaturesModal />}

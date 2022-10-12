@@ -13,7 +13,6 @@ import classNames from 'classnames';
 import { runInAction } from 'mobx';
 import Loading from 'components/Loading';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import Sidebar from 'components/Sidebar';
 import openEditor from 'components/Post/OpenEditor';
 import sleep from 'utils/sleep';
 import { RiMoreFill } from 'react-icons/ri';
@@ -26,6 +25,7 @@ import openLoginModal from 'components/openLoginModal';
 import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
 import store from 'store2';
+import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
 
 import './index.css';
 
@@ -62,7 +62,6 @@ export default observer(() => {
   const isMyself = userStore.address === userAddress;
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
-  const scrollRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if (state.fetched) {
@@ -151,9 +150,6 @@ export default observer(() => {
     },
   });
 
-  React.useEffect(() => {
-    rootRef(scrollRef.current);
-  }, [scrollRef.current]);
 
   React.useEffect(() => {
     if (isMyself) {
@@ -227,7 +223,8 @@ export default observer(() => {
   }
 
   return (
-    <div className="pt-[40px] md:pt-[42px] box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent" ref={scrollRef}>
+    <div className="box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent" ref={rootRef}>
+      <TopPlaceHolder />
       <div className="w-full md:w-[600px] box-border mx-auto md:pt-5">
         <div>
           <div className="flex items-stretch overflow-hidden relative p-6 pb-5 md:pb-6 px-5 md:px-8 md:rounded-12">
@@ -292,7 +289,7 @@ export default observer(() => {
                 <div className="flex items-center">
                   {!user.muted && (
                     <div
-                      className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-80"
+                      className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-60 md:opacity-80"
                       onClick={(e: any) => {
                         state.anchorEl = e.currentTarget
                       }}>
@@ -427,7 +424,7 @@ export default observer(() => {
                   const post = await openEditor();
                   if (post) {
                     await sleep(400);
-                    scrollRef.current?.scrollTo(0, 0);
+                    scrollToTop();
                     await sleep(200);
                     postStore.addUserPost(post);
                     if (postStore.feedType === 'latest') {
@@ -462,7 +459,6 @@ export default observer(() => {
         onClose={() => {
           state.showUserListModal = false;
         }} />
-      <Sidebar scrollRef={scrollRef} />
       <div ref={sentryRef} />
     </div>
   )

@@ -521,7 +521,7 @@ const Editor = observer((props: IProps) => {
             >
               <div className={props.buttonClassName || ''}>
                 <Button
-                  size="small"
+                  size={isMobile ? 'large' : 'small'}
                   className={classNames({
                     'opacity-30': !readyToSubmit,
                   })}

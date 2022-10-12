@@ -92,7 +92,7 @@ const Editor = observer((props: IProps) => {
                   }
                 } catch (err) {}
               }}
-              size="small"
+              size="large"
               isDoing={props.isCreating}
               color={state.value ? 'primary' : 'gray'}
             >

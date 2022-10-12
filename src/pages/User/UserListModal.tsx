@@ -30,7 +30,6 @@ const UserList = observer((props: IProps) => {
     submitting: false,
     relations: [] as IRelation[],
   }));
-  const scrollRef = React.useRef<HTMLInputElement>(null);
   const history = useHistory();
   const isMyList = props.userAddress === userStore.address;
 
@@ -63,10 +62,6 @@ const UserList = observer((props: IProps) => {
       state.page += 1;
     },
   });
-
-  React.useEffect(() => {
-    rootRef(scrollRef.current);
-  }, [scrollRef.current]);
 
   const changeRelation = async (type: 'unfollow' | 'unmute', relation: IRelation) => {
     if (state.submitting) {
@@ -113,7 +108,7 @@ const UserList = observer((props: IProps) => {
         {props.type === 'followers' && `关注${isMyList ? '我' : ' Ta '}的人`}
         {props.type === 'muted' && '我屏蔽掉的人'}
       </div>
-      <div className="w-full md:w-[330px] h-[80vh] md:h-[400px] overflow-y-auto" ref={scrollRef}>
+      <div className="w-full md:w-[330px] h-[80vh] md:h-[400px] overflow-y-auto" ref={rootRef}>
         {state.loading && (
           <div className="pt-24 flex items-center justify-center">
             <Loading />

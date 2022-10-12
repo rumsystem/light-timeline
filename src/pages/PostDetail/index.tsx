@@ -8,7 +8,6 @@ import { useStore } from 'store';
 import { isMobile } from 'utils/env';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
-import Sidebar from 'components/Sidebar';
 import Button from 'components/Button';
 
 export default observer(() => {
@@ -19,7 +18,6 @@ export default observer(() => {
   const { trxId } = useParams() as { trxId: string };
   const post = postStore.map[trxId];
   const history = useHistory();
-  const scrollRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if (post) {
@@ -84,7 +82,7 @@ export default observer(() => {
   }
 
   return (
-    <div className="pt-[40px] md:pt-[42px] box-border w-full overflow-y-auto h-screen" id="post-detail-page" ref={scrollRef}>
+    <div className="box-border w-full overflow-y-auto h-screen" id="post-detail-page">
       <div className="w-full md:w-[600px] box-border mx-auto min-h-screen md:py-5">
         <PostItem
           post={post as IPost}
@@ -92,7 +90,6 @@ export default observer(() => {
           hideBottom={isMobile}
         />
       </div>
-      <Sidebar scrollRef={scrollRef} />
     </div>
   )
 })
