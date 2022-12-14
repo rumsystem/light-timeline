@@ -101,7 +101,7 @@ export default observer((props: RouteChildrenProps) => {
   const fetchPosts = async () => {
     state.fetchingPosts = true;
     try {
-      const limit = 15;
+      const limit = isMobile ? 10 : 15;
       const posts = await PostApi.list({
         groupId: groupId || '',
         type: 'latest',

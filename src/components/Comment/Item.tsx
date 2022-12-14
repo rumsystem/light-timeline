@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import classNames from 'classnames';
-import urlify from 'utils/urlify';
+import replaceContent from 'utils/replaceContent';
 import ago from 'utils/ago';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 import Avatar from 'components/Avatar';
@@ -235,7 +235,7 @@ export default observer((props: IProps) => {
                         : '：'}
                       <span
                         dangerouslySetInnerHTML={{
-                          __html: urlify(`${comment.content}`),
+                          __html: replaceContent(`${comment.content}`),
                         }}
                       />
                       {comment.images && comment.images.length > 0 && (
@@ -278,7 +278,7 @@ export default observer((props: IProps) => {
                     )}
                     ref={commentRef}
                     dangerouslySetInnerHTML={{
-                      __html: urlify(comment.content),
+                      __html: replaceContent(comment.content),
                     }}
                   />
 
