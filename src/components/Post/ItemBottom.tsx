@@ -5,7 +5,6 @@ import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 import Comment from 'components/Comment';
 import CommentMobile from 'components/Comment/Mobile';
 import { TrxStorage, OBJECT_STATUS_DELETED_LABEL } from 'apis/common';
-import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
 import { useStore } from 'store';
 import classNames from 'classnames';
@@ -16,7 +15,7 @@ import sleep from 'utils/sleep';
 import openEditor from 'components/Post/OpenEditor';
 import openLoginModal from 'components/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
-import { AiOutlineLink } from 'react-icons/ai';
+import { TiArrowForwardOutline } from 'react-icons/ti';
 import { lang } from 'utils/lang';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -118,23 +117,38 @@ export default observer((props: IProps) => {
   return (
     <div>
       {!props.hideBottom && (
-        <div className="pl-12 ml-1 flex items-center text-gray-88 leading-none text-12">
+        <div className="pl-12 ml-1 flex items-center dark:text-white dark:text-opacity-60 text-gray-88 leading-none text-12">
           <div
-            className="text-12 tracking-wide cursor-pointer mr-[20px] mt-[-1px] opacity-80 hidden md:block"
+            className={classNames(
+              {
+                'dark:text-white dark:text-opacity-70 text-gray-33': liked,
+              },
+              'flex items-center pl-0 p-2 pr-5 cursor-pointer tracking-wide dark:hover:text-white hover:text-gray-33',
+            )}
             onClick={() => {
-              if (!inPostDetail) {
-                history.push(`/posts/${post.trxId}`)
-              }
+              updateCounter(post.trxId);
             }}
           >
-            {ago(post.timestamp)}
+            <div className="text-16 mr-[6px] opacity-90">
+              {liked ? (
+                <RiThumbUpFill className="dark:text-white dark:text-opacity-60 text-black opacity-60 dark:opacity-80" />
+              ) : (
+                <RiThumbUpLine />
+              )}
+            </div>
+            {likeCount ? (
+              <span className="mr-[10px] md:mr-1">{likeCount || ''}</span>
+            )
+              : <span className={classNames({
+                'invisible': isMobile
+              })}>赞</span>}
           </div>
           <div
             className={classNames(
               {
-                'text-gray-33': state.showComment,
+                'dark:text-white dark:text-opacity-60 text-gray-33': state.showComment,
               },
-              'flex items-center p-2 pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide hover:text-gray-33 mt-[-1px]',
+              'flex items-center p-2 pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide dark:hover:text-white hover:text-gray-33 mt-[-1px]',
             )}
             onClick={() => {
               if (inPostDetail) {
@@ -150,7 +164,7 @@ export default observer((props: IProps) => {
           >
             <div className="text-16 mr-[6px] opacity-90">
               {state.showComment ? (
-                <FaComment className="text-black opacity-60" />
+                <FaComment className="dark:text-white dark:text-opacity-60 text-black opacity-60 dark:opacity-80" />
               ) : (
                 <FaRegComment />
               )}
@@ -161,32 +175,7 @@ export default observer((props: IProps) => {
               : <span className="hidden md:block">评论</span>}
           </div>
           <div
-            className={classNames(
-              {
-                'text-gray-33': liked,
-              },
-              'flex items-center p-2 md:mr-5 cursor-pointer tracking-wide hover:text-gray-33',
-            )}
-            onClick={() => {
-              updateCounter(post.trxId);
-            }}
-          >
-            <div className="text-16 mr-[6px] opacity-90">
-              {liked ? (
-                <RiThumbUpFill className="text-black opacity-60" />
-              ) : (
-                <RiThumbUpLine />
-              )}
-            </div>
-            {likeCount ? (
-              <span className="mr-[10px] md:mr-1">{likeCount || ''}</span>
-            )
-              : <span className={classNames({
-                'invisible': isMobile
-              })}>赞</span>}
-          </div>
-          <div
-            className='flex items-center p-2 mr-5 cursor-pointer tracking-wide hover:text-gray-33'
+            className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:hover:text-white hover:text-gray-33'
             onClick={() => {
               copy(`${window.origin}/posts/${post.trxId}`);
               snackbarStore.show({
@@ -201,8 +190,8 @@ export default observer((props: IProps) => {
               title='复制链接'
               arrow
               >
-              <div className="text-16 mr-[6px] opacity-90">
-                <AiOutlineLink />
+              <div className="text-20 mr-[6px] opacity-60">
+                <TiArrowForwardOutline />
               </div>
             </Tooltip>
           </div>
@@ -211,7 +200,7 @@ export default observer((props: IProps) => {
               trxId={post.trxId}
               storage={post.storage}
               SyncedComponent={() => (
-                <div className="mt-[-3px]">
+                <div className="mt-[-1px]">
                   <Menu
                     data={{
                       groupId: post.groupId,

@@ -10,7 +10,7 @@ import { BsInfo } from 'react-icons/bs';
 import openGroupInfo from 'components/openGroupInfo';
 import Avatar from 'components/Avatar';
 import sleep from 'utils/sleep';
-import { MdArrowUpward } from 'react-icons/md';
+import { MdArrowUpward, MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
@@ -42,7 +42,8 @@ export default observer(() => {
     confirmDialogStore,
     groupStore,
     modalStore,
-    pathStore
+    pathStore,
+    settingStore
   } = useStore();
   const state = useLocalObservable(() => ({
     showBackToTop: true,
@@ -140,14 +141,14 @@ export default observer(() => {
     <div>
       <div className={classNames({
         hidden: isSearchPage
-      }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white border-b border-neutral-100")}>
+      }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white dark:bg-[#181818] border-b dark:border-white dark:border-opacity-10 border-neutral-100")}>
         <div className="w-[600px] flex items-center justify-between">
           {isHomePage && (
             <Tabs />
           )}
           {!isHomePage && (
             <div
-              className="flex items-center cursor-pointer text-neutral-500"
+              className="flex items-center cursor-pointer dark:text-white dark:text-opacity-80 text-neutral-500"
               onClick={() => {
                 pathStore.prevPath ? history.goBack() : history.push(`/`)
               }}>
@@ -164,6 +165,16 @@ export default observer(() => {
           )}
           {userStore.isLogin && (
             <div className="flex items-center">
+              {(isPc || isMyUserPage) && (
+                <div
+                  className="p-1 cursor-pointer mr-1 md:mr-4"
+                  onClick={() => {
+                    settingStore.setTheme(settingStore.isDarkMode ? 'light' : 'dark');
+                  }}>
+                  <MdOutlineDarkMode className="dark:hidden text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
+                  <MdOutlineLightMode className="hidden dark:block text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
+                </div>
+              )}
               {isPc && (
                 <div
                   className="p-1 cursor-pointer mr-4"
@@ -177,7 +188,7 @@ export default observer(() => {
                       })}`);
                     }
                   }}>
-                  <AiOutlineSearch className="text-22 text-neutral-500 opacity-80" />
+                  <AiOutlineSearch className="text-22 dark:text-white text-neutral-500 opacity-70 dark:opacity-100 dark:dark:text-white" />
                 </div>
               )}
               <div
@@ -195,7 +206,7 @@ export default observer(() => {
                   }}
                 >
                   <div className="cursor-pointer transform scale-110">
-                    <MdNotificationsNone className="text-24 text-neutral-400 opacity-80 md:opacity-90" />
+                    <MdNotificationsNone className="text-24 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
                   </div>
                 </Badge>
               </div>
@@ -248,20 +259,20 @@ export default observer(() => {
           {(isMyUserPage || (isGroupPage && userStore.isLogin) || (isHomePage && userStore.isLogin)) && (
             <Fade in={true} timeout={350}>
               <div
-                className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-black bg-black'
+                className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-black dark:bg-white bg-black'
                 onClick={onOpenEditor}
               >
-                <BsPencil className="text-15 text-white" />
+                <BsPencil className="text-15 dark:text-black text-white" />
               </div>
             </Fade>
           )}
           {state.showBackToTop && (
             <Fade in={true} timeout={350}>
               <div
-                className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center cursor-pointer border border-gray-c4'
+                className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center cursor-pointer border dark:border-white dark:border-opacity-10 border-gray-c4'
                 onClick={scrollToTop}
               >
-                <MdArrowUpward className="text-20 text-gray-af" />
+                <MdArrowUpward className="text-20 dark:text-white dark:text-opacity-80 text-gray-af" />
               </div>
             </Fade>
           )}
@@ -275,10 +286,10 @@ export default observer(() => {
             interactive
             >
               <div
-                className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border border-gray-c4 hidden'
+                className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:border-opacity-10 border-gray-c4 hidden'
                 onClick={() => openGroupInfo(groupStore.groupId)}
               >
-                <BsInfo className="text-24 text-gray-af" />
+                <BsInfo className="text-24 dark:text-white dark:text-opacity-80 text-gray-af" />
               </div>
             </Tooltip>
         </div>
@@ -286,23 +297,23 @@ export default observer(() => {
 
       {isMobile && (
         <div>
-          {(isHomePage || isMyUserPage) && userStore.isLogin && (
+          {(isHomePage || isMyUserPage || isGroupPage) && userStore.isLogin && (
             <Fade in={true} timeout={350}>
               <div
-                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black bg-black z-10'
+                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black dark:bg-white dark:bg-opacity-80 bg-black z-10'
                 onClick={onOpenEditor}
               >
-                <BsPencil className="text-20 opacity-90 text-white" />
+                <BsPencil className="text-20 opacity-90 dark:text-black text-white" />
               </div>
             </Fade>
           )}
           {(isHomePage || isMyUserPage || isSearchPage) && (
             <div>
-              <div className="pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around text-gray-88 text-12 border-t border-neutral-100 bg-white z-50">
+              <div className="pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:border-opacity-10 border-neutral-100 bg-white dark:bg-[#181818] z-50">
                 <div
                   className={classNames(
                     {
-                      'text-black': isHomePage,
+                      'dark:text-white dark:text-opacity-80 text-black': isHomePage,
                     },
                     'px-4 text-center',
                   )}
@@ -330,7 +341,7 @@ export default observer(() => {
                 <div
                   className={classNames(
                     {
-                      'text-black': isSearchPage,
+                      'dark:text-white dark:text-opacity-80 text-black': isSearchPage,
                     },
                     'px-4 text-center',
                   )}
@@ -352,7 +363,7 @@ export default observer(() => {
                 <div
                   className={classNames(
                     {
-                      'text-black': isMyUserPage,
+                      'dark:text-white dark:text-opacity-80 text-black': isMyUserPage,
                     },
                     'px-4 text-center',
                   )}

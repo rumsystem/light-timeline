@@ -186,9 +186,10 @@ export default observer((props: IProps) => {
     <Fade in={true} timeout={350}>          
       <div
         className={classNames({
-          'border border-gray-f2': isPc && props.withBorder,
-          'border-b border-gray-ec': isMobile && !inPostDetail
-        }, 'post-item md:rounded-10 bg-white pl-4 pr-2 md:pl-8 md:pr-6 pt-6 pb-3 w-full lg:w-full md:w-[600px] relative mb-0 md:mb-[10px]')}
+          'border-b dark:border-white dark:border-opacity-10 border-gray-ec border-opacity-60': (isMobile && !inPostDetail) || (isPc && props.withBorder),
+          'pt-6 pb-3': inPostDetail,
+          'pt-[18px] pb-2': !inPostDetail
+        }, 'post-item bg-white dark:bg-transparent pl-4 pr-2 md:pl-8 md:pr-6 w-full lg:w-full md:w-[600px] relative')}
         ref={postBoxRef}
       >
         <div className="relative">
@@ -197,21 +198,21 @@ export default observer((props: IProps) => {
             userAddress={post.userAddress}
           >
             <Avatar
-              className="absolute top-[-6px] left-[-4px]"
+              className="absolute top-[-4px] left-[-4px]"
               url={profile.avatar}
               size={44}
             />
           </UserCard>
           <div className="pl-12 ml-1">
-            <div className="pt-[1px] flex">
+            <div className="pt-[1px] flex items-center">
               <UserCard
                 disableHover={props.disabledUserCardTooltip}
                 userAddress={post.userAddress}
               >
-                <div className="text-gray-4a md:text-15">
+                <div className="dark:text-white dark:text-opacity-80 text-gray-4a md:text-15">
                   <UserName
                     name={profile.name}
-                    normalNameClass="font-bold max-w-[60vw] md:max-w-[250px] truncate opacity-80 mt-[-4px] h-[18px] md:h-[20px]"
+                    normalNameClass="font-bold max-w-[40vw] md:max-w-[250px] truncate opacity-90 mt-[-4px] h-[18px] md:h-[20px]"
                     fromClass='mt-[-2px] h-[15px] md:h-[17px]'
                     fromNameClass="opacity-80 truncate font-bold max-w-[120px] md:max-w-[250px]"
                     fromIconClass="text-22 text-sky-400 mx-1"
@@ -219,18 +220,19 @@ export default observer((props: IProps) => {
                     />
                 </div>
               </UserCard>
-            </div>
-            <div
-              className="text-gray-88 text-12 tracking-wide cursor-pointer mt-[6px] opacity-80 block md:hidden"
-              onClick={() => {
-                if (isMobile) {
-                  history.push(`/posts/${post.trxId}`);
-                }
-              }}
-            >
-              {ago(post.timestamp, {
-                trimmed: true
-              })}
+              <div
+                className="flex items-center dark:text-white dark:opacity-40 text-gray-88 text-12 tracking-wide cursor-pointer opacity-80"
+                onClick={() => {
+                  if (isMobile || !inPostDetail) {
+                    history.push(`/posts/${post.trxId}`);
+                  }
+                }}
+              >
+                <span className="mx-[6px] transform scale-150 opacity-50">·</span>
+                {ago(post.timestamp, {
+                  trimmed: inPostDetail
+                })}
+              </div>
             </div>
             {post.content && (
               <div className="pb-2 relative">
@@ -244,7 +246,7 @@ export default observer((props: IProps) => {
                       'text-[15px]': inPostDetail,
                       'text-[14px]': !inPostDetail
                     },
-                    'mt-[8px] text-gray-4a break-words whitespace-pre-wrap tracking-wide',
+                    'mt-[8px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
                     __html: urlify(`${post.content}`) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}">查看原文</a>` : ''}`,
@@ -300,11 +302,11 @@ export default observer((props: IProps) => {
             </div>}
 
             <div className="flex pt-1 pb-2 tracking-wider">
-              <div className="bg-stone-100 text-12 py-1 px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
+              <div className="bg-[#EFF3F4] bg-opacity-100 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
                 history.push(`/groups/${post.groupId}`)
               }}>
-                <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-60" />
-                <span className="text-sky-400 font-bold opacity-80">{post.extra.groupName}</span>
+                <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
+                <span className="text-[#37434D] opacity-[0.55] font-bold dark:text-white dark:opacity-50">{post.extra.groupName}</span>
               </div>
             </div>
           </div>

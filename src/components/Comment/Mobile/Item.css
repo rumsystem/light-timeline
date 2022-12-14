@@ -10,6 +10,9 @@
 .mobile-comment-item .highlight {
   background: #e2f6ff;
 }
+.dark .mobile-comment-item .highlight {
+  background: #0a151a;
+}
 .mobile-comment-item .comment-body {
   font-size: 14px;
   line-height: 1.625;

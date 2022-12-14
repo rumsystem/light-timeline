@@ -9,7 +9,7 @@ import { useStore } from 'store';
 import { IComment, IPost } from 'apis/types';
 import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
-import { AiOutlineLink } from 'react-icons/ai';
+import { TiArrowForwardOutline } from 'react-icons/ti';
 import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
 import openLoginModal from 'components/openLoginModal';
@@ -90,18 +90,18 @@ export default observer((props: IProps) => {
 
   const contentPrefix =
     comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.trxId
-      ? `回复 <span class="text-gray-88">${comment.extra.replyComment.extra.userProfile.name}</span>：`
+      ? `回复 <span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.replyComment.extra.userProfile.name}</span>：`
       : '';
   const previewContentPrefix =
     comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.trxId
-      ? `<span class="text-gray-88">${comment.extra.userProfile.name}</span> 回复 <span class="text-gray-88">${comment.extra.replyComment.extra.userProfile.name}</span>：`
-      : `<span class="text-gray-88">${comment.extra.userProfile.name}</span>：`;
+      ? `<span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.userProfile.name}</span> 回复 <span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.replyComment.extra.userProfile.name}</span>：`
+      : `<span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.userProfile.name}</span>：`;
 
   if (isPreview) {
     return (
       <div className="pt-[2px]" id={`comment_${commentStore.mobile.topCommentPage.open ? '_xxx_' : ''}${comment.trxId}`}>
         <span
-          className="text-gray-1e break-words"
+          className="dark:text-white dark:text-opacity-80 text-gray-1e break-words"
           dangerouslySetInnerHTML={{ __html: urlify(`${previewContentPrefix}${comment.content}`) }}
         />
         {comment.images && comment.images.length > 0 && (
@@ -167,7 +167,7 @@ export default observer((props: IProps) => {
         className={classNames(
           {
             highlight: highlight,
-            'border-b border-gray-200': !hideDivider && noSubComments,
+            'border-b dark:border-white dark:border-opacity-10 border-gray-200': !hideDivider && noSubComments,
             'md:pb-1': !isTopComment,
           },
           'comment-item pt-4 pr-4 duration-500 ease-in-out pl-4 md:pt-4',
@@ -192,65 +192,21 @@ export default observer((props: IProps) => {
           </div>
           <div className="ml-10-px md:ml-3" style={{ paddingLeft: 36 }}>
             <div className="flex justify-between items-start md:items-center">
-              <div className="flex items-center leading-none text-14 text-gray-99 relative">
-                <div>
-                  <div className="flex items-center">
-                    <Link to={`/${comment.groupId}/users/${comment.userAddress}`} >
-                      <span
-                        onClick={async () => {
-                          await sleep(400);
-                          commentStore.mobile.topCommentPage.setOpen(false);
-                        }}
-                        className='truncate text-14 text-gray-88 max-w-[150px] block'
-                      >
-                        {comment.extra.userProfile.name}
-                      </span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="relative">
-                <div className="flex items-center text-gray-9b leading-none">
-                  <div
-                    className='flex items-center justify-end cursor-pointer pl-1 pt-2-px pb-3-px w-12 pr-2'
-                    onClick={() => {
-                      copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
-                      snackbarStore.show({
-                        message: `链接${lang.copied}`,
-                      });
+              <div className="flex items-center leading-none text-14 dark:text-white dark:text-opacity-80 text-gray-99 relative">
+                <Link to={`/${comment.groupId}/users/${comment.userAddress}`} >
+                  <span
+                    onClick={async () => {
+                      await sleep(400);
+                      commentStore.mobile.topCommentPage.setOpen(false);
                     }}
+                    className='truncate text-14 dark:text-white dark:text-opacity-50 text-gray-88 max-w-[150px] block'
                   >
-                    <span className="flex items-center text-16 pr-1 md">
-                      <AiOutlineLink />
-                    </span>
-                  </div>
-                  {(isTopComment || comment.userAddress !== userStore.address) && (  
-                    <div
-                      className="flex items-center cursor-pointer text-xs px-1 pt-2-px pb-3-px w-10 justify-end ml-2"
-                      onClick={() => replyTo(comment)}
-                    >
-                      <span className="flex items-center text-16 pr-2 md:pr-1">
-                        <FaRegComment />
-                      </span>
-                    </div>
-                  )}
-                  <div
-                    className='flex items-center justify-end cursor-pointer pt-2-px pb-3-px pr-0 w-10'
-                    onClick={() => updateCounter(comment.trxId)}
-                  >
-                    <span className="flex items-center text-16 pr-1 md">
-                      {comment.extra.liked ? (
-                        <RiThumbUpFill className="text-black opacity-60" />
-                      ) : (
-                        <RiThumbUpLine />
-                      )}
-                    </span>
-                    <span className="font-bold">{Number(comment.likeCount) || ''}</span>
-                  </div>
-                </div>
+                    {comment.extra.userProfile.name}
+                  </span>
+                </Link>
               </div>
             </div>
-            {<div className="text-12 text-gray-bd">{ago(comment.timestamp)}</div>}
+            <div className="mt-[4px] text-12 dark:text-white dark:opacity-40 text-gray-bd">{ago(comment.timestamp, { trimmed: true })}</div>
             <div
               className={classNames(
                 {
@@ -275,7 +231,7 @@ export default observer((props: IProps) => {
                     }}
                   >
                     <div className="text-sky-400">{comment.extra.replyComment.extra.userProfile.name}</div>
-                    <div className="truncate text-gray-99">{comment.extra.replyComment.content}</div>
+                    <div className="truncate dark:text-white dark:text-opacity-80 text-gray-99">{comment.extra.replyComment.content}</div>
                   </div>
                 )}
               </div>
@@ -285,7 +241,7 @@ export default observer((props: IProps) => {
                     'comment-expand': state.expand,
                     'comment-fold': !state.expand && state.readyToFold
                   },
-                  'comment-body comment text-gray-1e break-words whitespace-pre-wrap',
+                  'comment-body comment mt-2 dark:text-white dark:text-opacity-80 text-gray-1e break-words whitespace-pre-wrap',
                 )}
                 onClick={() => {
                   if (isOwner) {
@@ -307,6 +263,45 @@ export default observer((props: IProps) => {
                   <Images images={comment.images} />
                 </div>
               )}
+
+              <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-9b leading-none mt-3">
+                <div
+                  className='flex items-center cursor-pointer pr-6'
+                  onClick={() => updateCounter(comment.trxId)}
+                >
+                  <span className="flex items-center text-16 pr-1 md">
+                    {comment.extra.liked ? (
+                      <RiThumbUpFill className="dark:text-white text-black opacity-60 dark:opacity-80" />
+                    ) : (
+                      <RiThumbUpLine />
+                    )}
+                  </span>
+                  <span className="font-bold">{Number(comment.likeCount) || ''}</span>
+                </div>
+                {(isTopComment || comment.userAddress !== userStore.address) && (  
+                  <div
+                    className="flex items-center justify-center cursor-pointer pr-6"
+                    onClick={() => replyTo(comment)}
+                  >
+                    <span className="flex items-center text-16">
+                      <FaRegComment />
+                    </span>
+                  </div>
+                )}
+                <div
+                  className='flex items-center justify-center cursor-pointer pr-6'
+                  onClick={() => {
+                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
+                    snackbarStore.show({
+                      message: `链接${lang.copied}`,
+                    });
+                  }}
+                >
+                  <span className="flex items-center text-20 pr-1 opacity-80">
+                    <TiArrowForwardOutline />
+                  </span>
+                </div>
+              </div>
 
               {!state.expand && state.canExpand && (
                 <div

@@ -11,9 +11,9 @@ const Reply = observer(() => {
   const { comment, submit, postUserAddress, where } = modalStore.commentReply.data;
 
   return (
-    <div className="bg-white rounded-0 py-5 pl-6 pr-8 max-h-[90vh] overflow-y-auto relative">
+    <div className="bg-white dark:bg-[#181818] rounded-0 py-5 pl-6 pr-8 max-h-[90vh] overflow-y-auto relative">
       <div className="w-[535px]">
-        <div>
+        <div className="-mt-2">
           <CommentItem
             comment={comment}
             submit={submit}

@@ -160,7 +160,7 @@ const ImageLib = observer((props: any) => {
             ))}
           </div>
           {state.isFetched && state.total === 0 && (
-            <div className="py-20 text-center text-gray-500 text-14">
+            <div className="py-20 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14">
               没有搜索到相关的图片呢
               <br />
               <div className="mt-1">换个关键词试试</div>

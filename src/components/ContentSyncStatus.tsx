@@ -43,7 +43,7 @@ export default observer((props: IProps) => {
           <div
             className={`${
               props.positionClassName || 'mt-[-2px]'
-            } rounded-full text-gray-af text-12 leading-none font-bold tracking-wide cursor-default`}
+            } rounded-full dark:text-white dark:text-opacity-80 text-gray-af text-12 leading-none font-bold tracking-wide cursor-default`}
             onClick={() => {
               state.showTrxStatusModal = true;
             }}

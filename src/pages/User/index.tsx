@@ -241,7 +241,7 @@ export default observer((props: RouteChildrenProps) => {
   if (state.fetched && state.notFound) {
     return (
       <div className="h-screen flex justify-center items-center">
-        <div className="-mt-20 text-base md:text-xl text-center text-gray-600">
+        <div className="-mt-20 text-base md:text-xl text-center dark:text-white dark:text-opacity-80 text-gray-600">
           抱歉，你访问的用户不存在
         </div>
       </div>
@@ -249,7 +249,7 @@ export default observer((props: RouteChildrenProps) => {
   }
 
   return (
-    <div className="box-border w-full h-screen overflow-auto user-page bg-white md:bg-transparent pb-16" ref={rootRef}>
+    <div className="box-border w-full h-screen overflow-auto user-page bg-white dark:bg-[#181818] md:bg-transparent pb-16" ref={rootRef}>
       <TopPlaceHolder />
       <div className={classNames({
         'invisible': state.invisible
@@ -274,7 +274,7 @@ export default observer((props: RouteChildrenProps) => {
                   }}
                   width={isMobile ? 74 : 100}
                   height={isMobile ? 74 : 100}
-                  className="rounded-full avatar bg-white"
+                  className="rounded-full avatar bg-white dark:bg-[#181818]"
                   src={profile.avatar}
                   alt={profile.name}
                 />
@@ -325,7 +325,7 @@ export default observer((props: RouteChildrenProps) => {
                   </span>
                 </div>
                 {isTweet && (
-                  <div className="text-black bg-white py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
+                  <div className="dark:text-white dark:text-opacity-80 text-black bg-white dark:bg-[#181818] py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
                     本号所有内容来自推特用户 @{profile.name.split('\n@')[1]}
                   </div>
                 )}
@@ -357,7 +357,7 @@ export default observer((props: RouteChildrenProps) => {
                           state.userListType = 'muted';
                           state.showUserListModal = true;
                         }}>  
-                          <div className="py-1 pl-1 pr-3 flex items-center text-neutral-700">
+                          <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
                             <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽列表
                           </div>
                         </MenuItem>
@@ -448,7 +448,7 @@ export default observer((props: RouteChildrenProps) => {
         <div>
           <div className={classNames({
             'opacity-0': state.invisibleOverlay
-          }, "md:mt-5 w-full box-border")}>
+          }, "md:mt-5 w-full box-border  dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:border-opacity-10 md:rounded-12")}>
             {postStore.userPosts.map((post) => (
               <div key={post.trxId}>
                 <PostItem
@@ -485,7 +485,7 @@ export default observer((props: RouteChildrenProps) => {
             </div>
           )}
           {!isMyself && state.fetched && user.postCount === 0 && (
-            <div className="py-32 text-center text-gray-500 text-14">
+            <div className="py-32 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14">
               还没有发布过内容
             </div>
           )}

@@ -49,8 +49,8 @@ export default observer(() => {
       state.open = false;
     }}>
       <div className="p-8 px-10 md:px-12 h-[95vh] md:h-[auto] md:max-h-[650px] box-border overflow-y-auto">
-        <div className="-mt-2 text-neutral-600 text-20 text-center font-bold">欢迎回来</div>
-        <div className="pt-3 text-neutral-500 text-12 text-center">自从您上次登录，我们新增了以下功能：</div>
+        <div className="-mt-2 dark:text-white dark:text-opacity-80 text-neutral-600 text-20 text-center font-bold">欢迎回来</div>
+        <div className="pt-3 dark:text-white dark:text-opacity-80 text-neutral-500 text-12 text-center">自从您上次登录，我们新增了以下功能：</div>
         <div className={`${state.visible ? 'visible' : 'invisible'}`}>
           <div className="min-h-[55vh] md:min-h-[300px]">
             {state.features.map(feature => (

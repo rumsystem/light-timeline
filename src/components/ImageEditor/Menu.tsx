@@ -41,7 +41,7 @@ export default observer((props: Props) => {
           ))}
       </div>
       {loading && (
-        <div className="absolute top-0 right-0 z-10 w-full py-20 bg-white">
+        <div className="absolute top-0 right-0 z-10 w-full py-20 bg-white dark:bg-[#181818]">
           <div className="pt-4">
             <Loading />
           </div>
