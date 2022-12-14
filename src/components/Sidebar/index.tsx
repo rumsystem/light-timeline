@@ -35,8 +35,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
 
-import './index.css';
-
 export default observer(() => {
   const {
     userStore,
@@ -309,7 +307,7 @@ export default observer(() => {
           {(isHomePage || isMyUserPage || isGroupPage) && userStore.isLogin && (
             <Fade in={true} timeout={350}>
               <div
-                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black dark:bg-white dark:bg-opacity-80 bg-black z-10'
+                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black dark:bg-white dark:bg-opacity-80 bg-black z-10 ios-safe-area-margin'
                 onClick={onOpenEditor}
               >
                 <BsPencil className="text-20 opacity-90 dark:text-black text-white" />
@@ -318,7 +316,7 @@ export default observer(() => {
           )}
           {(isHomePage || isMyUserPage || isSearchPage) && (
             <div>
-              <div className="mobile-navigator pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100 bg-white dark:bg-[#181818] z-50">
+              <div className="ios-safe-area-padding pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100 bg-white dark:bg-[#181818] z-50">
                 <div
                   className={classNames(
                     {
