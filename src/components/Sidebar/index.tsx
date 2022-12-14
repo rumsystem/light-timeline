@@ -35,6 +35,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
 
+import './index.css';
+
 export default observer(() => {
   const {
     userStore,
@@ -309,7 +311,7 @@ export default observer(() => {
           )}
           {(isHomePage || isMyUserPage || isSearchPage) && (
             <div>
-              <div className="pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100 bg-white dark:bg-[#181818] z-50">
+              <div className="mobile-navigator pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100 bg-white dark:bg-[#181818] z-50">
                 <div
                   className={classNames(
                     {
