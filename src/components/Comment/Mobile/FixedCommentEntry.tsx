@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react-lite';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useStore } from 'store';
 import { IPost, IComment } from 'apis/types';
 import Fade from '@material-ui/core/Fade';
@@ -15,6 +15,10 @@ interface IProps {
 
 export default observer((props: IProps) => {
   const { commentStore, userStore } = useStore();
+  const state = useLocalObservable(() => ({
+    submitting: false,
+    likeAnimating: false
+  }));
   const {
     mobile: {
       openEditorEntryDrawer,
@@ -77,16 +81,22 @@ export default observer((props: IProps) => {
               )}
             </div>
             <div
-              onClick={() => props.likePost(props.post.trxId)}
-              className='pl-4 pr-6 relative font-bold flex items-center text-18'
+              onClick={async () => {
+                state.likeAnimating = !props.post.extra.liked;
+                await props.likePost(props.post.trxId);
+                state.likeAnimating = false;
+              }}
+              className={classNames({
+                'dark:text-white dark:text-opacity-80 text-black text-opacity-60': props.post.extra.liked
+              }, 'pl-4 pr-6 relative font-bold flex items-center text-18')}
             >
               {props.post.extra.liked ? (
-                <RiThumbUpFill className="dark:text-white dark:text-opacity-60 text-black opacity-60 dark:opacity-80" />
+                <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
               ) : (
                 <RiThumbUpLine />
               )}
               {props.post.likeCount > 0 && (
-                <span className="text-14 ml-1 mt-[2px]">{props.post.likeCount}</span>
+                <span className="text-14 ml-1 mt-[2px] dark:opacity-90">{props.post.likeCount}</span>
               )}
             </div>
           </div>

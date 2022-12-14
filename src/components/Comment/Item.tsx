@@ -53,6 +53,7 @@ export default observer((props: IProps) => {
     anchorEl: null,
     showEditor: false,
     submitting: false,
+    likeAnimating: false
   }));
 
   React.useEffect(() => {
@@ -82,13 +83,14 @@ export default observer((props: IProps) => {
     <span
       className={classNames(
         {
-          'dark:text-white dark:text-opacity-80 text-gray-88 dark:md:text-white md:text-gray-500 md:opacity-80': true,
-          'mr-[1px]': !props.isTopComment && isPc,
+          'dark:text-white dark:text-opacity-80 text-gray-88 dark:md:text-white md:text-gray-500 md:opacity-80 font-bold': !props.isReplyTo,
+          'text-sky-500': props.isReplyTo,
+          'mr-[1px]': !props.isTopComment && isPc
         },
-        'font-bold max-w-40 truncate text-14',
+        'max-w-40 truncate text-14',
       )}
     >
-      {props.name}
+      {props.isReplyTo && '@'}{props.name}
     </span>
   );
 
@@ -101,6 +103,7 @@ export default observer((props: IProps) => {
       return;
     }
     state.submitting = true;
+    state.likeAnimating = !comment.extra.liked;
     try {  
       const res = await TrxApi.createObject({
         groupId: comment.groupId,
@@ -129,6 +132,7 @@ export default observer((props: IProps) => {
       });
     }
     state.submitting = false;
+    state.likeAnimating = false;
   }
 
   return (
@@ -307,7 +311,7 @@ export default observer((props: IProps) => {
                 <div
                   className={classNames(
                     {
-                      'hidden group-hover:flex': isSubComment,
+                      'dark:text-white dark:text-opacity-80 text-black text-opacity-50 font-bold': comment.extra.liked
                     },
                     'flex items-center cursor-pointer pr-6 tracking-wide leading-none',
                   )}
@@ -315,23 +319,18 @@ export default observer((props: IProps) => {
                 >
                   <span className="flex items-center text-14 pr-[3px]">
                     {comment.extra.liked ? (
-                      <RiThumbUpFill className="dark:text-white dark:text-opacity-80 text-black opacity-60 dark:opacity-80" />
+                      <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
                     ) : (
                       <RiThumbUpLine />
                     )}
                   </span>
-                  <span className="text-12 dark:text-white dark:text-opacity-80 text-gray-9b mr-[1px]">
+                  <span className="text-12 mr-[1px] dark:opacity-90">
                     {comment.likeCount || ''}
                   </span>
                 </div>
                 {!props.disabledReply && !(isSubComment && comment.userAddress === userStore.address) && (
                   <span
-                    className={classNames(
-                      {
-                        'hidden group-hover:flex': isSubComment,
-                      },
-                      'flex items-center cursor-pointer pr-6 tracking-wide',
-                    )}
+                    className='flex items-center cursor-pointer pr-6 tracking-wide'
                     onClick={() => {
                       modalStore.commentReply.show({
                         postUserAddress: props.postUserAddress,
@@ -347,12 +346,7 @@ export default observer((props: IProps) => {
                   </span>
                 )}
                 <div
-                  className={classNames(
-                    {
-                      'hidden group-hover:flex': isSubComment,
-                    },
-                    'flex items-center cursor-pointer pr-6 tracking-wide leading-none',
-                  )}
+                  className='items-center cursor-pointer pr-6 tracking-wide leading-none hidden group-hover:flex'
                   onClick={() => {
                     copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
                     snackbarStore.show({
@@ -375,7 +369,7 @@ export default observer((props: IProps) => {
                 <div className='ml-[2px] mt-[2px]'>
                   <ContentSyncStatus
                     trxId={comment.trxId}
-                  storage={comment.storage}
+                    storage={comment.storage}
                     SyncedComponent={() => (
                       <TrxInfo
                         groupId={comment.groupId}
