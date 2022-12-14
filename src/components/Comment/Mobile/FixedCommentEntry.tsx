@@ -36,7 +36,7 @@ export default observer((props: IProps) => {
 
   return (
     <Fade in={true} timeout={200}>
-      <div className="fixed entry bottom-0 left-0 w-full py-2 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200 bg-white dark:bg-[#181818] flex items-center justify-between ios-safe-area-margin">
+      <div className="fixed entry bottom-0 left-0 w-full py-2 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200 bg-white dark:bg-[#181818] flex items-center justify-between ios-safe-area-padding">
         <div
           className={classNames(
             {
