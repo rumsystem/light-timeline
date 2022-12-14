@@ -250,7 +250,7 @@ export default observer((props: IProps) => {
                 {!state.expandContent && state.canExpandContent && (
                   <div className="relative mt-6-px pb-4">
                     <div
-                      className="text-blue-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
+                      className="text-sky-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
                       onClick={() => { state.expandContent = true; }}
                     >
                       {lang.expand}
@@ -261,7 +261,7 @@ export default observer((props: IProps) => {
                 {state.expandContent && state.canExpandContent && (
                   <div className="relative mt-6-px pb-4">
                     <div
-                      className="text-blue-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
+                      className="text-sky-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
                       onClick={async () => {
                         state.expandContent = false;
                         await sleep(1);
@@ -275,7 +275,7 @@ export default observer((props: IProps) => {
                 )}
                 {isPc && state.expandContent && state.canExpandContent && post.content.length > 600 && (
                   <div
-                    className="text-blue-400 cursor-pointer tracking-wide flex items-center text-12 absolute top-[2px] right-[-90px] opacity-80"
+                    className="text-sky-400 cursor-pointer tracking-wide flex items-center text-12 absolute top-[2px] right-[-90px] opacity-80"
                     onClick={() => {
                       state.expandContent = false;
                     }}
@@ -292,11 +292,11 @@ export default observer((props: IProps) => {
             </div>}
 
             <div className="flex pt-1 pb-2 tracking-wide">
-              <div className="bg-slate-100 text-12 py-1 px-2 flex items-center rounded-full text-blue-400 cursor-pointer" onClick={() => {
+              <div className="bg-stone-100 text-12 py-1 px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
                 history.push(`/groups/${post.groupId}`)
               }}>
-                <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-90" />
-                {post.extra.groupName}
+                <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-60" />
+                <span className="text-sky-400 font-bold opacity-80 tracking-wider">{post.extra.groupName}</span>
               </div>
             </div>
           </div>

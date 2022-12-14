@@ -153,7 +153,7 @@ const Main = observer((props: IModalProps) => {
                     ))}
                     {state.hasMoreContent && (
                       <div className="text-center pt-1 text-12" onClick={fetchMoreContents}>
-                        <span className="text-blue-400 cursor-pointer">加载更多</span>
+                        <span className="text-sky-400 cursor-pointer">加载更多</span>
                       </div>
                     )}
                   </div>
