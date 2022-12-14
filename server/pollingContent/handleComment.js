@@ -4,6 +4,9 @@ const Notification = require('../database/notification');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 const { getSocketIo } = require('../socket');
+const config = require('../config');
+const Mixin = require('../mixin');
+const truncateByBytes = require('../utils/truncateByBytes');
 
 module.exports = async (item, group) => {
   const comment = await pack(item);
@@ -161,5 +164,12 @@ const notify = async (trxId) => {
   });
   if (comment) {
     getSocketIo().emit('comment', comment);
+    const name = comment.extra.userProfile.name.split('\n')[0];
+    Mixin.notifyByBot({
+      iconUrl: comment.extra.userProfile.avatar,
+      title: (comment.content || '').slice(0, 30) || '图片',
+      description: `${truncateByBytes(name, 14)} 发表评论`,
+      url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`
+    });
   }
 }
