@@ -205,7 +205,7 @@ export default observer((props: IProps) => {
                     {comment.extra.userProfile.name}
                   </span>
                 </Link>
-                <div className="text-12 mr-3 tracking-wide opacity-90 dark:opacity-50 flex items-center text-gray-bd">
+                <div className="text-12 mr-3 tracking-wide text-gray-88 opacity-70 dark:text-white dark:opacity-40 flex items-center">
                   <span className="mx-[6px] transform scale-150 opacity-50">·</span>
                   {ago(comment.timestamp, { trimmed: true })}
                 </div>
