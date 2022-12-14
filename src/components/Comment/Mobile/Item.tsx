@@ -18,6 +18,7 @@ import Images from 'components/Images';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
+import { BsFillCaretDownFill } from 'react-icons/bs';
 
 import './Item.css';
 
@@ -267,6 +268,16 @@ export default observer((props: IProps) => {
                 </div>
               )}
 
+              {!state.expand && state.canExpand && (
+                <div
+                  className="text-sky-400 cursor-pointer pt-1 flex items-center text-12"
+                  onClick={() => (state.expand = true)}
+                >
+                  {lang.expand}
+                  <BsFillCaretDownFill className="text-12 ml-[1px] opacity-70" />
+                </div>
+              )}
+
               <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-9b leading-none mt-3">
                 <div
                   className='flex items-center cursor-pointer pr-6'
@@ -305,15 +316,6 @@ export default observer((props: IProps) => {
                   </span>
                 </div>
               </div>
-
-              {!state.expand && state.canExpand && (
-                <div
-                  className="text-sky-400 cursor-pointer pt-1"
-                  onClick={() => (state.expand = true)}
-                >
-                  展开
-                </div>
-              )}
             </div>
           </div>
         </div>
