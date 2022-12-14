@@ -8588,10 +8588,10 @@ quick-lru@^5.1.1:
   resolved "https://registry.npmmirror.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-quorum-light-node-sdk@0.1.34:
-  version "0.1.34"
-  resolved "https://registry.npmjs.org/quorum-light-node-sdk/-/quorum-light-node-sdk-0.1.34.tgz#554ff81e3ad938451518a50c876f2d14ad3d62fe"
-  integrity sha512-VV9joUJBMXPSATxWx560bzUwD9WMCxOeRO0sy20lw8Q3ecaFHrCGYY/8HMvGgtHupgsp4b34Ooi/nKYQFO+5Ew==
+quorum-light-node-sdk@0.1.36:
+  version "0.1.36"
+  resolved "https://registry.npmjs.org/quorum-light-node-sdk/-/quorum-light-node-sdk-0.1.36.tgz#f66d382d187298f8140480ae9d24ee4a42364bda"
+  integrity sha512-Q7TKnuErQRDzftuiWtjDLxICCInhkk5pPpRwR8k8Bggu/uwEGANuJZH8cn3wzaGp3RZNiP4Oz7ZmqLb3gkhYFw==
   dependencies:
     "@types/crypto-js" "^4.1.1"
     "@types/node-localstorage" "^1.3.0"
