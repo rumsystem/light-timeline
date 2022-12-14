@@ -56,14 +56,26 @@ export default observer(() => {
     history.listen(() => {
       if (mounted) {
         const isSearchPage = window.location.pathname === '/search';
+        let changed = false;
         if (isSearchPage) {
-          postStore.resetSearchedTrxIds();
-          state.fetched = false;
-          state.page = 1;
-          state.q = Query.get('q') || '';
-          state.minLike = Query.get('minLike') || '';
-          state.minComment = Query.get('minComment') || '';
-          fetchData();
+          if (state.q !== Query.get('q')) {
+            state.q = Query.get('q') || '';
+            changed = true;
+          }
+          if (state.minLike !== Query.get('minLike')) {
+            state.minLike = Query.get('minLike') || '';
+            changed = true;
+          }
+          if (state.minComment !== Query.get('minComment')) {
+            state.minComment = Query.get('minComment') || '';
+            changed = true;
+          }
+          if (changed) {
+            postStore.resetSearchedTrxIds();
+            state.fetched = false;
+            state.page = 1;
+            fetchData();
+          }
         }
       }
     });
@@ -128,7 +140,10 @@ export default observer(() => {
     }
   }
 
-  const submit = async () => {
+  const submit = () => {
+    postStore.resetSearchedTrxIds();
+    state.fetched = false;
+    state.page = 1;
     history.replace(`/search?${qs.stringify({
       q: state.q,
       minLike: state.minLike,
@@ -136,6 +151,7 @@ export default observer(() => {
     }, {
       skipEmptyString: true
     })}`);
+    fetchData();
   }
 
   return (
@@ -147,8 +163,8 @@ export default observer(() => {
             <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-3 pb-2 md:pb-4 md:border-b dark:md:border dark:md:border-white dark:md:border-opacity-10  md:border-gray-ec md:rounded-12 shadow-sm">
               <div className="flex items-center text-30 ml-1 mr-3 dark:text-white dark:text-opacity-80 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
                 pathStore.paths.length > 0 ? history.goBack() : history.replace(`/`);
-                postStore.resetSearchedTrxIds();
                 await aliveController.drop('search');
+                postStore.resetSearchedTrxIds();
               }}>
                 <MdChevronLeft />
                 {isPc && <span className="text-14 mr-5">返回</span>}
@@ -169,8 +185,9 @@ export default observer(() => {
                 />
               </form>
               <div className={classNames({
-                'text-orange-500': state.minLike || state.minComment
-              }, "ml-4 flex items-center dark:text-white dark:text-opacity-80 text-gray-88 cursor-pointer mt-1 mr-1 md:mr-0")}
+                'text-orange-500': state.minLike || state.minComment,
+                'dark:text-white dark:text-opacity-80 text-gray-88': !(state.minLike || state.minComment),
+              }, "ml-4 flex items-center cursor-pointer mt-1 mr-1 md:mr-0")}
               onClick={async () => {
                 const result = await openSearchModal({
                   q: state.q,

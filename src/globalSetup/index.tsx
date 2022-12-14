@@ -104,7 +104,7 @@ export default observer(() => {
             }
           }
           if (href.startsWith('#')) {
-            const { pathname } = location;
+            const { pathname } = window.location;
             if (pathname === '/search') {
               history.replace(`/search?q=${encodeURIComponent(href)}`);
             } else {
