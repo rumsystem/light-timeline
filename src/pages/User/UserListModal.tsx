@@ -11,6 +11,7 @@ import sleep from 'utils/sleep';
 import { useHistory } from 'react-router-dom';
 import { lang } from 'utils/lang';
 import { TrxApi } from 'apis';
+import UserName from 'components/UserName';
 
 interface IProps {
   userAddress: string
@@ -110,7 +111,7 @@ const UserList = observer((props: IProps) => {
         {props.type === 'followers' && `关注${isMyList ? '我' : ' Ta '}的人`}
         {props.type === 'muted' && '我屏蔽掉的人'}
       </div>
-      <div className="w-full md:w-[330px] h-[80vh] md:h-[400px] overflow-y-auto" ref={rootRef}>
+      <div className="w-full md:w-[350px] h-[80vh] md:h-[400px] overflow-y-auto" ref={rootRef}>
         {!state.fetched && (
           <div className="pt-24 flex items-center justify-center">
             <Loading />
@@ -139,7 +140,13 @@ const UserList = observer((props: IProps) => {
                         alt={relation.extra.userProfile.name}
                       />
                       <div className="ml-3">
-                        <div className="text-14 truncate w-48 md:w-[155px]">{relation.extra.userProfile.name}</div>
+                        <UserName
+                          name={relation.extra.userProfile.name}
+                          normalNameClass="text-14 truncate max-w-[160px] md:max-w-[140px]"
+                          fromNameClass="text-14 truncate max-w-[160px] md:max-w-[140px]"
+                          fromIconClass="text-20 text-sky-400 mx-1"
+                          fromIdClass="hidden"
+                          />
                       </div>
                     </div>
                   </div>

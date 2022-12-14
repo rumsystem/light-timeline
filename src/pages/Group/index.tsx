@@ -56,6 +56,9 @@ export default observer((props: RouteChildrenProps) => {
       (async () => {
         await sleep(200);
         state.invisible = false;
+        if (state.fetchGroup) {
+          document.title = state.group.groupName;
+        }
       })();
     }
   });
@@ -81,6 +84,7 @@ export default observer((props: RouteChildrenProps) => {
         ]);
         state.group = group;
         groupStore.setGroup(group);
+        document.title = group.groupName;
       } catch (err) {
         console.log(err);
       }
