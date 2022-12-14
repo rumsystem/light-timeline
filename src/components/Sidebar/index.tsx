@@ -34,6 +34,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
+import { TiArrowForwardOutline } from 'react-icons/ti';
+import copy from 'copy-to-clipboard';
+import { lang } from 'utils/lang';
 import { RiTwitterLine } from 'react-icons/ri';
 import openTweetModal from './openTweetModal';
 
@@ -46,7 +49,8 @@ export default observer(() => {
     modalStore,
     pathStore,
     settingStore,
-    configStore
+    configStore,
+    snackbarStore
   } = useStore();
   const state = useLocalObservable(() => ({
     showBackToTop: true,
@@ -65,6 +69,7 @@ export default observer(() => {
   const isGroupsPage = location.pathname === `/groups`;
   const isMyUserPage = location.pathname === `/users/${userStore.address}`;
   const isGroupPage = location.pathname.startsWith(`/groups/`);
+  const isPostPage = location.pathname.startsWith(`/posts`);
 
   const fetchUnreadCount = async () => {
     try {
@@ -206,6 +211,18 @@ export default observer(() => {
                     }
                   }}>
                   <AiOutlineSearch className="text-22 dark:text-white text-neutral-500 opacity-70 dark:opacity-100 dark:dark:text-white" />
+                </div>
+              )}
+              {isMobile && isPostPage && (
+                <div
+                  className="p-1 cursor-pointer mr-1"
+                  onClick={() => { 
+                    copy(window.location.href);
+                    snackbarStore.show({
+                      message: `链接${lang.copied}`,
+                    });
+                  }}>
+                  <TiArrowForwardOutline className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
                 </div>
               )}
               <div
