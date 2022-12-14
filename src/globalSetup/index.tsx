@@ -16,28 +16,6 @@ export default observer(() => {
   const state = useLocalObservable(() => ({
     ready: false,
   }));
-
-  React.useEffect(() => {
-    const { pathname } = location;
-    if (pathname === `/` || !pathStore.prevPath) {
-      document.title = 'Rum 微博广场';
-    } else if (pathname === `/search`) {
-      document.title = '搜索';
-    }
-    pathStore.push(pathname);
-    const isHomePage = pathname === '/';
-    const isMyUserPage = pathname.startsWith(`/users/${userStore.address}`);
-    if (pathStore.prevPath && (isHomePage || isMyUserPage)) {
-      (async () => {
-        try {
-          const group = await GroupApi.getDefaultGroup();
-          groupStore.setGroup(group);
-        } catch (err) {
-          console.log(err);
-        }
-      })();
-    }
-  }, [location.pathname]);
   
   React.useEffect(() => {
     initSocket();
@@ -114,6 +92,15 @@ export default observer(() => {
   }, []);
 
   React.useEffect(() => {
+    const { pathname } = location;
+    if (pathname === `/`) {
+      document.title = 'Rum 微博广场';
+    } else if (pathname === `/search`) {
+      document.title = '搜索';
+    }
+  }, [location.pathname]);
+
+  React.useEffect(() => {
     const { push } = history;
     history.push = (path: string) => {
       if (path === window.location.pathname) {
@@ -121,6 +108,27 @@ export default observer(() => {
       }
       push(path);
     }
+    history.listen((data, action) => {
+      console.log(`[history.listen]:`, { data, action });
+      const { pathname } = data;
+      if (action === 'PUSH') {
+        pathStore.push(pathname);
+      } else if (action === 'POP') {
+        pathStore.pop();
+      }
+      const isHomePage = pathname === '/';
+      const isMyUserPage = pathname.startsWith(`/users/${userStore.address}`);
+      if (isHomePage || isMyUserPage) {
+        (async () => {
+          try {
+            const group = await GroupApi.getDefaultGroup();
+            groupStore.setGroup(group);
+          } catch (err) {
+            console.log(err);
+          }
+        })();
+      }
+    })
   }, []);
 
   if (!state.ready) {

@@ -150,7 +150,7 @@ export default observer(() => {
             <div
               className="flex items-center cursor-pointer dark:text-white dark:text-opacity-80 text-neutral-500"
               onClick={() => {
-                pathStore.prevPath ? history.goBack() : history.push(`/`)
+                pathStore.paths.length > 0 ? history.goBack() : history.replace(`/`);
               }}>
               <div className="flex items-center text-20 ml-3 md:ml-2">
                 <BiArrowBack />
