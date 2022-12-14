@@ -27,6 +27,7 @@ import store from 'store2';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
 import { useActivate, useUnactivate } from 'react-activation';
 import { RouteChildrenProps } from 'react-router-dom';
+import UserName from 'components/UserName';
 
 import './index.css';
 
@@ -60,6 +61,7 @@ export default observer((props: RouteChildrenProps) => {
   const isMyself = userStore.address === userAddress;
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
+  const isTweet = (profile.name || '').includes('\n@');
 
   React.useEffect(() => {
     (async () => {
@@ -270,8 +272,15 @@ export default observer((props: RouteChildrenProps) => {
                   src={profile.avatar}
                   alt={profile.name}
                 />
-                <div className="font-bold mt-2 text-19 md:text-24 pt-1 leading-snug w-[230px] md:w-[320px] break-words">
-                  {profile.name}
+                <div className="mt-2 pt-1 text-19 md:text-24">
+                  <UserName
+                    name={profile.name}
+                    normalNameClass="leading-snug font-bold w-[230px] md:w-[320px] break-words"
+                    fromClass='mt-[2px]'
+                    fromNameClass="py-1 truncate font-bold max-w-[180px]"
+                    fromIconClass="text-28 text-sky-400 mx-1"
+                    fromIdClass="opacity-60 truncate text-16 max-w-[120px] md:max-w-[150px] mt-[1px] hidden"
+                    />
                 </div>
                 <div className="text-14 md:text-16 flex items-center pt-1 md:pt-0">
                   <span className="mt-2">
@@ -309,8 +318,13 @@ export default observer((props: RouteChildrenProps) => {
                     被关注
                   </span>
                 </div>
+                {isTweet && (
+                  <div className="text-black bg-white py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
+                    本号所有内容来自推特用户 @{profile.name.split('\n@')[1]}
+                  </div>
+                )}
               </div>
-              <div className="mt-8 md:mt-12 pt-4 mr-3 md:mr-5 absolute top-0 right-0">
+              <div className="mt-5 md:mt-12 pt-4 mr-3 md:mr-5 absolute top-0 right-0">
                 <div className="flex items-center">
                   {!user.muted && (
                     <div
@@ -425,7 +439,6 @@ export default observer((props: RouteChildrenProps) => {
             </div>
           </div>
         </div>
-
         <div>
           <div className={classNames({
             'opacity-0': state.invisibleOverlay

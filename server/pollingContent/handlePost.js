@@ -55,10 +55,12 @@ const pack = async item => {
   const {
     id,
     content,
-    image
+    image,
+    name
   } = item.Data;
   const post = {
     content,
+    title: name || '',
     userAddress: QuorumLightNodeSDK.utils.pubkeyToAddress(item.SenderPubkey),
     groupId: item.GroupId,
     trxId: item.TrxId,

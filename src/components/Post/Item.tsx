@@ -18,6 +18,7 @@ import { useHistory } from 'react-router-dom';
 import BFSReplace from 'utils/BFSReplace';
 import Query from 'utils/query';
 import escapeStringRegexp from 'escape-string-regexp';
+import UserName from 'components/UserName';
 
 import './index.css';
 
@@ -144,6 +145,7 @@ export default observer((props: IProps) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const profile = post.extra!.userProfile;
   const history = useHistory();
+  const isTweet = (post.title || '').startsWith('https://twitter.com')
 
   React.useEffect(() => {
     if (inPostDetail || !post.content) {
@@ -207,8 +209,15 @@ export default observer((props: IProps) => {
                 userAddress={post.userAddress}
                 className="inline-block"
               >
-                <div className="text-gray-4a font-bold max-w-40 truncate opacity-80 md:opacity-100 inline-block">
-                  {profile.name}
+                <div className="text-gray-4a md:text-15">
+                  <UserName
+                    name={profile.name}
+                    normalNameClass="font-bold max-w-40 truncate opacity-80 inline-block"
+                    fromClass='mt-[-2px] h-[15px] md:h-[17px]'
+                    fromNameClass="opacity-80 truncate font-bold max-w-[120px]"
+                    fromIconClass="text-22 text-sky-400 mx-1"
+                    fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[120px] md:max-w-[150px] mt-[1px]"
+                    />
                 </div>
               </UserCard>
             </div>
@@ -239,7 +248,7 @@ export default observer((props: IProps) => {
                     'mt-[8px] text-gray-4a break-all whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: urlify(`${post.content}`),
+                    __html: urlify(`${post.content}`) +`${isTweet ? ` <a class="text-sky-400 text-13" href="${post.title || ''}">查看原文</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {
