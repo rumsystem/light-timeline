@@ -511,10 +511,18 @@ const Editor = observer((props: IProps) => {
                 />
               )}
               <div className="flex ml-5 mt-[2px] tracking-wider">
-                <div className="bg-stone-100 text-12 py-1 px-2 flex items-center rounded-full">
-                  <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-60" />
-                  <span className="text-sky-400 font-bold opacity-80">{groupStore.group.groupName}</span>
-                </div>
+                <Tooltip
+                  enterDelay={200}
+                  enterNextDelay={200}
+                  placement="top"
+                  title='您的内容将发送到这里'
+                  arrow
+                  >
+                  <div className="bg-stone-100 text-12 py-1 px-2 flex items-center rounded-full">
+                    <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-60" />
+                    <span className="text-sky-400 font-bold opacity-80">{groupStore.group.groupName}</span>
+                  </div>
+                </Tooltip>
               </div>
             </div>
             <Tooltip
