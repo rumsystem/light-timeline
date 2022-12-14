@@ -33,7 +33,7 @@ export default observer((props: RouteChildrenProps) => {
     invisibleOverlay: false,
     fetchingPosts: false,
     fetchedPosts: false,
-    fetchGroup: false,
+    fetchedGroup: false,
     hasMore: false,
     page: 1,
     group: {} as IGroup,
@@ -42,7 +42,7 @@ export default observer((props: RouteChildrenProps) => {
       return this.profileMap[userStore.address]
     },
     get fetched() {
-      return this.fetchGroup && this.fetchedPosts
+      return this.fetchedGroup && this.fetchedPosts
     },
     get groupNotFound() {
       return isEmpty(this.group);
@@ -56,7 +56,7 @@ export default observer((props: RouteChildrenProps) => {
       (async () => {
         await sleep(200);
         state.invisible = false;
-        if (state.fetchGroup) {
+        if (state.fetchedGroup) {
           document.title = state.group.groupName;
           groupStore.setGroup(toJS(state.group));
         }
@@ -75,7 +75,7 @@ export default observer((props: RouteChildrenProps) => {
       state.fetchedPosts = false;
       state.fetchingPosts = true;
       state.page = 1;
-      state.fetchGroup = false;
+      state.fetchedGroup = false;
     }
     (async () => {
       try {
@@ -89,7 +89,7 @@ export default observer((props: RouteChildrenProps) => {
       } catch (err) {
         console.log(err);
       }
-      state.fetchGroup = true;
+      state.fetchedGroup = true;
       if (fetched) {
         await sleep(200);
         scrollToTop();
@@ -246,7 +246,7 @@ export default observer((props: RouteChildrenProps) => {
                   />
                 </div>
                 <div className={classNames({
-                  'opacity-0': state.invisibleOverlay || !state.fetched || postStore.total === 0
+                  'opacity-0': state.invisibleOverlay || !state.fetched || postStore.groupTotal === 0
                 }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12")}>
                   {postStore.groupPosts.map((post) => (
                     <div key={post.trxId}>
