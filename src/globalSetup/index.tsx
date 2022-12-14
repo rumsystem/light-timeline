@@ -78,6 +78,11 @@ export default observer(() => {
     const body = document.querySelector('body') as any;
     if (body) {
       const listener = (e: any) => {
+        if (e.target && e.target.id === 'marker') {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         if (e.target && e.target.tagName === 'A') {
           e.preventDefault();
           e.stopPropagation();
