@@ -70,14 +70,14 @@ export default observer(() => {
           <div className="pt-[5vh]" />
         )}
         {state.groups.map(group => (
-          <div className="bg-white rounded-full shadow-xl w-full flex justify-between items-center pt-5 pb-4 px-8 md:px-10 border border-gray-ec leading-none mb-8" key={group.groupId}>
+          <div className="bg-white dark:bg-[#181818] rounded-full shadow-xl w-full flex justify-between items-center pt-5 pb-4 px-8 md:px-10 border dark:border-white dark:border-opacity-10 border-gray-ec leading-none mb-8" key={group.groupId}>
             <div>
               <div className="flex items-center">
-                <span className="font-bold text-18 md:text-20 text-gray-33 tracking-wider truncate max-w-[180px] md:max-w-[280px]">
+                <span className="font-bold text-18 md:text-20 dark:text-white dark:text-opacity-80 text-gray-33 tracking-wider truncate max-w-[180px] md:max-w-[280px]">
                   {group.groupName}
                 </span>
               </div>
-              <div className="mt-[15px] text-gray-9b flex items-center cursor-pointer" onClick={async () => {
+              <div className="mt-[15px] dark:text-white dark:text-opacity-80 text-gray-9b flex items-center cursor-pointer" onClick={async () => {
                 const result = await openGroupInfo(group.groupId);
                 if (result === 'removed') {
                   await sleep(500);
@@ -95,14 +95,14 @@ export default observer(() => {
                   </div>
                 )}
                 {group.status === 'disconnected' && (
-                  <div className="flex items-center bg-red-400 text-white p-1 px-2 text-12 rounded-12 mr-2 text-center">
+                  <div className="flex items-center bg-red-400 dark:text-black text-white p-1 px-2 text-12 rounded-12 mr-2 text-center">
                     <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
                   </div>
                 )}
                 <div>
                   {group.contentCount > 0 && (
                     <div>
-                      {group.status === 'connected' && '，'}同步<span className="text-gray-64 font-bold mx-[6px]">{group.contentCount}</span>条内容
+                      {group.status === 'connected' && '，'}同步<span className="dark:text-white dark:text-opacity-80 text-gray-64 font-bold mx-[6px]">{group.contentCount}</span>条内容
                     </div>
                   )}
                 </div>
@@ -114,7 +114,7 @@ export default observer(() => {
         <div className={classNames({
           'w-10 h-10': state.groups.length > 0,
           'h-16': state.groups.length === 0
-        }, "items-center justify-center mx-auto mt-10 bg-black rounded-full cursor-pointer text-white hidden md:flex")} onClick={() => {
+        }, "items-center justify-center mx-auto mt-10 dark:bg-white bg-black rounded-full cursor-pointer dark:text-black text-white hidden md:flex")} onClick={() => {
           state.openAddGroupModal = true;
         }}>
           <RiAddFill className="text-26" />
