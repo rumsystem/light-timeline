@@ -40,8 +40,8 @@ const Main = observer((props: IModalProps) => {
  
   const submit = async () => {
     if (
-      (!state.isUpdating && !state.url.includes('https://twitter.com')) ||
-      (state.isUpdating && state.url && !state.url.includes('https://twitter.com'))
+      (!state.isUpdating && !(state.url.includes('https://twitter.com') || state.url.includes('https://weibo.com'))) ||
+      (state.isUpdating && state.url && !(state.url.includes('https://twitter.com') || state.url.includes('https://weibo.com')))
     ) {
       return snackbarStore.show({
         message: '请输入正确的链接',

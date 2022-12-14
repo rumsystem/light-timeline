@@ -141,7 +141,7 @@ const UserList = observer((props: IProps) => {
                           name={relation.extra.userProfile.name}
                           normalNameClass="text-14 truncate max-w-[160px] md:max-w-[140px]"
                           fromNameClass="text-14 truncate max-w-[160px] md:max-w-[140px]"
-                          fromIconClass="text-20 text-sky-400 mx-1"
+                          fromIconClass="text-20 mx-1"
                           fromIdClass="hidden"
                           />
                       </div>

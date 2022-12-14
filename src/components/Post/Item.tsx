@@ -145,7 +145,9 @@ export default observer((props: IProps) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const profile = post.extra!.userProfile;
   const history = useHistory();
-  const isTweet = (post.title || '').startsWith('https://twitter.com');
+  const fromTwitter = (post.title || '').startsWith('https://twitter.com');
+  const fromWeibo = (post.title || '').startsWith('https://weibo.com');
+  const isTweet = fromTwitter || fromWeibo;
   const isIndexedBy = (post.title || '').includes('indexed by');
 
   React.useEffect(() => {
@@ -217,7 +219,7 @@ export default observer((props: IProps) => {
                     normalNameClass="font-bold max-w-[40vw] md:max-w-[250px] truncate opacity-90 mt-[-4px] h-[18px] md:h-[20px]"
                     fromClass='mt-[-2px] h-[15px] md:h-[17px]'
                     fromNameClass="opacity-80 truncate font-bold max-w-[160px] md:max-w-[250px]"
-                    fromIconClass="text-22 text-sky-400 mx-1"
+                    fromIconClass="text-22 mx-1"
                     fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[60px] hidden md:block md:max-w-[140px]"
                     />
                 </div>

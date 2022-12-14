@@ -63,6 +63,8 @@ export default observer((props: RouteChildrenProps) => {
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
   const isTweet = (profile.name || '').includes('\n@');
+  const fromWeibo = isTweet && (profile.name || '').includes('\n@weibo');
+  const fromTwitter = isTweet && !fromWeibo;
 
   React.useEffect(() => {
     (async () => {
@@ -281,7 +283,7 @@ export default observer((props: RouteChildrenProps) => {
                     normalNameClass="leading-snug font-bold w-[230px] md:w-[320px] break-words"
                     fromClass='mt-[2px]'
                     fromNameClass="py-1 truncate font-bold max-w-[70vw] md:max-w-[350px]"
-                    fromIconClass="text-28 text-sky-400 mx-1"
+                    fromIconClass="text-28 mx-1"
                     fromIdClass="hidden"
                     />
                 </div>
@@ -321,9 +323,14 @@ export default observer((props: RouteChildrenProps) => {
                     被关注
                   </span>
                 </div>
-                {isTweet && (
+                {fromTwitter && (
                   <div className="text-black bg-white dark:bg-opacity-90 py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
                     本号所有内容来自推特用户 @{profile.name.split('\n@')[1]}
+                  </div>
+                )}
+                {fromWeibo && (
+                  <div className="text-black bg-white dark:bg-opacity-90 py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
+                    本号所有内容来自微博用户 @{profile.name.split('\n@')[0]}
                   </div>
                 )}
               </div>
