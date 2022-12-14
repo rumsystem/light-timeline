@@ -26,7 +26,7 @@ const createStore = () => ({
   configStore: observable(createConfigStore()),
 });
 
-interface Store {
+export interface Store {
   snackbarStore: ReturnType<typeof createSnackbarStore>
   confirmDialogStore: ReturnType<typeof createConfirmDialogStore>
   modalStore: ReturnType<typeof createModalStore>

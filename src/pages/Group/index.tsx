@@ -1,10 +1,10 @@
 import React from 'react';
-import { runInAction, toJS } from 'mobx';
+import { runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { IPost, IProfile, IGroup } from 'apis/types';
 import { TrxStorage } from 'apis/common';
 import PostItem from 'components/Post/Item';
-import { GroupApi, PostApi, TrxApi } from 'apis';
+import { PostApi, TrxApi } from 'apis';
 import Editor from 'components/Editor';
 import { lang } from 'utils/lang';
 import { useStore } from 'store';
@@ -18,7 +18,6 @@ import { isMobile } from 'utils/env';
 import Base64 from 'utils/base64';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
 import { RouteChildrenProps } from 'react-router-dom';
-import { isEmpty } from 'lodash';
 import { useActivate, useUnactivate } from 'react-activation';
 import sleep from 'utils/sleep';
 
@@ -36,7 +35,7 @@ export default observer((props: RouteChildrenProps) => {
     fetchedGroup: false,
     hasMore: false,
     page: 1,
-    group: {} as IGroup,
+    group: null as IGroup | null,
     invisible: false,
     get myProfile () {
       return this.profileMap[userStore.address]
@@ -44,9 +43,6 @@ export default observer((props: RouteChildrenProps) => {
     get fetched() {
       return this.fetchedGroup && this.fetchedPosts
     },
-    get groupNotFound() {
-      return isEmpty(this.group);
-    }
   }));
   const DEFAULT_BG_GRADIENT =
   'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
@@ -56,9 +52,8 @@ export default observer((props: RouteChildrenProps) => {
       (async () => {
         await sleep(200);
         state.invisible = false;
-        if (state.fetchedGroup) {
+        if (state.fetchedGroup && state.group) {
           document.title = state.group.groupName;
-          groupStore.setGroup(toJS(state.group));
         }
       })();
     }
@@ -79,12 +74,12 @@ export default observer((props: RouteChildrenProps) => {
     }
     (async () => {
       try {
-        const [ group ] = await Promise.all([
-          GroupApi.get(groupId),
-          fetchPosts()
-        ]);
+        const group = groupStore.map[groupId];
+        if (!group) {
+          throw new Error('group not found');
+        }
+        await fetchPosts();
         state.group = group;
-        groupStore.setGroup(group);
         document.title = group.groupName;
       } catch (err) {
         console.log(err);
@@ -101,7 +96,7 @@ export default observer((props: RouteChildrenProps) => {
   const fetchPosts = async () => {
     state.fetchingPosts = true;
     try {
-      const limit = isMobile ? 10 : 15;
+      const limit = 15;
       const posts = await PostApi.list({
         groupId: groupId || '',
         type: 'latest',
@@ -164,17 +159,15 @@ export default observer((props: RouteChildrenProps) => {
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: groupStore.groupId,
+      groupId,
       object: payload,
-      aesKey: groupStore.getCipherKey(groupStore.groupId),
-      privateKey: userStore.privateKey,
-    }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+    });
     console.log(res);
     const post: IPost = {
       content: payload.content || '',
       images: (payload.image || []).map(image => Base64.getUrl(image)),
       userAddress: userStore.address,
-      groupId: groupStore.groupId,
+      groupId,
       trxId: res.trx_id,
       latestTrxId: '',
       storage: TrxStorage.cache,
@@ -185,7 +178,7 @@ export default observer((props: RouteChildrenProps) => {
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
-        groupName: groupStore.group.groupName
+        groupName: state.group!.groupName
       }
     };
     postStore.addGroupPost(post);
@@ -208,8 +201,8 @@ export default observer((props: RouteChildrenProps) => {
         <div className={classNames({
           'invisible': state.invisible
         }, "w-full md:w-[600px] box-border mx-auto relative pb-16")}>
-          {state.groupNotFound && <div className="py-32 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14">空空如也 ~</div>}
-          {!state.groupNotFound && (
+          {!state.group && <div className="py-32 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14">空空如也 ~</div>}
+          {state.group && (
             <div>
               <div className="flex items-stretch overflow-hidden relative p-6 pb-5 md:pb-6 px-5 md:px-8 md:rounded-12 md:mt-5">
                 <div
@@ -227,6 +220,7 @@ export default observer((props: RouteChildrenProps) => {
               <div className="md:pt-5">
                 <div className="hidden md:block">
                   <Editor
+                    groupId={state.group.groupId}
                     editorKey="post"
                     placeholder={lang.andNewIdea}
                     autoFocusDisabled

@@ -43,7 +43,7 @@ export default observer((props: IProps) => {
     expand: false,
     readyToFold: isSafari || isIPhone ? false : true,
   }));
-  const { commentStore, userStore, groupStore, snackbarStore } = useStore();
+  const { commentStore, userStore, snackbarStore } = useStore();
   const commentRef = React.useRef<any>();
   const {
     hideDivider,
@@ -140,9 +140,7 @@ export default observer((props: IProps) => {
           id: trxId,
           type: comment.extra.liked ? 'Dislike' : 'Like',
         },
-        aesKey: groupStore.getCipherKey(comment.groupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       commentStore.updateComment({
         ...comment,

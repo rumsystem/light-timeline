@@ -39,7 +39,7 @@ interface IProps {
 }
 
 export default observer((props: IProps) => {
-  const { modalStore, userStore, groupStore, commentStore, snackbarStore } = useStore();
+  const { modalStore, userStore, commentStore, snackbarStore } = useStore();
   const commentRef = React.useRef<any>();
   const { comment, isTopComment } = props;
   const isSubComment = !isTopComment;
@@ -111,9 +111,7 @@ export default observer((props: IProps) => {
           id: trxId,
           type: comment.extra.liked ? 'Dislike' : 'Like'
         },
-        aesKey: groupStore.getCipherKey(comment.groupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       commentStore.updateComment({
         ...comment,

@@ -73,18 +73,16 @@ const UserList = observer((props: IProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.relationGroupId,
+        groupId: groupStore.relationGroup.groupId,
         object: {
           type: 'Note',
           content: JSON.stringify({
-            groupId: groupStore.groupId,
+            groupId: groupStore.defaultGroup.groupId,
             type,
             to: relation.to
           })
         },
-        aesKey: groupStore.getCipherKey(groupStore.relationGroupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       state.relations = state.relations.filter(r => r.to !== relation.to);
       if (type === 'unfollow') {

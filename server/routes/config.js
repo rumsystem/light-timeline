@@ -7,7 +7,8 @@ async function get(ctx) {
   ctx.body = {
     title: config.title || '',
     logo: config.logo || '',
-    version: config.version || '1.0.0'
+    version: config.version || '1.0.0',
+    defaultGroupId: config.defaultGroupId || ''
   };
 }
 

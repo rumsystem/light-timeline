@@ -7,7 +7,7 @@ import { lang } from 'utils/lang';
 import { IObject } from 'quorum-light-node-sdk';
 
 const Reply = observer(() => {
-  const { modalStore } = useStore();
+  const { modalStore, groupStore } = useStore();
   const { comment, submit, postUserAddress, where } = modalStore.commentReply.data;
 
   return (
@@ -24,6 +24,7 @@ const Reply = observer(() => {
           />
           <div className="mt-3">
             <Editor
+              groupId={groupStore.defaultGroup.groupId}
               editorKey={`comment_reply_${comment.trxId}`}
               minRows={3}
               placeholder={`${lang.reply} ${comment.extra.userProfile.name}`}

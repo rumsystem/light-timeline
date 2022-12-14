@@ -295,7 +295,7 @@ export default observer(() => {
             >
               <div
                 className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 hidden'
-                onClick={() => openGroupInfo(groupStore.groupId)}
+                onClick={() => openGroupInfo(groupStore.defaultGroup.groupId)}
               >
                 <BsInfo className="text-24 dark:text-white dark:text-opacity-80 text-gray-af" />
               </div>

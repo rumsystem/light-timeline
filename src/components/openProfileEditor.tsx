@@ -67,16 +67,14 @@ const ModalWrapper = observer((props: IModalProps) => {
         }
       }
       const res = await TrxApi.createPerson({
-        groupId: groupStore.groupId,
+        groupId: groupStore.defaultGroup.groupId,
         person,
-        aesKey: groupStore.getCipherKey(groupStore.groupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       const profile: IProfile = {
         name: state.profile.name,
         avatar: state.profile.avatar,
-        groupId: groupStore.groupId,
+        groupId: groupStore.defaultGroup.groupId,
         userAddress: userStore.address
       };
       runInAction(() => {

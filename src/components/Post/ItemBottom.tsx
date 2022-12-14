@@ -34,7 +34,6 @@ export default observer((props: IProps) => {
     postStore,
     modalStore,
     userStore,
-    groupStore
   } = useStore();
   const { post } = props;
   const inPostDetail = props.where.startsWith('postDetail');
@@ -64,9 +63,7 @@ export default observer((props: IProps) => {
           id: trxId,
           type: post.extra.liked ? 'Dislike' : 'Like'
         },
-        aesKey: groupStore.getCipherKey(post.groupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       postStore.updatePost({
         ...post,
@@ -101,9 +98,7 @@ export default observer((props: IProps) => {
           content: OBJECT_STATUS_DELETED_LABEL,
           id: trxId
         },
-        aesKey: groupStore.getCipherKey(post.groupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
     } catch (err) {
       console.log(err);

@@ -65,18 +65,16 @@ const UserCard = observer((props: IUserCardProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.relationGroupId,
+        groupId: groupStore.relationGroup.groupId,
         object: {
           type: 'Note',
           content: JSON.stringify({
-            groupId: groupStore.groupId,
+            groupId: groupStore.defaultGroup.groupId,
             type,
             to: props.userAddress
           })
         },
-        aesKey: groupStore.getCipherKey(groupStore.relationGroupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       userStore.updateUser(props.userAddress, {
         followerCount: user.followerCount + (type === 'follow' ? 1 : -1),
