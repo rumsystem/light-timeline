@@ -4,8 +4,9 @@ const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
 const config = require('../config');
+const { ensurePermission } = require('../middleware/api');
 
-router.post('/', create);
+router.post('/', ensurePermission, create);
 
 async function create(ctx) {
   const { url } = ctx.request.body;

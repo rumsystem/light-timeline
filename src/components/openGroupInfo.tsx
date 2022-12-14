@@ -79,9 +79,19 @@ const Main = observer((props: IModalProps) => {
     confirmDialogStore.show({
       content: '确定移除这个种子网络吗？<div class="text-12">（同时移除掉已同步的内容）</div>',
       ok: async () => {
-        await GroupApi.remove(props.groupId);
-        confirmDialogStore.hide();
-        handleClose('removed');
+        try {
+          await GroupApi.remove(props.groupId);
+          confirmDialogStore.hide();
+          handleClose('removed');
+        } catch (err: any) {
+          if (err.code === 'ERR_NOT_PERMISSION') {
+            snackbarStore.show({
+              message: '您还没有权限执行这个操作，请让站长给您加权限',
+              type: 'error',
+              duration: 4000
+            });
+          }
+        }
       },
     });
   }

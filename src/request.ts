@@ -1,17 +1,26 @@
 import sleep from 'utils/sleep';
+import store from 'store2';
+
 const BASE = '';
 export default async (url: any, options: any = {}) => {
-  const hasEffectMethod = options.method === 'POST' || options.method === 'DELETE' || options.method === 'PUT';
+  const hasEffectMethod = ['post', 'delete', 'put'].includes((options.method || '').toLocaleLowerCase());
+  options.headers = {
+    'X-Address': store('address') || ''
+  }
   if (hasEffectMethod) {
-    options.headers = { 'Content-Type': 'application/json' };
+    options.headers = {
+      ...options.headers,
+      'Content-Type': 'application/json',
+    };
     options.body = JSON.stringify(options.body);
   }
   if (options.jwt) {
     options.headers = {
-      ...(options.headers || {}),
-      Authorization: `Bearer ${options.jwt}`
+      ...options.headers,
+      Authorization: `Bearer ${options.jwt}`,
     }
   }
+
   if (!options.base) {
     options.credentials = 'include';
   }
