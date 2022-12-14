@@ -49,7 +49,8 @@ const PostEditor = observer((props: {
       imageCount: (payload.image || []).length,
       timestamp: Date.now(),
       extra: {
-        userProfile: toJS(userStore.profile)
+        userProfile: toJS(userStore.profile),
+        groupName: groupStore.group.groupName
       }
     };
     props.rs(post);

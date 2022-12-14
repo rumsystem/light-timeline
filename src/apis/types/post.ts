@@ -23,4 +23,5 @@ export interface IPost extends IPostContent {
 export interface IPostExtra {
   userProfile: IProfile
   liked?: boolean
+  groupName: string
 }

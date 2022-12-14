@@ -4,6 +4,7 @@ const Profile = require('./profile');
 const UniqueCounter = require('./uniqueCounter');
 const getDefaultProfile = require('../utils/getDefaultProfile');
 const config = require('../config');
+const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 
 exports.create = async (item) => {
   return await Post.create(item);
@@ -73,6 +74,7 @@ exports.list = async (query, options = {}) => {
 const bulkAppendExtra = async (items, options = {}) => {
   items = items.map((item) => {
     item.extra = item.extra || {};
+    item.extra.groupName = QuorumLightNodeSDK.cache.Group.get(item.groupId).groupName
     return item;
   });
 
@@ -99,6 +101,8 @@ const bulkAppendExtra = async (items, options = {}) => {
     item.extra.userProfile = profileMap[item.userAddress] || getDefaultProfile(item.userAddress)
     return item;
   });
+
+
   return items;
 }
 

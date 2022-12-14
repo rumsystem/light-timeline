@@ -116,7 +116,8 @@ export default observer(() => {
       imageCount: (payload.image || []).length,
       timestamp: Date.now(),
       extra: {
-        userProfile: userStore.profile
+        userProfile: userStore.profile,
+        groupName: groupStore.group.groupName
       }
     };
     postStore.addPost(post);

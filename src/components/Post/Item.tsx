@@ -248,7 +248,7 @@ export default observer((props: IProps) => {
                   }}
                 />
                 {!state.expandContent && state.canExpandContent && (
-                  <div className="relative mt-6-px pb-2">
+                  <div className="relative mt-6-px pb-4">
                     <div
                       className="text-blue-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
                       onClick={() => { state.expandContent = true; }}
@@ -259,7 +259,7 @@ export default observer((props: IProps) => {
                   </div>
                 )}
                 {state.expandContent && state.canExpandContent && (
-                  <div className="relative mt-6-px pb-2">
+                  <div className="relative mt-6-px pb-4">
                     <div
                       className="text-blue-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
                       onClick={async () => {
@@ -287,9 +287,18 @@ export default observer((props: IProps) => {
               </div>
             )}
             {!post.content && <div className="pb-3" />}
-            {post.images && <div className="pb-2">
-              <Images images={post.images} />
+            {(post.images || []).length > 0 && <div className="pb-2">
+              <Images images={post.images || []} />
             </div>}
+
+            <div className="flex pt-1 pb-2 tracking-wide">
+              <div className="bg-slate-100 text-12 py-1 px-2 flex items-center rounded-full text-blue-400 cursor-pointer" onClick={() => {
+                history.push(`/groups/${post.groupId}`)
+              }}>
+                <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-90" />
+                {post.extra.groupName}
+              </div>
+            </div>
           </div>
         </div>
 
