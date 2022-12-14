@@ -349,7 +349,8 @@ export default observer((props: IProps) => {
         likePost={props.updateCounter}
         post={props.post}
       />
-      <div className="pt-3 pb-6">
+      <div className="pt-3 pb-5">
+        <div className="ios-safe-area-padding" />
         {topComments.length > 5 && (
           <BottomLine />
         )}
