@@ -196,7 +196,7 @@ export default observer((props: IProps) => {
           </div>
           <div className="ml-10-px md:ml-3" style={{ paddingLeft: 36 }}>
             <div className="flex justify-between items-start md:items-center">
-              <div className="flex items-center leading-none text-14 dark:text-white dark:text-opacity-80 text-gray-99 relative">
+              <div className="flex items-center leading-[1.2] text-14 dark:text-white dark:text-opacity-80 text-gray-99 relative">
                 <Link to={`/${comment.groupId}/users/${comment.userAddress}`} >
                   <span
                     onClick={async () => {
