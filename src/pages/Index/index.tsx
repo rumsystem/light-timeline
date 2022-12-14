@@ -128,7 +128,7 @@ export default observer(() => {
   }
 
   return (
-    <div className="box-border w-full h-screen overflow-auto bg-white md:bg-transparent" ref={rootRef}>
+    <div className="box-border w-full h-screen overflow-auto bg-white dark:bg-[#181818] md:bg-transparent" ref={rootRef}>
       <TopPlaceHolder />
       <div className="w-full md:w-[600px] box-border mx-auto relative pb-16">
         <div className="md:pt-5">
@@ -152,8 +152,8 @@ export default observer(() => {
             />
           </div>
           <div className={classNames({
-            'opacity-0': state.invisibleOverlay
-          }, "md:mt-5 w-full box-border")}>
+            'opacity-0': state.invisibleOverlay || !state.fetched
+          }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:border-opacity-10 md:rounded-12 overflow-hidden")}>
             {postStore.posts.map((post) => (
               <div key={post.trxId}>
                 <PostItem
@@ -175,7 +175,7 @@ export default observer(() => {
             </div>
           )}
           {state.fetched && postStore.total === 0 && (
-            <div className="py-[30vh] text-center text-gray-500 text-14 tracking-wider opacity-80">
+            <div className="py-[30vh] text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 tracking-wider opacity-80">
               {['latest', 'random'].includes(postStore.feedType) && '来发布一条内容吧 ~'}
               {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
               {postStore.feedType === 'latest' && isMobile && !userStore.isLogin && (
