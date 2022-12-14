@@ -1,9 +1,10 @@
 const router = require('koa-router')();
 const axios = require('axios');
-const JsSHA = require('jssha');
 const config = require('../config');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { assert, Errors } = require('../utils/validator');
+const nftUtils = require('../utils/nft');
+const logger = require('../utils/logger');
 
 router.get('/:pubKey', get);
 router.post('/:pubKey', tryAdd);
@@ -11,22 +12,58 @@ router.post('/:pubKey', tryAdd);
 async function get(ctx) {
   const { groupId, pubKey } = ctx.params;
   const allow = await getChainAuth(groupId, pubKey);
-  console.log(`[getAllow]:`, { allow });
+  logger.info(`[getAllow]:`)
+  logger.info({ allow });
   assert(allow, Errors.ERR_NOT_FOUND('allow'));
   ctx.body = true;
 }
 
 async function tryAdd(ctx) {
   const { groupId, pubKey } = ctx.params;
+  const provider = ctx.query.provider || 'mixin';
   const accessToken = ctx.query.access_token;
   assert(accessToken, Errors.ERR_IS_REQUIRED('accessToken'));
-  console.log(`[get permission]:`, { accessToken });
-  const userId = await getUserId(accessToken);
-  console.log(`getUserId:`, { userId });
-  assert(userId, Errors.ERR_IS_INVALID('userId'));
-  const nft = await getNFT(userId, accessToken, config.nft.collection_id);
-  console.log(`[getNFT]:`, { nft });
-  assert(nft, Errors.ERR_NOT_FOUND(`${JSON.stringify(config.nft)} nft`));
+  logger.info(`[tryAdd query]:`)
+  logger.info({ provider, accessToken });
+  let nft;
+  if (provider === 'mixin') {
+    const userId = await nftUtils.mixin.getUserId(accessToken);
+    logger.info(`nftUtils.mixin.getUserId:`)
+    logger.info({ userId });
+    assert(userId, Errors.ERR_NOT_FOUND('userId'));
+    const nftInfo = await nftUtils.mixin.getNFT(userId, accessToken, config.nft.collection_id);
+    logger.info(`[nftUtils.mixin.getNFT]:`)
+    logger.info({ nftInfo });
+    assert(nftInfo, Errors.ERR_NOT_FOUND(`${JSON.stringify(config.nft)} nft`));
+    nft = {
+      collection_id: nftInfo.collection_id,
+      meta: {
+        description: nftInfo.meta.description,
+        hash: nftInfo.meta.hash,
+        icon_url: nftInfo.meta.icon_url,
+        name: nftInfo.meta.name
+      }
+    }
+    logger.info({ nft });
+  }
+  if (provider === 'web3') {
+    const address = await getOriginalVaultAddress(accessToken);
+    assert(address, Errors.ERR_NOT_FOUND('address'));
+    const nftInfo = await nftUtils.mvm.getNFTFromExplorer(address, config.nft.collection_id);
+    logger.info(`[nftUtils.mvm.getNFTFromExplorer]:`)
+    logger.info({ nftInfo });
+    assert(nftInfo, Errors.ERR_NOT_FOUND(`${JSON.stringify(config.nft)} nft`));
+    nft = {
+      collection_id: nftInfo.collection.id,
+      meta: {
+        description: nftInfo.token.description,
+        hash: nftInfo.token.media.hash,
+        icon_url: nftInfo.token.icon.url,
+        name: nftInfo.token.name
+      }
+    }
+    logger.info({ nft });
+  }
   const allow = await getChainAuth(groupId, pubKey);
   if (allow) {
     ctx.body = { nft, allow };
@@ -50,10 +87,9 @@ const getChainAuth = async (groupId, pubKey) => {
       },
     });
     const allowList = res.data || [];
-    console.log(`[getChainAuth]:`, { allowList });
     return allowList.find(item => item.Pubkey === pubKey) || null;
   } catch (err) {
-    console.log(err);
+    logger(err);
     return null;
   }
 }
@@ -81,10 +117,11 @@ const updateChainAuth = async (groupId, pubKey, action) => {
         Authorization: `Bearer ${chainApiToken}`,
       },
     });
-    console.log(`[updateChainAuth]:`, { 'res.data': res.data });
+    logger.info(`[updateChainAuth]:`)
+    logger.info({ 'res.data': res.data });
     return true;
   } catch (err) {
-    console.log(err);
+    logger.info(err);
     return false;
   }
 }
@@ -97,68 +134,19 @@ const getPresetGroup = groupId => {
   });
 }
 
-async function getOutputs(token, ids) {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  const resp = await axios.get(`https://mixin-api.zeromesh.net/collectibles/outputs?members=${hashMembers(ids)}&threshold=1&state=unspent`, config)
-  if (resp.data) {
-    return resp.data.data
-  }
-}
-
-async function getUserId(token) {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  const resp = await axios.get(`https://mixin-api.zeromesh.net/me`, config);
+const getOriginalVaultAddress = async (token) => {
   try {
-    return resp.data.data.user_id;
+    assert(token, Errors.ERR_IS_REQUIRED('token'));
+    const res = await axios.get(`https://vault.rumsystem.net/v1/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data.eth_address_user.address;
   } catch (err) {
-    console.log(resp.data);
+    logger.info(err);
     return '';
   }
-};
-
-async function getNFT(userId, token, collectionId) {
-  const outputs = await getOutputs(token, [userId]);
-  console.log(`[getNFT]:`, { outputs });
-  for (const output of outputs) {
-    try {
-      if (output.token_id) {
-        const nft = await getNFTToken(token, output.token_id);
-        if (nft.collection_id === collectionId) {
-          return nft;
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  return null;
 }
-
-async function getNFTToken(token, id) {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  const resp = await axios.get(`https://mixin-api.zeromesh.net/collectibles/tokens/${id}`, config)
-  if (resp.data) {
-    return resp.data.data
-  }
-};
-
-const hashMembers = (ids) => {
-  const key = ids.sort().join('');
-  const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
-  sha.update(key);
-  return sha.getHash('HEX');
-};
 
 module.exports = router;

@@ -19,11 +19,11 @@ export default (store: Store) => {
           window.location.href = nft_info!.buy_url;
         },
       });
-    } else if (userStore.vaultAppUser.provider !== 'mixin') {
+    } else if (!['web3', 'mixin'].includes(userStore.vaultAppUser.provider)) {
       confirmDialogStore.show({
-        content: `当前帐号只能点赞和评论，只有使用 Mixin 登录而且持有 NFT 才能发布内容哦`,
+        content: `当前帐号只能点赞和评论，只有使用 Mixin 或者 MetaMask 登录、而且持有 NFT 才能发布内容哦`,
         cancelText: '我知道了',
-        okText: '使用 Mixin 登录',
+        okText: '切换账号',
         ok: async () => {
           confirmDialogStore.hide();
           await sleep(500);

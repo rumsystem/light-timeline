@@ -6,31 +6,19 @@ export default {
     await request(`${API_BASE_URL}/${groupId}/permission/${pubKey}`);
   },
 
-  async tryAdd(groupId: string, pubKey: string, accessToken: string) {
-    const res = await request(`${API_BASE_URL}/${groupId}/permission/${pubKey}?access_token=${accessToken}`, {
+  async tryAdd(groupId: string, pubKey: string, provider: string, accessToken: string) {
+    const res = await request(`${API_BASE_URL}/${groupId}/permission/${pubKey}?provider=${provider}&access_token=${accessToken}`, {
       method: 'POST'
     });
     return res as {
       nft: {
         collection_id: string
-        created_at: string
-        group: string
         meta: {
           description: string
-          group: string
           hash: string
           icon_url: string
-          media_url: string
-          mime: string
           name: string
         }
-        mixin_id: string
-        nfo: string
-        receivers: string[]
-        receivers_threshold: number
-        token: string
-        token_id: string
-        type: string
       },
       allow?: {
         GroupOwnerPubkey: string

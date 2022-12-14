@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash';
 import openProfileEditor from 'components/openProfileEditor';
 import openLoginModal from 'components/openLoginModal';
 import sleep from 'utils/sleep';
+import isJWT from 'utils/isJWT';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
@@ -34,13 +35,12 @@ const Preload = observer(() => {
       try {
         const groups = await GroupApi.list();
         groupStore.setMap(groups);
-        let createdByToken = false;
         if (token) {
           modalStore.pageLoading.show();
-          createdByToken = await handleToken(token, accessToken);
+          await handleToken(token, accessToken);
           modalStore.pageLoading.hide();
         }
-        if (userStore.isLogin && !createdByToken) {
+        if (userStore.isLogin) {
           const [profile, user] = await Promise.all([
             ProfileApi.get(userStore.address),
             UserApi.get(userStore.address, {
@@ -77,9 +77,8 @@ const Preload = observer(() => {
   }, []);
 
   const handleToken = async (token: string, accessToken: string) => {
-    let createdByToken = false;
-    const jwt = await Vault.decryptByCryptoKey(token);
-    const decryptedAccessToken = await Vault.decryptByCryptoKey(accessToken);
+    const jwt = isJWT(token) ? token : await Vault.decryptByCryptoKey(token);
+    const _accessToken = accessToken ? (isJWT(accessToken) ? accessToken : await Vault.decryptByCryptoKey(accessToken)) : '';
     Vault.removeCryptoKeyFromLocalStorage();
     userStore.setJwt(jwt);
     const vaultUser = await VaultApi.getUser(jwt);
@@ -90,7 +89,6 @@ const Preload = observer(() => {
     } catch (err) {
       console.log(err);
       vaultAppUser = await VaultApi.createAppUser(jwt);
-      createdByToken = true;
     }
     console.log({ vaultAppUser });
     const compressedPublicKey = ethers.utils.arrayify(ethers.utils.computePublicKey(vaultAppUser.eth_pub_key, true));
@@ -98,12 +96,12 @@ const Preload = observer(() => {
     userStore.setVaultAppUser({
       ...vaultAppUser,
       eth_pub_key: publicKey,
-      access_token: decryptedAccessToken,
-      provider: vaultUser.mixin ? 'mixin' : 'github'
+      access_token: _accessToken || jwt,
+      provider: isJWT(token) ? 'web3' : (vaultUser.mixin ? 'mixin' : 'github')
     });
     try {
       const profileExist = await ProfileApi.exist(userStore.address);
-      if (!profileExist) {
+      if (!profileExist && !isJWT(token)) {
         const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
         const res = await TrxApi.createPerson({
           groupId: groupStore.map.group_profiles.groupId,
@@ -128,14 +126,13 @@ const Preload = observer(() => {
     } catch (err) {
       console.log(err);
     }
-    return createdByToken;
   }
 
   const handlePermission = async () => {
     try {
       const { vaultAppUser } = userStore;
-      if (vaultAppUser.provider === 'mixin' && vaultAppUser.status !== 'allow') {
-        const res = await PermissionApi.tryAdd(groupStore.map.group_timeline.groupId, vaultAppUser.eth_pub_key, vaultAppUser.access_token);
+      if (['mixin', 'web3'].includes(vaultAppUser.provider) && vaultAppUser.status !== 'allow') {
+        const res = await PermissionApi.tryAdd(groupStore.map.group_timeline.groupId, vaultAppUser.eth_pub_key, vaultAppUser.provider, vaultAppUser.access_token);
         console.log(`[PermissionApi.tryAdd]`, vaultAppUser.eth_pub_key, { res });
         if (res.allow) {
           userStore.setVaultAppUser({
@@ -151,7 +148,6 @@ const Preload = observer(() => {
         }
       }
     } catch (err: any) {
-      console.log(err);
       if (err.code === 'ERR_IS_INVALID' && err.message.includes('userId')) {
         userStore.setVaultAppUser({
           ...userStore.vaultAppUser,

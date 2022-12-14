@@ -15,7 +15,7 @@ async function sendTrx(ctx) {
     ctx.body = res;
   } catch (err) {
     console.log(err);
-    const { status } = err.response;
+    const { status } = err.response || {};
     if (status > 200 && status < 500) {
       throws(Errors.ERR_NO_PERMISSION('request'));
     } else {
