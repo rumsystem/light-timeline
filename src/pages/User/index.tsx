@@ -28,6 +28,7 @@ import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
 import { useActivate, useUnactivate } from 'react-activation';
 import { RouteChildrenProps } from 'react-router-dom';
 import UserName from 'components/UserName';
+import openPhotoSwipe from 'components/openPhotoSwipe';
 
 import './index.css';
 
@@ -266,6 +267,11 @@ export default observer((props: RouteChildrenProps) => {
             <div className="justify-between z-10 w-full box-border pt-2 px-5 md:px-8 text-white relative">
               <div>
                 <img
+                  onClick={() => {
+                    openPhotoSwipe({
+                      image: profile.avatar,
+                    });
+                  }}
                   width={isMobile ? 74 : 100}
                   height={isMobile ? 74 : 100}
                   className="rounded-full avatar bg-white"
