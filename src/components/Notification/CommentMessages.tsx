@@ -65,7 +65,7 @@ export default observer((props: IMessagesProps) => {
                     </div>
                   </div>
                   <div
-                    className="mt-[9px] opacity-90 break-all"
+                    className="mt-[9px] opacity-90 break-word"
                   >
                     <div>
                       <div dangerouslySetInnerHTML={{

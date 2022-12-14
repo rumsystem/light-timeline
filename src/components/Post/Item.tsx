@@ -245,7 +245,7 @@ export default observer((props: IProps) => {
                       'text-[15px]': inPostDetail,
                       'text-[14px]': !inPostDetail
                     },
-                    'mt-[8px] text-gray-4a break-all whitespace-pre-wrap tracking-wide',
+                    'mt-[8px] text-gray-4a break-word whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
                     __html: urlify(`${post.content}`) +`${isTweet ? ` <a class="text-sky-400 text-13" href="${post.title || ''}">查看原文</a>` : ''}`,
