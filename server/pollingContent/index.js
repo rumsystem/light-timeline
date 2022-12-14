@@ -55,7 +55,6 @@ const startJob = async (groupId, duration) => {
     const groupCount = await Group.count({ where: { groupId } })
     if (groupCount === 0) {
       delete jobShareData.jobMap[groupId];
-      console.log({ '删除之后 jobShareData.jobMap': jobShareData.jobMap });
       break;
     }
     const group = jobShareData.activeGroupMap[groupId];
