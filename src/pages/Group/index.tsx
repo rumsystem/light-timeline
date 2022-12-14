@@ -1,5 +1,5 @@
 import React from 'react';
-import { runInAction } from 'mobx';
+import { runInAction, toJS } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { IPost, IProfile, IGroup } from 'apis/types';
 import { TrxStorage } from 'apis/common';
@@ -58,6 +58,7 @@ export default observer((props: RouteChildrenProps) => {
         state.invisible = false;
         if (state.fetchGroup) {
           document.title = state.group.groupName;
+          groupStore.setGroup(toJS(state.group));
         }
       })();
     }
