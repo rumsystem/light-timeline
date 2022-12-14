@@ -117,13 +117,13 @@ export default observer((props: IProps) => {
   return (
     <div>
       {!props.hideBottom && (
-        <div className="pl-12 ml-1 flex items-center dark:text-white dark:text-opacity-60 text-gray-88 leading-none text-12">
+        <div className="pl-12 ml-1 flex items-center dark:text-white dark:text-opacity-50 text-gray-88 leading-none text-12">
           <div
             className={classNames(
               {
-                'dark:text-white dark:text-opacity-70 text-gray-33': liked,
+                'dark:text-white dark:text-opacity-50 text-gray-33': liked,
               },
-              'flex items-center pl-0 p-2 pr-5 cursor-pointer tracking-wide dark:hover:text-white hover:text-gray-33',
+              'flex items-center pl-0 p-2 pr-5 cursor-pointer tracking-wide',
             )}
             onClick={() => {
               updateCounter(post.trxId);
@@ -131,7 +131,7 @@ export default observer((props: IProps) => {
           >
             <div className="text-16 mr-[6px] opacity-90">
               {liked ? (
-                <RiThumbUpFill className="dark:text-white dark:text-opacity-60 text-black opacity-60 dark:opacity-80" />
+                <RiThumbUpFill className="dark:text-white dark:text-opacity-50 text-black opacity-60 dark:opacity-80" />
               ) : (
                 <RiThumbUpLine />
               )}
@@ -146,9 +146,9 @@ export default observer((props: IProps) => {
           <div
             className={classNames(
               {
-                'dark:text-white dark:text-opacity-60 text-gray-33': state.showComment,
+                'dark:text-white dark:text-opacity-50 text-gray-33': state.showComment,
               },
-              'flex items-center p-2 pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide dark:hover:text-white hover:text-gray-33 mt-[-1px]',
+              'flex items-center p-2 pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide mt-[-1px]',
             )}
             onClick={() => {
               if (inPostDetail) {
@@ -164,7 +164,7 @@ export default observer((props: IProps) => {
           >
             <div className="text-16 mr-[6px] opacity-90">
               {state.showComment ? (
-                <FaComment className="dark:text-white dark:text-opacity-60 text-black opacity-60 dark:opacity-80" />
+                <FaComment className="dark:text-white dark:text-opacity-50 text-black opacity-60 dark:opacity-80" />
               ) : (
                 <FaRegComment />
               )}
@@ -175,7 +175,7 @@ export default observer((props: IProps) => {
               : <span className="hidden md:block">评论</span>}
           </div>
           <div
-            className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:hover:text-white hover:text-gray-33'
+            className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:text-white dark:text-opacity-50 opacity-80'
             onClick={() => {
               copy(`${window.origin}/posts/${post.trxId}`);
               snackbarStore.show({
@@ -190,7 +190,7 @@ export default observer((props: IProps) => {
               title='复制链接'
               arrow
               >
-              <div className="text-20 mr-[6px] opacity-60">
+              <div className="text-20 mr-[6px]">
                 <TiArrowForwardOutline />
               </div>
             </Tooltip>
