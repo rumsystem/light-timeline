@@ -25,6 +25,15 @@ export default observer((props: IMessagesProps) => {
   const { notifications } = props;
   const history = useHistory();
 
+  const toPost = (url: string) => {
+    const inPostDetail = window.location.pathname.includes('/posts/');
+    if (inPostDetail) {
+      window.location.href = url;
+    } else {
+      history.push(url);
+    }
+  }
+
   return (
     <div>
       {notifications.map((notification, index) => {
@@ -96,7 +105,7 @@ export default observer((props: IMessagesProps) => {
                           const commentId = (notification.extra.fromObject as IComment).trxId;
                           props.close();
                           await sleep(400);
-                          history.push(`/posts/${objectId}?commentId=${commentId}`);
+                          toPost(`/posts/${objectId}?commentId=${commentId}`);
                         } else {
                           Query.set({
                             commentId: (notification.extra.fromObject as IComment).trxId
