@@ -46,7 +46,6 @@ export default observer(() => {
   } = useStore();
   const state = useLocalObservable(() => ({
     showBackToTop: true,
-    showPostEditorEntry: true,
     openMessageModal: false,
     consoleClickCount: 0,
     unreadCount: 0,
@@ -61,6 +60,7 @@ export default observer(() => {
   const isSearchPage = location.pathname === `/search`;
   const isGroupsPage = location.pathname === `/groups`;
   const isMyUserPage = location.pathname === `/users/${userStore.address}`;
+  const isGroupPage = location.pathname.startsWith(`/groups/`);
 
   const fetchUnreadCount = async () => {
     try {
@@ -106,6 +106,11 @@ export default observer(() => {
       await sleep(200);
       if (isMyUserPage) {
         postStore.addUserPost(post);
+        if (postStore.feedType === 'latest') {
+          postStore.addPost(post);
+        }
+      } else if (isGroupPage) {
+        postStore.addGroupPost(post);
         if (postStore.feedType === 'latest') {
           postStore.addPost(post);
         }
@@ -240,7 +245,7 @@ export default observer(() => {
       </div>
       {isPc && (
         <div className='mt-10 mr-[-430px] scale-100 bottom-[30px] right-[50%] fixed'>
-          {(isMyUserPage || (isHomePage && userStore.isLogin && state.showPostEditorEntry)) && (
+          {(isMyUserPage || (isGroupPage && userStore.isLogin) || (isHomePage && userStore.isLogin)) && (
             <Fade in={true} timeout={350}>
               <div
                 className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-black bg-black'

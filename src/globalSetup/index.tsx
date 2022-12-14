@@ -7,6 +7,7 @@ import { IComment, IPost } from 'apis/types';
 import { useLocation, useHistory } from 'react-router-dom';
 import Sidebar from 'components/Sidebar';
 import { isMobile } from 'utils/env';
+import { GroupApi } from 'apis';
 
 export default observer(() => {
   const { userStore, commentStore, postStore, groupStore, pathStore } = useStore();
@@ -17,12 +18,25 @@ export default observer(() => {
   }));
 
   React.useEffect(() => {
-    if (location.pathname === `/` || !pathStore.prevPath) {
+    const { pathname } = location;
+    if (pathname === `/` || !pathStore.prevPath) {
       document.title = 'Rum 微博广场';
-    } else if (location.pathname === `/search`) {
+    } else if (pathname === `/search`) {
       document.title = '搜索';
     }
-    pathStore.push(location.pathname);
+    pathStore.push(pathname);
+    const isHomePage = pathname === '/';
+    const isMyUserPage = pathname.startsWith(`/users/${userStore.address}`);
+    if (pathStore.prevPath && (isHomePage || isMyUserPage)) {
+      (async () => {
+        try {
+          const group = await GroupApi.getDefaultGroup();
+          groupStore.setGroup(group);
+        } catch (err) {
+          console.log(err);
+        }
+      })();
+    }
   }, [location.pathname]);
   
   React.useEffect(() => {
