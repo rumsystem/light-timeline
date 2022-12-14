@@ -264,7 +264,7 @@ export default observer((props: RouteChildrenProps) => {
             >
               <div className="absolute top-0 left-0 right-0 bottom-0 blur-layer md:rounded-12" />
             </div>
-            <div className="justify-between z-10 w-full box-border pt-2 px-5 md:px-8 text-white relative">
+            <div className="justify-between z-10 w-full box-border pt-2 px-5 md:px-8 text-white dark:text-white dark:text-opacity-90 relative">
               <div>
                 <img
                   onClick={() => {
