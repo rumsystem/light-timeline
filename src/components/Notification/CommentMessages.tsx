@@ -79,7 +79,7 @@ export default observer((props: IMessagesProps) => {
                       {ago(notification.timestamp)}
                     </div>
                     <div
-                      className="mr-3 cursor-pointer dark:hover:text-white text-black hover:hover:font-bold flex items-center opacity-90"
+                      className="mr-3 cursor-pointer dark:text-white dark:text-opacity-80 hover:font-bold flex items-center opacity-90"
                       onClick={async () => {
                         if (isMobile) {
                           const objectId = (notification.extra.fromObject as IComment).objectId;
