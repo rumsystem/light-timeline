@@ -4,7 +4,6 @@ const JsSHA = require('jssha');
 const config = require('../config');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { assert, Errors } = require('../utils/validator');
-const logger = require('../utils/logger');
 
 router.get('/:pubKey', get);
 router.post('/:pubKey', tryAdd);
@@ -13,8 +12,6 @@ async function get(ctx) {
   const { groupId, pubKey } = ctx.params;
   const allow = await getChainAuth(groupId, pubKey);
   console.log(`[getAllow]:`, { allow });
-  logger.info(`${ctx.headers['x-address'] || ''} getAllow`);
-  logger.info({ allow });
   assert(allow, Errors.ERR_NOT_FOUND('allow'));
   ctx.body = true;
 }
@@ -24,28 +21,18 @@ async function tryAdd(ctx) {
   const accessToken = ctx.query.access_token;
   assert(accessToken, Errors.ERR_IS_REQUIRED('accessToken'));
   console.log(`[get permission]:`, { accessToken });
-  logger.info(`${ctx.headers['x-address'] || ''} get permission`);
-  logger.info({ accessToken });
   const userId = await getUserId(accessToken);
   console.log(`getUserId:`, { userId });
   assert(userId, Errors.ERR_IS_INVALID('userId'));
   const nft = await getNFT(userId, accessToken, config.nft.collection_id);
   console.log(`[getNFT]:`, { nft });
-  logger.info(`${ctx.headers['x-address'] || ''} get target nft`);
-  logger.info({ nft });
   assert(nft, Errors.ERR_NOT_FOUND(`${JSON.stringify(config.nft)} nft`));
   const allow = await getChainAuth(groupId, pubKey);
-  logger.info(`${ctx.headers['x-address'] || ''} getAllow`);
-  logger.info({ allow });
   if (allow) {
     ctx.body = { nft, allow };
-    logger.info(`${ctx.headers['x-address'] || ''} tryAdd return body`);
-    logger.info({ nft, allow });
   } else {
     await updateChainAuth(ctx.params.groupId, ctx.params.pubKey, 'add');
     ctx.body = { nft };
-    logger.info(`${ctx.headers['x-address'] || ''} tryAdd return body`);
-    logger.info({ nft });
   }
 }
 
@@ -130,13 +117,9 @@ async function getUserId(token) {
   };
   const resp = await axios.get(`https://mixin-api.zeromesh.net/me`, config);
   try {
-    logger.info(`get mixin user`);
-    logger.info(resp.data);
     return resp.data.data.user_id;
   } catch (err) {
     console.log(resp.data);
-    logger.info(`get mixin user`);
-    logger.info(resp.data);
     return '';
   }
 };
@@ -148,8 +131,6 @@ async function getNFT(userId, token, collectionId) {
     try {
       if (output.token_id) {
         const nft = await getNFTToken(token, output.token_id);
-        logger.info(`fetch nft info`);
-        logger.info({ nft });
         if (nft.collection_id === collectionId) {
           return nft;
         }
