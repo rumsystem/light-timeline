@@ -10,7 +10,7 @@ import { isMobile } from 'utils/env';
 import { GroupApi } from 'apis';
 
 export default observer(() => {
-  const { userStore, commentStore, postStore, groupStore, pathStore } = useStore();
+  const { userStore, commentStore, postStore, groupStore, pathStore, confirmDialogStore } = useStore();
   const location = useLocation();
   const history = useHistory();
   const state = useLocalObservable(() => ({
@@ -77,17 +77,24 @@ export default observer(() => {
           e.preventDefault();
           e.stopPropagation();
           const href = e.target.getAttribute('href');
-          if (href && href.startsWith('http')) {
-            if (isMobile) {
-              window.location.href = href;
+          const disabled = e.target.hasAttribute('disabled');
+          if (!disabled && href && href.startsWith('http')) {
+            const { origin } = new URL(href);
+            if (origin !== window.origin) {
+              confirmDialogStore.show({
+                content: `确定打开外部链接？<div class="text-12 max-w-[250px] break-words leading-[1.5] opacity-80 mt-2">${href.slice(0, 200)}</div>`,
+                ok: () => {
+                  isMobile ? confirmDialogStore.setLoading(true) : confirmDialogStore.hide();
+                  isMobile ? window.location.href = href : window.open(href);
+                },
+              });
             } else {
-              window.open(href);
+              isMobile ? window.location.href = href : window.open(href);
             }
           }
         }
       };
       body.addEventListener('click', listener);
-      body.addEventListener('touchstart', listener, { passive: false });
     }
   }, []);
 
