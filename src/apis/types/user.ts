@@ -4,4 +4,5 @@ export interface IUser {
   followerCount: number
   following?: boolean
   muted?: boolean
+  role: 'admin' | ''
 }
