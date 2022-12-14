@@ -115,7 +115,7 @@ const UserCard = observer((props: IUserCardProps) => {
                   normalNameClass="text-15 truncate text-gray-6d font-bold"
                   fromNameClass="text-15 opacity-80 md:opacity-100 truncate font-bold text-gray-6d max-w-[120px]"
                   fromIconClass="text-20 text-sky-400 mx-1"
-                  fromIdClass="text-gray-6d opacity-50 truncate text-13 max-w-[80px] mt-[1px]"
+                  fromIdClass="hidden"
                   />
                 {user.postCount === 0 && <div className="pb-2" />}
               </div>
