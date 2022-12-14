@@ -5,7 +5,10 @@ const sleep = require('../utils/sleep');
 
 if (config.mixinBotKeystore) {
   const client = MixinApi({
-    keystore: config.mixinBotKeystore,
+    keystore: {
+      ...config.mixinBotKeystore,
+      user_id: config.mixinBotKeystore.user_id || config.mixinBotKeystore.client_id
+    },
     blazeOptions: {
       parse: true,
       syncAck: true,
@@ -57,7 +60,10 @@ exports.notifyByBot = async (data) => {
     const { iconUrl, title, description, url } = data;
     const botSubs = await BotSubscription.findAll({ where: { status: 'open' } });
     const client = MixinApi({
-      keystore: config.mixinBotKeystore
+      keystore: {
+        ...config.mixinBotKeystore,
+        user_id: config.mixinBotKeystore.user_id || config.mixinBotKeystore.client_id
+      },
     });
     for (const botSub of botSubs) {
       try {
