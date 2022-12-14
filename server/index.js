@@ -35,6 +35,7 @@ const trx = require('./routes/trx');
 const feature = require('./routes/feature');
 const image = require('./routes/image');
 const relation = require('./routes/relation');
+const permission = require('./routes/permission');
 
 const {
   errorHandler,
@@ -74,6 +75,7 @@ router.use('/api/users', user.routes(), user.allowedMethods());
 router.use('/api/images', image.routes(), image.allowedMethods());
 router.use('/api/relations', relation.routes(), relation.allowedMethods());
 router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
+router.use('/api/:groupId/permission', permission.routes(), permission.allowedMethods());
 
 router.use('(.*)', async ctx => ctx.render('index'));
 
@@ -88,8 +90,8 @@ Socket.init(server);
 server.listen(port, () => {
   console.log(`Node.js v${process.versions.node}`);
   console.log(`Server run at ${port}`);
+  require('./preset');
   setTimeout(() => {
     pollingContent(2000);
   }, 2000);
 });
-

@@ -28,6 +28,7 @@ import { IPost } from 'apis/types';
 import { IImage } from 'apis/types/common';
 import openLoginModal from 'components/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
+import useHandleNoPermission from 'hooks/useHandleNoPermission';
 
 import './index.css';
 
@@ -134,7 +135,8 @@ export default (props: IProps) => {
 
 const Editor = observer((props: IProps) => {
   const { snackbarStore, userStore, groupStore } = useStore();
-  const draftKey = `${props.editorKey.toUpperCase()}_DRAFT_${groupStore.groupId}`;
+  const handleNoPermission = useHandleNoPermission(useStore());
+  const draftKey = `${props.editorKey.toUpperCase()}_DRAFT_${groupStore.map.group_timeline.groupId}`;
   const state = useLocalObservable(() => ({
     content: props.post ? props.post.content : '',
     submitting: false,
@@ -302,13 +304,18 @@ const Editor = observer((props: IProps) => {
           delete state.imageMap[prop];
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       state.submitting = false;
       console.error(err);
-      snackbarStore.show({
-        message: lang.somethingWrong,
-        type: 'error',
-      });
+      console.log(err.code);
+      if (err.code === 'ERR_NOT_PERMISSION') {
+        handleNoPermission();
+      } else {
+        snackbarStore.show({
+          message: lang.somethingWrong,
+          type: 'error',
+        });
+      }
       if (_draft) {
         localStorage.setItem(draftKey, _draft);
       }
@@ -514,7 +521,7 @@ const Editor = observer((props: IProps) => {
                 />
               )}
               {props.editorKey === 'post' && (
-                <div className="flex ml-5 mt-[2px] tracking-wider">
+                <div className="ml-5 mt-[2px] tracking-wider hidden">
                   <Tooltip
                     enterDelay={600}
                     enterNextDelay={600}
@@ -524,7 +531,7 @@ const Editor = observer((props: IProps) => {
                     >
                     <div className="bg-[#e3e5e6] bg-opacity-60 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full">
                       <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
-                      <span className="text-[#37434D] opacity-[0.6] font-bold dark:text-white dark:opacity-50">{groupStore.group.groupName}</span>
+                      <span className="text-[#37434D] opacity-[0.6] font-bold dark:text-white dark:opacity-50">{groupStore.map.group_timeline.groupName}</span>
                     </div>
                   </Tooltip>
                 </div>

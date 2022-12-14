@@ -120,10 +120,22 @@ module.exports = {
         scale: {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.5)' },
+        },
+
+        'scale-sm': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.2)' },
+        },
+
+        'fade-in': {
+          "0%": { opacity: '0' },
+          "100%": { opacity: '1' },
         }
       },
       animation: {
         scale: 'scale 0.5s ease-in-out',
+        'scale-sm': 'scale-sm 1.5s ease-in-out',
+        "fade-in": "fade-in 0.5s ease-in-out",
       }
     },
   },

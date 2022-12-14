@@ -86,7 +86,7 @@ const bulkAppendExtra = async (items, options = {}) => {
 
   if (options.viewer) {
     const likedMap = await getCounterMap({
-      counterName: 'commentLike',
+      counterName: 'like',
       userAddress: options.viewer,
       items
     });

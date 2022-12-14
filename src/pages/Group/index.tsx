@@ -1,5 +1,5 @@
 import React from 'react';
-import { runInAction, toJS } from 'mobx';
+import { runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { IPost, IProfile, IGroup } from 'apis/types';
 import { TrxStorage } from 'apis/common';
@@ -58,7 +58,6 @@ export default observer((props: RouteChildrenProps) => {
         state.invisible = false;
         if (state.fetchedGroup) {
           document.title = state.group.groupName;
-          groupStore.setGroup(toJS(state.group));
         }
       })();
     }
@@ -84,7 +83,6 @@ export default observer((props: RouteChildrenProps) => {
           fetchPosts()
         ]);
         state.group = group;
-        groupStore.setGroup(group);
         document.title = group.groupName;
       } catch (err) {
         console.log(err);
@@ -164,9 +162,9 @@ export default observer((props: RouteChildrenProps) => {
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: groupStore.groupId,
+      groupId: groupStore.map.group_timeline.groupId,
       object: payload,
-      aesKey: groupStore.getCipherKey(groupStore.groupId),
+      aesKey: groupStore.map.group_timeline.extra.rawGroup.cipherKey,
       privateKey: userStore.privateKey,
     }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
     console.log(res);
@@ -174,7 +172,7 @@ export default observer((props: RouteChildrenProps) => {
       content: payload.content || '',
       images: (payload.image || []).map(image => Base64.getUrl(image)),
       userAddress: userStore.address,
-      groupId: groupStore.groupId,
+      groupId: groupStore.map.group_timeline.groupId,
       trxId: res.trx_id,
       latestTrxId: '',
       storage: TrxStorage.cache,
@@ -185,7 +183,7 @@ export default observer((props: RouteChildrenProps) => {
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
-        groupName: groupStore.group.groupName
+        groupName: groupStore.map.group_timeline.groupName
       }
     };
     postStore.addGroupPost(post);

@@ -1,37 +1,21 @@
 import { IGroup } from 'apis/types';
 
+type APP_KEY = 'group_timeline' | 'group_comments' | 'group_profiles' | 'group_counters' | 'group_relations';
+
 export function createGroupStore() {
   return {
     loading: true,
 
-    group: {} as IGroup,
-
-    relationGroupId: '' as string,
-
-    groupMap: {} as Record<string, IGroup>,
-
-    get groupId() {
-      return this.group.groupId || '';
-    },
-
-    setGroup(group: IGroup) {
-      this.group = group;
-    },
-
-    setRelationGroupId(groupId: string) {
-      this.relationGroupId = groupId;
-    },
+    map: {} as Record<APP_KEY, IGroup>,
 
     setLoading(loading: boolean) {
       this.loading = loading;
     },
 
-    setGroupMap(map: Record<string, IGroup>) {
-      this.groupMap = map;
+    setMap(groups: IGroup[]) {
+      for (const group of groups) {
+        this.map[group.extra.rawGroup.appKey as APP_KEY] = group;
+      }
     },
-
-    getCipherKey(groupId: string) {
-      return this.groupMap[groupId]?.extra.rawGroup.cipherKey
-    }
   };
 }

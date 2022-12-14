@@ -84,9 +84,9 @@ export default observer((props: IProps) => {
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: props.post.groupId,
+      groupId: groupStore.map.group_comments.groupId,
       object: payload,
-      aesKey: groupStore.getCipherKey(props.post.groupId),
+      aesKey: groupStore.map.group_comments.extra.rawGroup.cipherKey,
       privateKey: userStore.privateKey,
     }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
     console.log(res);
@@ -97,7 +97,7 @@ export default observer((props: IProps) => {
       threadId: '',
       replyId: '',
       userAddress: userStore.address,
-      groupId: groupStore.groupId,
+      groupId: groupStore.map.group_comments.groupId,
       trxId: res.trx_id,
       storage: TrxStorage.cache,
       commentCount: 0,

@@ -80,7 +80,12 @@ async function sendTrx(ctx) {
     ctx.body = await QuorumLightNodeSDK.chain.Trx.send(ctx.params.groupId, payload);
   } catch (err) {
     console.log(err);
-    throws(Errors.ERR_IS_REQUEST_FAILED());
+    const { status } = err.response;
+    if (status > 200 && status < 500) {
+      throws(Errors.ERR_NO_PERMISSION('request'));
+    } else {
+      throws(Errors.ERR_IS_REQUEST_FAILED());
+    }
   }
 }
 
@@ -89,7 +94,12 @@ async function get(ctx) {
     ctx.body = await QuorumLightNodeSDK.chain.Trx.get(ctx.params.groupId, ctx.params.trxId);
   } catch (err) {
     console.log(err);
-    throws(Errors.ERR_IS_REQUEST_FAILED());
+    const { status } = err.response;
+    if (status > 200 && status < 500) {
+      throws(Errors.ERR_NO_PERMISSION('request'));
+    } else {
+      throws(Errors.ERR_IS_REQUEST_FAILED());
+    }
   }
 }
 

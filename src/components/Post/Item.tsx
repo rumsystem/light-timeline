@@ -145,7 +145,8 @@ export default observer((props: IProps) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const profile = post.extra!.userProfile;
   const history = useHistory();
-  const isTweet = (post.title || '').startsWith('https://twitter.com')
+  const isTweet = (post.title || '').startsWith('https://twitter.com');
+  const isIndexedBy = (post.title || '').includes('indexed by');
 
   React.useEffect(() => {
     if (inPostDetail || !post.content) {
@@ -222,7 +223,7 @@ export default observer((props: IProps) => {
               </UserCard>
               <div
                 className={classNames({
-                  'mt-[-2px]': isTweet
+                  'mt-[-2px]': isTweet && !isIndexedBy
                 }, "flex items-center text-gray-88 opacity-70 dark:text-white dark:opacity-40 text-12 tracking-wide cursor-pointer")}
                 onClick={() => {
                   if (isMobile || !inPostDetail) {
@@ -230,7 +231,7 @@ export default observer((props: IProps) => {
                   }
                 }}
               >
-                {(isPc || !isTweet) && (
+                {(isPc || !isTweet || isIndexedBy) && (
                   <span className="mx-[6px] transform scale-150 opacity-50">·</span>
                 )}
                 {ago(post.timestamp, {
@@ -239,7 +240,7 @@ export default observer((props: IProps) => {
               </div>
             </div>
             {post.content && (
-              <div className="pb-2 relative">
+              <div className="pb-1 relative">
                 <div
                   ref={contentRef}
                   key={post.content}
@@ -255,7 +256,7 @@ export default observer((props: IProps) => {
                   dangerouslySetInnerHTML={{
                     __html: urlify(`${post.content}`, {
                       disabled: isMobile && !inPostDetail
-                    }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
+                    }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}" ${isMobile && !inPostDetail ? 'disabled' : ''}>${post.title?.includes('indexed by') ? '来自推特' : '查看原文'}</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {
@@ -307,7 +308,7 @@ export default observer((props: IProps) => {
               <Images images={post.images || []} />
             </div>}
 
-            <div className="flex pt-1 pb-2 tracking-wider">
+            <div className="pt-1 pb-2 tracking-wider hidden">
               <div className="bg-[#EFF3F4] bg-opacity-100 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
                 history.push(`/groups/${post.groupId}`)
               }}>

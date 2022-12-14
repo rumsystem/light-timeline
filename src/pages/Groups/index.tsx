@@ -29,7 +29,7 @@ export default observer(() => {
   }));
 
   React.useEffect(() => {
-    document.title = 'Rum 微博广场';
+    document.title = 'CNFT Mixin Story Club';
   }, []);
 
   React.useEffect(() => {

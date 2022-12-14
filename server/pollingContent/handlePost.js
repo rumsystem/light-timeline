@@ -48,6 +48,17 @@ module.exports = async (item, group) => {
     await Post.destroy(extra.deletedTrxId);
     return;
   }
+  post.likeCount = await UniqueCounter.count({
+    where: {
+      name: 'like',
+      objectId: post.trxId
+    }
+  });
+  post.commentCount = await Comment.count({
+    where: {
+      objectId: post.trxId
+    }
+  });
   await Post.create(post);
   if (group.loaded) {
     await notify(post.trxId);

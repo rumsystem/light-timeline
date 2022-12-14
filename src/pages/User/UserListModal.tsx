@@ -73,16 +73,16 @@ const UserList = observer((props: IProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.relationGroupId,
+        groupId: groupStore.map.group_relations.groupId,
         object: {
           type: 'Note',
           content: JSON.stringify({
-            groupId: groupStore.groupId,
+            groupId: groupStore.map.group_relations.groupId,
             type,
             to: relation.to
           })
         },
-        aesKey: groupStore.getCipherKey(groupStore.relationGroupId),
+        aesKey: groupStore.map.group_relations.extra.rawGroup.cipherKey,
         privateKey: userStore.privateKey,
       }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);

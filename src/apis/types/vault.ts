@@ -27,4 +27,13 @@ export interface IVaultAppUser {
   userid: number
   eth_address: string
   eth_pub_key: string
+  access_token: string
+  provider: 'mixin' | 'github'
+  status: 'allow' | 'no_allow' | 'no_nft' | 'token_expired'
+  nft_info?: {
+    name: string
+    collection_id: string
+    icon_url: string
+    buy_url: string
+  }
 }

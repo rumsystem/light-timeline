@@ -1,5 +1,4 @@
 import sleep from 'utils/sleep';
-import store from 'store2';
 import { API_BASE_URL } from 'apis/common';
 
 const BASE = '';
@@ -7,7 +6,7 @@ export default async (url: any, options: any = {}) => {
   const hasEffectMethod = ['post', 'delete', 'put'].includes((options.method || '').toLocaleLowerCase());
   if (url.startsWith(API_BASE_URL)) {
     options.headers = {
-      'X-Address': store('address') || ''
+      'X-Address': (window as any).store.userStore.address || ''
     }
   }
   if (hasEffectMethod) {

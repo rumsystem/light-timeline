@@ -39,14 +39,15 @@ const Main = observer(() => {
             await Vault.saveCryptoKeyToLocalStorage(aesKey);
             window.location.href = Vault.getMixinOauthUrl({
               state: keyInHex,
-              return_to: encodeURIComponent(window.location.href)
+              return_to: encodeURIComponent(window.location.href),
+              scope: 'PROFILE:READ+COLLECTIBLES:READ'
             });
           }}
         >
           Mixin 登录{state.loadingMixin && '...'}
         </Button>
       </div>
-      <div className="justify-center mt-6 md:mt-4 w-full">
+      <div className="justify-center mt-6 md:mt-4 w-full flex">
         <Button
           className="tracking-widest"
           fullWidth
@@ -66,7 +67,7 @@ const Main = observer(() => {
           Github 登录{state.loadingGithub && '...'}
         </Button>
       </div>
-      <div className="flex justify-center mt-6 md:mt-4 w-full">
+      <div className="justify-center mt-6 md:mt-4 w-full flex">
         <Button
           className="tracking-widest"
           fullWidth

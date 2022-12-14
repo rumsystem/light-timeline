@@ -33,7 +33,7 @@ export default observer(() => {
         <div className="pt-8 md:pt-10 pb-6 md:pb-8 px-8 md:px-12">
           <div className="flex items-center justify-center md:min-h-[60px]">
             <div
-              className={`dark:text-white dark:text-opacity-80 text-neutral-500 leading-7 ${contentClassName} md:min-w-[160px] md:max-w-[250px] text-center text-16`}
+              className={`dark:text-white dark:text-opacity-80 text-neutral-500 leading-7 ${contentClassName} md:min-w-[160px] md:max-w-[250px] max-w-[80vw] text-center text-16`}
               dangerouslySetInnerHTML={{ __html: content }}
             />
           </div>
@@ -56,7 +56,7 @@ export default observer(() => {
               )}
               <Button
                 size="large"
-                className={`${cancelDisabled ? 'w-[150px]' : 'w-[110px]'}`}
+                className={`${cancelDisabled ? 'min-w-[150px]' : 'min-w-[110px]'}`}
                 onClick={() => ok()}
                 isDoing={loading}>
                 {okText}

@@ -106,12 +106,12 @@ export default observer((props: IProps) => {
     state.likeAnimating = !comment.extra.liked;
     try {  
       const res = await TrxApi.createObject({
-        groupId: comment.groupId,
+        groupId: groupStore.map.group_counters.groupId,
         object: {
           id: trxId,
           type: comment.extra.liked ? 'Dislike' : 'Like'
         },
-        aesKey: groupStore.getCipherKey(comment.groupId),
+        aesKey: groupStore.map.group_counters.extra.rawGroup.cipherKey,
         privateKey: userStore.privateKey,
       }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);

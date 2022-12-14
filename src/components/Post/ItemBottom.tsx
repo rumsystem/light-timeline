@@ -59,12 +59,12 @@ export default observer((props: IProps) => {
     state.likeAnimating = !post.extra.liked;
     try {
       const res = await TrxApi.createObject({
-        groupId: post.groupId,
+        groupId: groupStore.map.group_counters.groupId,
         object: {
           id: trxId,
           type: post.extra.liked ? 'Dislike' : 'Like'
         },
-        aesKey: groupStore.getCipherKey(post.groupId),
+        aesKey: groupStore.map.group_counters.extra.rawGroup.cipherKey,
         privateKey: userStore.privateKey,
       }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);
@@ -95,13 +95,13 @@ export default observer((props: IProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: post.groupId,
+        groupId: groupStore.map.group_timeline.groupId,
         object: {
           type: 'Note',
           content: OBJECT_STATUS_DELETED_LABEL,
           id: trxId
         },
-        aesKey: groupStore.getCipherKey(post.groupId),
+        aesKey: groupStore.map.group_timeline.extra.rawGroup.cipherKey,
         privateKey: userStore.privateKey,
       }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);

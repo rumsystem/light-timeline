@@ -45,13 +45,6 @@ const Main = observer((props: IProps) => {
           type: 'error',
         });
       }
-      if (group.appKey !== 'group_timeline') {
-        return snackbarStore.show({
-          message: '请添加 group_timeline 类型的种子网络',
-          type: 'error',
-          duration: 3000,
-        });
-      }
     } catch (err) {
       return snackbarStore.show({
         message: '无法解析这个种子',

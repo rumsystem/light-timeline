@@ -34,6 +34,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
+import { RiTwitterLine } from 'react-icons/ri';
+import openTweetModal from './openTweetModal';
 
 export default observer(() => {
   const {
@@ -172,14 +174,21 @@ export default observer(() => {
           )}
           {userStore.isLogin && (
             <div className="flex items-center">
+              {userStore.vaultAppUser.status === 'allow' && (isPc || isMyUserPage) && (
+                <div
+                  className="px-3 md:p-1 cursor-pointer mr-4"
+                  onClick={openTweetModal}>
+                  <RiTwitterLine className="text-22 dark:text-white text-neutral-500 opacity-70 dark:opacity-60 dark:md:opacity-90 dark:dark:text-white" />
+                </div>
+              )}
               {(isPc || isMyUserPage) && (
                 <div
                   className="p-1 cursor-pointer mr-1 md:mr-4"
                   onClick={() => {
                     settingStore.setTheme(settingStore.isDarkMode ? 'light' : 'dark');
                   }}>
-                  <MdOutlineDarkMode className="dark:hidden text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
-                  <MdOutlineLightMode className="hidden dark:block text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
+                  <MdOutlineDarkMode className="dark:hidden text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-80 dark:md:opacity-100 dark:dark:text-white" />
+                  <MdOutlineLightMode className="hidden dark:block text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-80 dark:md:opacity-100 dark:dark:text-white" />
                 </div>
               )}
               {isPc && (
@@ -294,7 +303,7 @@ export default observer(() => {
             >
               <div
                 className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 hidden'
-                onClick={() => openGroupInfo(groupStore.groupId)}
+                onClick={() => openGroupInfo(groupStore.map.group_timeline.groupId)}
               >
                 <BsInfo className="text-24 dark:text-white dark:text-opacity-80 text-gray-af" />
               </div>

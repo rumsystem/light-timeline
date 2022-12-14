@@ -6,8 +6,7 @@ const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 
 const CounterName = {
-  postLike: 'postLike',
-  commentLike: 'commentLike',
+  like: 'like',
 }
 
 module.exports = async (item, group) => {
@@ -39,62 +38,61 @@ module.exports = async (item, group) => {
           objectId: post.trxId
         }
       });
-      if (name === CounterName.postLike) {
+      if (name === CounterName.like) {
         post.likeCount = count;
       }
       await Post.update(post.trxId, post);
-    }
-    if (value > 0 && from !== post.userAddress) {
-      const notification = {
-        groupId: '',
-        status: group.loaded ? 'unread' : 'read',
-        type: 'like',
-        toObjectId: post.trxId,
-        toObjectType: 'post',
-        to: post.userAddress,
-        from,
-        fromObjectId: '',
-        fromObjectType: '',
-        timestamp: Date.now()
-      };
-      await Notification.create(notification);
-      if (group.loaded) {
-        trySendSocket(notification.to, 'notification', notification);
+      if (value > 0 && from !== post.userAddress) {
+        const notification = {
+          groupId: '',
+          status: group.loaded ? 'unread' : 'read',
+          type: 'like',
+          toObjectId: post.trxId,
+          toObjectType: 'post',
+          to: post.userAddress,
+          from,
+          fromObjectId: '',
+          fromObjectType: '',
+          timestamp: Date.now()
+        };
+        await Notification.create(notification);
+        if (group.loaded) {
+          trySendSocket(notification.to, 'notification', notification);
+        }
       }
     }
   }
 
   if (name.startsWith('comment')) {
     const comment = await Comment.get(objectId);
-    if (!comment) {
-      return;
-    }
-    const count = await UniqueCounter.count({
-      where: {
-        name,
-        objectId: comment.trxId
+    if (comment) {
+      const count = await UniqueCounter.count({
+        where: {
+          name,
+          objectId: comment.trxId
+        }
+      });
+      if (name === CounterName.like) {
+        comment.likeCount = count;
       }
-    });
-    if (name === CounterName.commentLike) {
-      comment.likeCount = count;
-    }
-    await Comment.update(comment.trxId, comment);
-    if (value > 0 && from !== comment.userAddress) {
-      const notification = {
-        groupId: '',
-        status: group.loaded ? 'unread' : 'read',
-        type: 'like',
-        toObjectId: comment.trxId,
-        toObjectType: 'comment',
-        to: comment.userAddress,
-        from,
-        fromObjectId: '',
-        fromObjectType: '',
-        timestamp: Date.now()
-      };
-      await Notification.create(notification);
-      if (group.loaded) {
-        trySendSocket(notification.to, 'notification', notification);
+      await Comment.update(comment.trxId, comment);
+      if (value > 0 && from !== comment.userAddress) {
+        const notification = {
+          groupId: '',
+          status: group.loaded ? 'unread' : 'read',
+          type: 'like',
+          toObjectId: comment.trxId,
+          toObjectType: 'comment',
+          to: comment.userAddress,
+          from,
+          fromObjectId: '',
+          fromObjectType: '',
+          timestamp: Date.now()
+        };
+        await Notification.create(notification);
+        if (group.loaded) {
+          trySendSocket(notification.to, 'notification', notification);
+        }
       }
     }
   }
@@ -105,19 +103,10 @@ const pack = async (item) => {
   const data = {
     objectId: id,
     value: type === 'Like' ? 1 : -1,
-    name: '',
+    name: 'like',
     userAddress: QuorumLightNodeSDK.utils.pubkeyToAddress(item.SenderPubkey),
     groupId: item.GroupId,
     trxId: item.TrxId
-  }
-  const post = await Post.get(id);
-  const comment = await Comment.get(id);
-  if (post) {
-    data.name = 'postLike';
-  } else if (comment) {
-    data.name = 'commentLike';
-  } else {
-    return null;
   }
   return data;
 }

@@ -95,9 +95,9 @@ export default observer(() => {
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: groupStore.groupId,
+      groupId: groupStore.map.group_timeline.groupId,
       object: payload,
-      aesKey: groupStore.getCipherKey(groupStore.groupId),
+      aesKey: groupStore.map.group_timeline.extra.rawGroup.cipherKey,
       privateKey: userStore.privateKey,
     }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
     console.log(res);
@@ -105,7 +105,7 @@ export default observer(() => {
       content: payload.content || '',
       images: (payload.image || []).map(image => Base64.getUrl(image)),
       userAddress: userStore.address,
-      groupId: groupStore.groupId,
+      groupId: groupStore.map.group_timeline.groupId,
       trxId: res.trx_id,
       latestTrxId: '',
       storage: TrxStorage.cache,
@@ -116,7 +116,7 @@ export default observer(() => {
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
-        groupName: groupStore.group.groupName
+        groupName: groupStore.map.group_timeline.groupName
       }
     };
     postStore.addPost(post);

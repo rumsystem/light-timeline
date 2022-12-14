@@ -13,7 +13,6 @@ const Profile = require('../database/sequelize/profile');
 const Notification = require('../database/sequelize/notification');
 const { ensurePermission } = require('../middleware/api');
 
-router.get('/default', getDefaultGroup);
 router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', shuffleChainApi);
@@ -37,33 +36,7 @@ async function list(ctx) {
       ['contentCount', 'DESC']
     ]
   });
-  ctx.body = groups
-              .filter(group => (
-                group.seedUrl.includes('group_timeline') ||
-                (config.userRelation?.visible && group.seedUrl.includes('group_relations'))
-              ))
-              .map(group => pack(group.toJSON()));
-}
-
-async function getDefaultGroup(ctx) {
-  if (config.defaultGroupId) {
-    const group = await Group.findOne({
-      where: {
-        groupId: config.defaultGroupId
-      }
-    });
-    assert(group, Errors.ERR_NOT_FOUND('group'));
-    ctx.body = pack(group.toJSON());
-    return;
-  }
-  const groups = await Group.findAll({
-    order: [
-      ['contentCount', 'DESC']
-    ]
-  });
-  const group = groups.find(g => g.seedUrl.includes('group_timeline') && g.status === 'connected');
-  assert(group, Errors.ERR_NOT_FOUND('group'));
-  ctx.body = pack(group.toJSON());
+  ctx.body = groups.map(group => pack(group.toJSON()));
 }
 
 async function getRelationGroup(ctx) {

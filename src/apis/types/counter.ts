@@ -24,8 +24,7 @@ export interface ILikePayload {
 }
 
 export enum CounterName {
-  postLike = 'postLike',
-  commentLike = 'commentLike',
+  like = 'like',
 }
 
 export interface ICounter {

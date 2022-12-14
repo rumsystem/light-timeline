@@ -7,6 +7,7 @@ const { getSocketIo } = require('../socket');
 const config = require('../config');
 const Mixin = require('../mixin');
 const truncateByBytes = require('../utils/truncateByBytes');
+const UniqueCounter = require('../database/uniqueCounter');
 
 module.exports = async (item, group) => {
   const comment = await pack(item);
@@ -15,6 +16,17 @@ module.exports = async (item, group) => {
     return;
   }
 
+  comment.likeCount = await UniqueCounter.count({
+    where: {
+      name: 'like',
+      objectId: comment.trxId
+    }
+  });
+  comment.commentCount = await Comment.count({
+    where: {
+      threadId: comment.trxId
+    }
+  });
   await Comment.create(comment);
 
   if (group.loaded) {
@@ -25,32 +37,30 @@ module.exports = async (item, group) => {
   const from = comment.userAddress;
 
   const post = await Post.get(objectId);
-  if (!post) {
-    return;
-  }
-  post.commentCount = await Comment.count({
-    where: {
-      groupId: post.groupId,
-      objectId: post.trxId
-    }
-  });
-  await Post.update(post.trxId, post);
-  if (!threadId && from !== post.userAddress) {
-    const notification = {
-      groupId: '',
-      status: group.loaded ?'unread' : 'read',
-      type: 'comment',
-      to: post.userAddress,
-      toObjectId: post.trxId,
-      toObjectType: 'post',
-      from,
-      fromObjectId: comment.trxId,
-      fromObjectType: 'comment',
-      timestamp: Date.now()
-    };
-    await Notification.create(notification);
-    if (group.loaded) {
-      trySendSocket(notification.to, 'notification', notification);
+  if (post) {
+    post.commentCount = await Comment.count({
+      where: {
+        objectId: post.trxId
+      }
+    });
+    await Post.update(post.trxId, post);
+    if (!threadId && from !== post.userAddress) {
+      const notification = {
+        groupId: '',
+        status: group.loaded ?'unread' : 'read',
+        type: 'comment',
+        to: post.userAddress,
+        toObjectId: post.trxId,
+        toObjectType: 'post',
+        from,
+        fromObjectId: comment.trxId,
+        fromObjectType: 'comment',
+        timestamp: Date.now()
+      };
+      await Notification.create(notification);
+      if (group.loaded) {
+        trySendSocket(notification.to, 'notification', notification);
+      }
     }
   }
 
@@ -61,7 +71,6 @@ module.exports = async (item, group) => {
     }
     threadComment.commentCount = await Comment.count({
       where: {
-        groupId: threadComment.groupId,
         threadId: threadComment.trxId
       }
     });
@@ -138,11 +147,8 @@ const pack = async item => {
   }
   if (inreplyto) {
     const toTrxId = inreplyto.trxid;
-    const toPost = await Post.get(toTrxId);
     const toComment = await Comment.get(toTrxId);
-    if (toPost) {
-      comment.objectId = toPost.trxId;
-    } else if (toComment) {
+    if (toComment) {
       comment.objectId = toComment.objectId;
       if (toComment.threadId) {
         comment.threadId = toComment.threadId;
@@ -151,7 +157,7 @@ const pack = async item => {
         comment.threadId = toComment.trxId;
       }
     } else {
-      return null;
+      comment.objectId = toTrxId;
     }
   }
   return comment;

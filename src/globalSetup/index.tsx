@@ -7,10 +7,9 @@ import { IComment, IPost } from 'apis/types';
 import { useLocation, useHistory } from 'react-router-dom';
 import Sidebar from 'components/Sidebar';
 import { isMobile } from 'utils/env';
-import { GroupApi } from 'apis';
 
 export default observer(() => {
-  const { userStore, commentStore, postStore, groupStore, pathStore, confirmDialogStore } = useStore();
+  const { userStore, commentStore, postStore, pathStore, confirmDialogStore } = useStore();
   const location = useLocation();
   const history = useHistory();
   const state = useLocalObservable(() => ({
@@ -25,7 +24,6 @@ export default observer(() => {
   React.useEffect(() => {
     const connectSocket = () => {
       getSocket().emit('authenticate', {
-        groupId: groupStore.groupId,
         userAddress: userStore.address
       });
     }
@@ -101,7 +99,7 @@ export default observer(() => {
   React.useEffect(() => {
     const { pathname } = location;
     if (pathname === `/`) {
-      document.title = 'Rum 微博广场';
+      document.title = 'CNFT Mixin Story Club';
     } else if (pathname === `/search`) {
       document.title = '搜索';
     }
@@ -121,18 +119,6 @@ export default observer(() => {
         pathStore.push(pathname);
       } else if (action === 'POP') {
         pathStore.pop();
-      }
-      const isHomePage = pathname === '/';
-      const isMyUserPage = pathname.startsWith(`/users/${userStore.address}`);
-      if (isHomePage || isMyUserPage) {
-        (async () => {
-          try {
-            const group = await GroupApi.getDefaultGroup();
-            groupStore.setGroup(group);
-          } catch (err) {
-            console.log(err);
-          }
-        })();
       }
     })
   }, []);
