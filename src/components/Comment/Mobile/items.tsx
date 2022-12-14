@@ -90,7 +90,7 @@ export default observer((props: IProps) => {
                         </div>
                       )}
                       {subCommentsGroupMap[comment.trxId].length > visibleSubComments.length && (
-                          <span className="text-blue-400 cursor-pointer mt-[6px] flex items-center leading-none">
+                          <span className="text-sky-400 cursor-pointer mt-[6px] flex items-center leading-none">
                             共 {subCommentsGroupMap[comment.trxId].length} 条回复
                             <span>
                               <MdChevronRight className="text-16" />

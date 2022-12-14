@@ -233,7 +233,7 @@ export default observer((props: IProps) => {
                       />
                       {comment.images && comment.images.length > 0 && (
                         <span
-                          className="mx-[6px] text-blue-400 opacity-90 cursor-pointer"
+                          className="mx-[6px] text-sky-400 opacity-90 cursor-pointer"
                           onClick={() => {
                             openPhotoSwipe({
                               image: ((comment.images || [])[0]!),
@@ -247,7 +247,7 @@ export default observer((props: IProps) => {
 
                     {!state.expand && state.canExpand && (
                       <div
-                        className="text-blue-400 cursor-pointer pt-[6px] pb-[2px] ml-[1px] flex items-center text-12"
+                        className="text-sky-400 cursor-pointer pt-[6px] pb-[2px] ml-[1px] flex items-center text-12"
                         onClick={() => { state.expand = true; }}
                       >
                         {lang.expand}
@@ -283,7 +283,7 @@ export default observer((props: IProps) => {
 
                   {!state.expand && state.canExpand && (
                     <div
-                      className="text-blue-400 cursor-pointer pt-1 flex items-center text-12"
+                      className="text-sky-400 cursor-pointer pt-1 flex items-center text-12"
                       onClick={() => { state.expand = true; }}
                     >
                       {lang.expand}
