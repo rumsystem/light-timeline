@@ -200,7 +200,7 @@ export default observer((props: RouteChildrenProps) => {
             to: userAddress
           })
         },
-        aesKey: groupStore.cipherKey,
+        aesKey: groupStore.getCipherKey(groupStore.relationGroupId),
         privateKey: userStore.privateKey,
       }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);

@@ -82,7 +82,7 @@ const UserList = observer((props: IProps) => {
             to: relation.to
           })
         },
-        aesKey: groupStore.cipherKey,
+        aesKey: groupStore.getCipherKey(groupStore.relationGroupId),
         privateKey: userStore.privateKey,
       }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);
