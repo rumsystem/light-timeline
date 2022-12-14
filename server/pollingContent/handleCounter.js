@@ -29,70 +29,66 @@ module.exports = async (item, group) => {
     await UniqueCounter.destroy(uniqueCounter);
   }
 
-  if (name.startsWith('post')) {
-    const post = await Post.get(objectId);
-    if (post) {
-      const count = await UniqueCounter.count({
-        where: {
-          name,
-          objectId: post.trxId
-        }
-      });
-      if (name === CounterName.like) {
-        post.likeCount = count;
+  const post = await Post.get(objectId);
+  if (post) {
+    const count = await UniqueCounter.count({
+      where: {
+        name,
+        objectId: post.trxId
       }
-      await Post.update(post.trxId, post);
-      if (value > 0 && from !== post.userAddress) {
-        const notification = {
-          groupId: '',
-          status: group.loaded ? 'unread' : 'read',
-          type: 'like',
-          toObjectId: post.trxId,
-          toObjectType: 'post',
-          to: post.userAddress,
-          from,
-          fromObjectId: '',
-          fromObjectType: '',
-          timestamp: Date.now()
-        };
-        await Notification.create(notification);
-        if (group.loaded) {
-          trySendSocket(notification.to, 'notification', notification);
-        }
+    });
+    if (name === CounterName.like) {
+      post.likeCount = count;
+    }
+    await Post.update(post.trxId, post);
+    if (value > 0 && from !== post.userAddress) {
+      const notification = {
+        groupId: '',
+        status: group.loaded ? 'unread' : 'read',
+        type: 'like',
+        toObjectId: post.trxId,
+        toObjectType: 'post',
+        to: post.userAddress,
+        from,
+        fromObjectId: '',
+        fromObjectType: '',
+        timestamp: Date.now()
+      };
+      await Notification.create(notification);
+      if (group.loaded) {
+        trySendSocket(notification.to, 'notification', notification);
       }
     }
   }
 
-  if (name.startsWith('comment')) {
-    const comment = await Comment.get(objectId);
-    if (comment) {
-      const count = await UniqueCounter.count({
-        where: {
-          name,
-          objectId: comment.trxId
-        }
-      });
-      if (name === CounterName.like) {
-        comment.likeCount = count;
+  const comment = await Comment.get(objectId);
+  if (comment) {
+    const count = await UniqueCounter.count({
+      where: {
+        name,
+        objectId: comment.trxId
       }
-      await Comment.update(comment.trxId, comment);
-      if (value > 0 && from !== comment.userAddress) {
-        const notification = {
-          groupId: '',
-          status: group.loaded ? 'unread' : 'read',
-          type: 'like',
-          toObjectId: comment.trxId,
-          toObjectType: 'comment',
-          to: comment.userAddress,
-          from,
-          fromObjectId: '',
-          fromObjectType: '',
-          timestamp: Date.now()
-        };
-        await Notification.create(notification);
-        if (group.loaded) {
-          trySendSocket(notification.to, 'notification', notification);
-        }
+    });
+    if (name === CounterName.like) {
+      comment.likeCount = count;
+    }
+    await Comment.update(comment.trxId, comment);
+    if (value > 0 && from !== comment.userAddress) {
+      const notification = {
+        groupId: '',
+        status: group.loaded ? 'unread' : 'read',
+        type: 'like',
+        toObjectId: comment.trxId,
+        toObjectType: 'comment',
+        to: comment.userAddress,
+        from,
+        fromObjectId: '',
+        fromObjectType: '',
+        timestamp: Date.now()
+      };
+      await Notification.create(notification);
+      if (group.loaded) {
+        trySendSocket(notification.to, 'notification', notification);
       }
     }
   }

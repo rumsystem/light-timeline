@@ -149,7 +149,7 @@ export default observer(() => {
             <div className="absolute top-0 left-[50%] ml-[-400px] mt-1 cursor-pointer px-4" onClick={() => {
               history.push('/');
             }}>
-              <img src="/logo192.png" alt="logo" width={32} height={32} />
+              <img src="/logo192.png" alt="logo" width={32} height={32} className="rounded-full" />
             </div>
           )}
           {isHomePage && (
