@@ -158,7 +158,7 @@ export default observer(() => {
     <div className="w-full h-screen overflow-auto" ref={rootRef}>
       <TopPlaceHolder />
       <div className="w-full md:w-[600px] box-border mx-auto relative">
-        <div className="pt-[23px] md:pt-[38px] pb-12 md:pb-4">
+        <div className="pt-[15px] md:pt-[38px] pb-12 md:pb-4">
           <div className="fixed top-0 left-0 md:left-[50%] md:ml-[-300px] z-[100] w-full md:w-[600px]">
             <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-3 pb-2 md:pb-4 md:border-b dark:md:border dark:md:border-white dark:md:border-opacity-10  md:border-gray-ec md:rounded-12 shadow-sm">
               <div className="flex items-center text-30 ml-1 mr-3 dark:text-white dark:text-opacity-80 text-gray-88 mt-1 cursor-pointer" onClick={async () => {

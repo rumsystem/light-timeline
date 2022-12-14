@@ -7,14 +7,12 @@ import { IComment, IPost } from 'apis/types';
 import { useLocation, useHistory } from 'react-router-dom';
 import Sidebar from 'components/Sidebar';
 import { isMobile } from 'utils/env';
-import { GroupApi } from 'apis';
 
 export default observer(() => {
   const {
     userStore,
     commentStore,
     postStore,
-    groupStore,
     pathStore,
     confirmDialogStore,
     configStore
@@ -33,7 +31,6 @@ export default observer(() => {
   React.useEffect(() => {
     const connectSocket = () => {
       getSocket().emit('authenticate', {
-        groupId: groupStore.groupId,
         userAddress: userStore.address
       });
     }
@@ -81,6 +78,11 @@ export default observer(() => {
     const body = document.querySelector('body') as any;
     if (body) {
       const listener = (e: any) => {
+        if (e.target && e.target.id === 'marker') {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         if (e.target && e.target.tagName === 'A') {
           e.preventDefault();
           e.stopPropagation();
@@ -120,7 +122,7 @@ export default observer(() => {
   React.useEffect(() => {
     const { pathname } = location;
     if (pathname === `/`) {
-      document.title = configStore.config.title || 'Rum 微博广场';
+      document.title = configStore.config.title || 'CNFT Mixin Story Club';
     } else if (pathname === `/search`) {
       document.title = '搜索';
     }
@@ -140,18 +142,6 @@ export default observer(() => {
         pathStore.push(pathname);
       } else if (action === 'POP') {
         pathStore.pop();
-      }
-      const isHomePage = pathname === '/';
-      const isMyUserPage = pathname.startsWith(`/users/${userStore.address}`);
-      if (isHomePage || isMyUserPage) {
-        (async () => {
-          try {
-            const group = await GroupApi.getDefaultGroup();
-            groupStore.setGroup(group);
-          } catch (err) {
-            console.log(err);
-          }
-        })();
       }
     })
   }, []);

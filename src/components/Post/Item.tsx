@@ -175,6 +175,7 @@ export default observer((props: IProps) => {
             const span = document.createElement('span');
             span.textContent = text;
             span.className = 'text-amber-500 font-bold';
+            span.id = 'marker';
             return span;
           },
         );
