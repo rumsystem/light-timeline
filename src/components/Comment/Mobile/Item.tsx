@@ -104,7 +104,7 @@ export default observer((props: IProps) => {
       <div className="pt-[2px]" id={`comment_${commentStore.mobile.topCommentPage.open ? '_xxx_' : ''}${comment.trxId}`}>
         <span
           className="dark:text-white dark:text-opacity-80 text-gray-1e break-words"
-          dangerouslySetInnerHTML={{ __html: urlify(`${previewContentPrefix}${comment.content}`) }}
+          dangerouslySetInnerHTML={{ __html: urlify(`${previewContentPrefix}${comment.content}`, { disabled: true }) }}
         />
         {comment.images && comment.images.length > 0 && (
           <span
@@ -249,11 +249,14 @@ export default observer((props: IProps) => {
                   },
                   'comment-body comment mt-2 dark:text-white dark:text-opacity-80 text-gray-1e break-words whitespace-pre-wrap',
                 )}
-                onClick={() => {
+                onClick={(e: any) => {
                   if (isOwner) {
                     return;
                   }
                   if (isAuthor && isFromAuthor) {
+                    return;
+                  }
+                  if (e.target && e.target.tagName === 'A') {
                     return;
                   }
                   replyTo(comment);

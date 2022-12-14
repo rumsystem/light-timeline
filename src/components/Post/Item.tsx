@@ -253,7 +253,9 @@ export default observer((props: IProps) => {
                     'mt-[4px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: urlify(`${post.content}`) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}">查看原文</a>` : ''}`,
+                    __html: urlify(`${post.content}`, {
+                      disabled: isMobile && !inPostDetail
+                    }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {
