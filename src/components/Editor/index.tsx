@@ -510,6 +510,12 @@ const Editor = observer((props: IProps) => {
                   onClose={action(() => { state.emoji = false; })}
                 />
               )}
+              <div className="flex ml-5 mt-[2px] tracking-wider">
+                <div className="bg-stone-100 text-12 py-1 px-2 flex items-center rounded-full">
+                  <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-60" />
+                  <span className="text-sky-400 font-bold opacity-80">{groupStore.group.groupName}</span>
+                </div>
+              </div>
             </div>
             <Tooltip
               enterDelay={1500}
