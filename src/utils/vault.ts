@@ -46,25 +46,14 @@ export const getCryptoKeyFromLocalStorage = async () => {
       name: "AES-GCM",
     }, true, jwk.key_ops 
   )
-  localStorage.removeItem('jwk');
   return result;
 }
 
-export const getMixinOauthUrl = (p: {
-  state: string,
-  return_to: string
-}) => {
-  return `https://vault.rumsystem.net/v1/oauth/mixin/login?${qs.stringify(p)}`
+export const removeCryptoKeyFromLocalStorage = async () => {
+  localStorage.removeItem('jwk');
 }
 
-export const getGithubOauthUrl = (p: {
-  state: string,
-  return_to: string
-}) => {
-  return `https://vault.rumsystem.net/v1/oauth/github/login?${qs.stringify(p)}`
-}
-
-export const getJwtFromToken = async (token: string) => {
+export const decryptByCryptoKey = async (token: string) => {
   const cipher = new Uint8Array(toUint8Array(token));
   const iv = cipher.slice(0, 12);
   const data = cipher.slice(12);
@@ -75,4 +64,19 @@ export const getJwtFromToken = async (token: string) => {
     data,
   );
   return new TextDecoder().decode(plain);
+}
+
+export const getMixinOauthUrl = (p: {
+  state: string,
+  return_to: string
+  scope?: string
+}) => {
+  return `https://vault.rumsystem.net/v1/oauth/mixin/login?${qs.stringify(p)}`
+}
+
+export const getGithubOauthUrl = (p: {
+  state: string,
+  return_to: string
+}) => {
+  return `https://vault.rumsystem.net/v1/oauth/github/login?${qs.stringify(p)}`
 }

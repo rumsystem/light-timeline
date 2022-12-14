@@ -27,4 +27,6 @@ export interface IVaultAppUser {
   userid: number
   eth_address: string
   eth_pub_key: string
+  access_token: string
+  provider: 'mixin' | 'github' | 'web3'
 }
