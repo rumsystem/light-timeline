@@ -44,9 +44,9 @@ export default observer((props: IMessagesProps) => {
                 {
                   'pb-2': showLastReadFlag,
                   'pb-[18px]': !showLastReadFlag,
-                  'border-b border-gray-ec': index !== notifications.length - 1
+                  'border-b dark:border-white dark:border-opacity-10 border-gray-ec': index !== notifications.length - 1
                 },
-                'p-2 pt-6 border-b border-gray-ec',
+                'p-2 pt-6 border-b dark:border-white dark:border-opacity-10 border-gray-ec',
               )}
             >
               <div className="relative">
@@ -58,15 +58,15 @@ export default observer((props: IMessagesProps) => {
                 />
                 <div className="pl-10 ml-3 text-13">
                   <div className="flex items-center leading-none">
-                    <div className="text-gray-4a font-bold cursor-pointer" onClick={() => props.toUserPage(fromProfile.userAddress)}>
+                    <div className="dark:text-white dark:text-opacity-80 text-gray-4a font-bold cursor-pointer" onClick={() => props.toUserPage(fromProfile.userAddress)}>
                       {fromProfile.name}
                     </div>
-                    <div className="ml-2 text-gray-9b text-12">
+                    <div className="ml-2 dark:text-white dark:text-opacity-80 text-gray-9b text-12">
                       {lang.likeFor(notification.toObjectType === 'post' ? lang.object : lang.comment)}
                     </div>
                   </div>
                   <div
-                    className="mt-3 border-l-[3px] border-gray-9b pl-[9px] text-12 text-gray-4a"
+                    className="mt-3 border-l-[3px] dark:border-white dark:border-opacity-10 border-gray-9b pl-[9px] text-12 dark:text-white dark:text-opacity-80 text-gray-4a"
                   >
                     <div
                       className="inline-block like-messages-content"
@@ -77,12 +77,12 @@ export default observer((props: IMessagesProps) => {
                     </div>
                     {!toObject.content && toObject.images && (<Images images={toObject.images || []} />)}
                   </div>
-                  <div className="pt-3 mt-[5px] text-12 flex items-center text-gray-af leading-none">
+                  <div className="pt-3 mt-[5px] text-12 flex items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none">
                     <div className="mr-6 opacity-90">
                       {ago(notification.timestamp)}
                     </div>
                     <div
-                      className="mr-3 cursor-pointer hover:text-black hover:font-bold flex items-center opacity-90"
+                      className="mr-3 cursor-pointer dark:text-white dark:text-opacity-80 hover:font-bold flex items-center opacity-90"
                       onClick={async () => {
                         if (notification.toObjectType === 'post') {
                           if (isMobile) {
@@ -120,7 +120,7 @@ export default observer((props: IMessagesProps) => {
                 </div>
               </div>
               {showLastReadFlag && (
-                <div className="w-full text-12 text-center pt-10 text-gray-400">
+                <div className="w-full text-12 text-center pt-10 dark:text-white dark:text-opacity-80 text-gray-400">
                   {lang.lastReadHere}
                 </div>
               )}

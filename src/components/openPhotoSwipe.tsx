@@ -30,7 +30,7 @@ export default async (props: IProps) => new Promise<void>((rs) => {
             {...props}
             rs={() => {
               rs();
-              setTimeout(unmount, 200);
+              setTimeout(unmount, 50);
             }}
           />
         </StoreProvider>

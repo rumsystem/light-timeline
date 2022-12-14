@@ -304,14 +304,14 @@ export default observer((props: IProps) => {
 
   return (
     <div className="pb-12 -ml-4 -mr-2 comment min-h-[90vh]" id="comment-section">
-      <div className="mt-4 pb-4 border-t-[10px] border-gray-f7" />
+      <div className="mt-4 pb-4 border-t-[10px] dark:border-white dark:border-opacity-[0.04] border-gray-f7" />
       {!hasComments && (
-        <div className="py-24 text-center text-gray-500 text-14 tracking-wider opacity-80">
+        <div className="py-24 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 tracking-wider opacity-80">
           来发布一条评论吧 ~
         </div>
       )}
       {hasComments && (
-        <div className="text-16 px-5 font-bold flex text-gray-64 pb-3 opacity-80">
+        <div className="text-16 px-5 font-bold flex dark:text-white dark:text-opacity-80 text-gray-64 pb-3 opacity-80">
           <div className="flex items-center">
             <span className="mr-2">
               <FaComment className="text-20" />

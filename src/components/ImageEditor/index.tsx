@@ -192,7 +192,7 @@ export default observer((props: IProps) => {
             </div>
           </div>
 
-          <div className="slider-box flex items-center py-1 pl-4 pr-2 mt-[0px] text-xl text-gray-500 relative">
+          <div className="slider-box flex items-center py-1 pl-4 pr-2 mt-[0px] text-xl dark:text-white dark:text-opacity-80 text-gray-500 relative">
             <div className="text-20 opacity-50 absolute top-0 left-0 mt-[9px] -ml-6">
               <RiZoomOutLine />
             </div>
@@ -228,7 +228,7 @@ export default observer((props: IProps) => {
 
   return (
     <div
-      className={`image-editor bg-white ml-1 relative ${props.className}`}
+      className={`image-editor bg-white dark:bg-[#181818] ml-1 relative ${props.className}`}
     >
       <div
         className={classNames(
@@ -260,7 +260,7 @@ export default observer((props: IProps) => {
         </div> */}
         {!props.imageUrl && (
           <div
-            className="flex items-center justify-center text-3xl bg-gray-200 text-gray-500"
+            className="flex items-center justify-center text-3xl bg-gray-200 dark:text-white dark:text-opacity-80 text-gray-500"
             style={{
               width: width * placeholderScale,
               height: (width * placeholderScale) / ratio,

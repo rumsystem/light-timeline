@@ -5,3 +5,7 @@
 .highlight {
   background: #e2f6ff;
 }
+
+.dark .highlight {
+  background: #0a151a;
+}

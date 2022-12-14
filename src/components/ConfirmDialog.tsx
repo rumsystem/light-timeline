@@ -33,7 +33,7 @@ export default observer(() => {
         <div className="pt-8 md:pt-10 pb-6 md:pb-8 px-8 md:px-12">
           <div className="flex items-center justify-center md:min-h-[60px]">
             <div
-              className={`text-neutral-500 leading-7 ${contentClassName} md:min-w-[160px] md:max-w-[250px] text-center text-16`}
+              className={`dark:text-white dark:text-opacity-80 text-neutral-500 leading-7 ${contentClassName} md:min-w-[160px] md:max-w-[250px] text-center text-16`}
               dangerouslySetInnerHTML={{ __html: content }}
             />
           </div>
@@ -65,10 +65,10 @@ export default observer(() => {
           )}
         </div>
         {isMobile && (
-          <div className="border-t border-slate-200 w-full flex">
+          <div className="border-t border-white border-opacity-10 w-full flex">
             {!cancelDisabled && (
               <div
-                className="text-15 py-3 flex-1 border-r border-slate-200 text-center text-slate-500"
+                className="text-15 py-3 flex-1 border-r border-white border-opacity-10 text-center text-slate-500"
                 onClick={() => {
                   if (cancel) {
                     cancel();
@@ -80,7 +80,7 @@ export default observer(() => {
               </div>
             )}
             <div
-              className="text-15 py-3 flex-1 border-r border-slate-200 text-center text-neutral-700 font-bold"
+              className="text-15 py-3 flex-1 border-r border-white border-opacity-10 text-center dark:text-white dark:text-opacity-80 text-neutral-700 font-bold"
               onClick={() => ok()}>
               {okText}{loading && '...'}
             </div>

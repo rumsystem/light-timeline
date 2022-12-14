@@ -33,11 +33,11 @@ export default observer(() => {
             onClick={() => {
               postStore.setFeedType(tab.value);
             }}>
-            <span className={active ? 'text-black font-bold' : 'text-neutral-400'}>{tab.text}</span>
+            <span className={active ? 'dark:text-white dark:text-opacity-80 text-black font-bold' : 'dark:text-white dark:text-opacity-80 text-neutral-400'}>{tab.text}</span>
             {active && (
               <Fade in={true} timeout={500}>
                 <div className="flex justify-center absolute bottom-0 left-0 w-full">
-                  <div className="w-10 bg-black h-[3px] rounded-full" />
+                  <div className="w-10 dark:bg-white bg-black h-[3px] rounded-full" />
                 </div>
               </Fade>
             )}

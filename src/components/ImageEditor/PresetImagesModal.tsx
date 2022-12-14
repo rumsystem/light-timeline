@@ -24,7 +24,7 @@ export default (props: Props) => {
   return (
     <>
       <Dialog open={props.open} onClose={props.close} maxWidth={false}>
-        <div className="bg-white rounded-0 text-center preset-image">
+        <div className="bg-white dark:bg-[#181818] rounded-0 text-center preset-image">
           <div className="text-18 font-bold mt-8 mb-4">选择头像</div>
           <div className="img-box overflow-y-auto pt-2 pb-3 px-8 mb-8">
             <div className="img-grid-box grid gap-x-2 gap-y-3">
@@ -33,7 +33,7 @@ export default (props: Props) => {
                   enterDelay={500}
                   enterNextDelay={500}
                   classes={{
-                    tooltip: 'p-0 bg-white shadow-6 rounded-lg overflow-hidden',
+                    tooltip: 'p-0 bg-white dark:bg-[#181818] shadow-6 rounded-lg overflow-hidden',
                   }}
                   placement="top"
                   title={

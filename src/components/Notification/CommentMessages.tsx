@@ -42,7 +42,7 @@ export default observer((props: IMessagesProps) => {
                 {
                   'pb-2': showLastReadFlag,
                   'pb-[18px]': !showLastReadFlag,
-                  'border-b border-gray-ec': index !== notifications.length - 1
+                  'border-b dark:border-white dark:border-opacity-10 border-gray-ec': index !== notifications.length - 1
                 },
                 'p-2 pt-6',
               )}
@@ -56,10 +56,10 @@ export default observer((props: IMessagesProps) => {
                 />
                 <div className="pl-10 ml-3 text-13">
                   <div className="flex items-center leading-none">
-                    <div className="text-gray-4a font-bold cursor-pointer" onClick={() => props.toUserPage(fromProfile.userAddress)}>
+                    <div className="dark:text-white dark:text-opacity-80 text-gray-4a font-bold cursor-pointer" onClick={() => props.toUserPage(fromProfile.userAddress)}>
                       {fromProfile.name}
                     </div>
-                    <div className="ml-2 text-gray-9b text-12">
+                    <div className="ml-2 dark:text-white dark:text-opacity-80 text-gray-9b text-12">
                       {notification.toObjectType === 'post' && lang.replyYourContent}
                       {notification.toObjectType === 'comment' && lang.replyYourComment}
                     </div>
@@ -74,12 +74,12 @@ export default observer((props: IMessagesProps) => {
                       {!fromObject.content && fromObject.images && <Images images={fromObject.images || []} />}
                     </div>
                   </div>
-                  <div className="pt-3 mt-[2px] text-12 flex items-center text-gray-af leading-none">
+                  <div className="pt-3 mt-[2px] text-12 flex items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none">
                     <div className="mr-6 opacity-90">
                       {ago(notification.timestamp)}
                     </div>
                     <div
-                      className="mr-3 cursor-pointer hover:text-black hover:font-bold flex items-center opacity-90"
+                      className="mr-3 cursor-pointer dark:hover:text-white text-black hover:hover:font-bold flex items-center opacity-90"
                       onClick={async () => {
                         if (isMobile) {
                           const objectId = (notification.extra.fromObject as IComment).objectId;
@@ -104,7 +104,7 @@ export default observer((props: IMessagesProps) => {
                 </div>
               </div>
               {showLastReadFlag && (
-                <div className="w-full text-12 text-center pt-10 text-gray-400 ">
+                <div className="w-full text-12 text-center pt-10 dark:text-white dark:text-opacity-80 text-gray-400 ">
                   {lang.lastReadHere}
                 </div>
               )}

@@ -34,7 +34,7 @@ export default (props: IProps) => {
             title="正在同步个人资料"
             arrow
           >
-            <div className="absolute top-[-4px] right-[-7px] rounded-full bg-black bg-opacity-70 flex items-center justify-center p-[3px] z-10">
+            <div className="absolute top-[-4px] right-[-7px] rounded-full dark:bg-white bg-black bg-opacity-70 flex items-center justify-center p-[3px] z-10">
               <Loading size={size > 50 ? 16 : 12} color="#fff" />
             </div>
           </Tooltip>

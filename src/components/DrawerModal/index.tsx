@@ -37,7 +37,7 @@ export default (props: Props) => {
           {
             'small-radius': smallRadius,
           },
-          'content relative overflow-hidden bg-white',
+          'content relative overflow-hidden bg-white dark:bg-[#181818]',
         )}
       >
         {props.children}
@@ -47,12 +47,12 @@ export default (props: Props) => {
             className={classNames(
               {
                 'text-white': !darkMode,
-                'text-gray': darkMode,
+                'dark:text-white dark:text-opacity-80': darkMode,
               },
               'absolute top-0 right-0 p-3 mr-1',
             )}
           >
-            <div className="flex justify-center items-center w-6 h-6 rounded-full text-32 text-black pr-1">
+            <div className="flex justify-center items-center w-6 h-6 rounded-full text-32 dark:text-white dark:text-opacity-80 text-black pr-1">
               <MdClear />
             </div>
           </div>

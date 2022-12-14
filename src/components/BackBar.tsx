@@ -5,12 +5,12 @@ import { useStore } from 'store';
 
 export default observer(() => {
   const history = useHistory();
-  const { groupStore, pathStore } = useStore();
+  const { pathStore } = useStore();
 
   return (
     <div>
       <div className="h-[44px] w-screen" />
-      <div className="h-[44px] bg-white flex items-center border-b border-gray-ec fixed top-0 left-0 right-0 z-[20]" onClick={() => {
+      <div className="h-[44px] bg-white dark:bg-[#181818] flex items-center border-b dark:border-white dark:border-opacity-10 border-gray-ec fixed top-0 left-0 right-0 z-[20]" onClick={() => {
         pathStore.prevPath ? history.goBack() : history.push(`/`)
       }}>
         <div className="flex items-center text-30 ml-2 opacity-70">

@@ -155,7 +155,7 @@ export const EmojiPicker = observer((props: Props) => {
 
   return (<>
     <EmojiPickerPopper {...props}>
-      <div className="bg-white shadow-4 rounded emojiPicker">
+      <div className="bg-white dark:bg-[#181818] shadow-4 rounded emojiPicker">
         <div className="relative border-b flex text-20">
           <div
             className="flex items-center justify-center w-9 h-10 pb-1 select-none cursor-pointer hover:bg-gray-ec"
@@ -182,13 +182,13 @@ export const EmojiPicker = observer((props: Props) => {
           />
         </div>
         <div
-          className="relative bg-white flex flex-col w-auto h-[300px] overflow-x-hidden overflow-y-auto"
+          className="relative bg-white dark:bg-[#181818] flex flex-col w-auto h-[300px] overflow-x-hidden overflow-y-auto"
           ref={scrollBox}
           onScroll={handleScroll}
         >
           <div>
             <div
-              className="py-px mt-1 pl-2 text-14 text-gray-4a font-bold"
+              className="py-px mt-1 pl-2 text-14 dark:text-white dark:text-opacity-80 text-gray-4a font-bold"
               ref={(ref) => { if (ref) { runInAction(() => { state.categoryBoxes[0] = ref; }); } }}
             >
               {lang.recent}
@@ -210,7 +210,7 @@ export const EmojiPicker = observer((props: Props) => {
               key={c.id}
               ref={(ref) => { if (ref) { runInAction(() => { state.categoryBoxes[i + 1] = ref; }); } }}
             >
-              <div className="py-px mt-1 pl-2 text-14 text-gray-4a font-bold">
+              <div className="py-px mt-1 pl-2 text-14 dark:text-white dark:text-opacity-80 text-gray-4a font-bold">
                 {lang[c.id]}
               </div>
               <div className="grid text-20 justify-center w-[324px] select-none">

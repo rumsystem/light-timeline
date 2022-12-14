@@ -17,12 +17,13 @@ import Images from 'components/Images';
 import { isMobile, isPc } from 'utils/env';
 import Fade from '@material-ui/core/Fade';
 import { IObject } from 'quorum-light-node-sdk';
-import { AiOutlineLink } from 'react-icons/ai';
+import { TiArrowForwardOutline } from 'react-icons/ti';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
 import openLoginModal from 'components/openLoginModal';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
+import { FaRegComment } from 'react-icons/fa';
 
 import './item.css';
 
@@ -81,10 +82,7 @@ export default observer((props: IProps) => {
     <span
       className={classNames(
         {
-          'bg-black text-white rounded opacity-50 px-1 leading-none':
-              props.isPostOwner && !props.isReplyTo && isPc,
-          'text-gray-88 md:text-gray-500 md:opacity-80': !props.isPostOwner || props.isReplyTo,
-          'py-[3px] inline-block': props.isPostOwner && props.isTopComment && isPc,
+          'dark:text-white dark:text-opacity-80 text-gray-88 dark:md:text-white md:text-gray-500 md:opacity-80': true,
           'mr-[1px]': !props.isTopComment && isPc,
         },
         'font-bold max-w-40 truncate text-14',
@@ -141,7 +139,7 @@ export default observer((props: IProps) => {
             highlight: props.highlight,
             'mt-[10px] p-2': isTopComment,
             'mt-1 px-2 py-[7px]': isSubComment,
-            'border-b border-gray-ec pb-4': isMobile && comment.commentCount === 0
+            'border-b dark:border-white dark:border-opacity-[0.05] border-gray-ec pb-4': isMobile && comment.commentCount === 0
           },
           'comment-item duration-500 ease-in-out -mx-2 rounded-6 group',
         )}
@@ -154,7 +152,7 @@ export default observer((props: IProps) => {
             <div
               className={classNames(
                 {
-                  'mt-[-4px]': isTopComment,
+                  'mt-[-2px]': isTopComment,
                   'mt-[-3px]': isSubComment,
                 },
                 'avatar absolute top-0 left-0',
@@ -175,9 +173,9 @@ export default observer((props: IProps) => {
             style={{ paddingLeft: isSubComment ? 28 : 34 }}
           >
             <div>
-              <div className="text-14 text-gray-99 relative">
+              <div className="text-14 dark:text-white dark:text-opacity-80 text-gray-99 relative">
                 {!isSubComment && (
-                  <div>
+                  <div className="md:mb-[3px] flex items-center">
                     <UserCard
                       userAddress={props.comment.userAddress}
                       className="inline-block"
@@ -190,6 +188,12 @@ export default observer((props: IProps) => {
                         isTopComment
                       />
                     </UserCard>
+                    <div
+                      className="text-12 mr-3 tracking-wide opacity-90 dark:opacity-50 flex items-center"
+                    >
+                      <span className="mx-[6px] transform scale-150 opacity-50">·</span>
+                      {ago(comment.timestamp, { trimmed: true })}
+                    </div>
                   </div>
                 )}
                 {isSubComment && (
@@ -199,7 +203,7 @@ export default observer((props: IProps) => {
                         {
                           'comment-expand': state.expand,
                         },
-                        'comment-body comment text-gray-1e break-words whitespace-pre-wrap ml-[1px] comment-fold',
+                        'comment-body comment dark:text-white dark:text-opacity-80 text-gray-1e break-words whitespace-pre-wrap ml-[1px] comment-fold',
                       )}
                       ref={commentRef}
                     >
@@ -267,7 +271,7 @@ export default observer((props: IProps) => {
                         'comment-expand': state.expand,
                         'pr-1': isSubComment,
                       },
-                      'comment-body comment text-gray-1e break-words whitespace-pre-wrap comment-fold',
+                      'comment-body comment dark:text-white dark:text-opacity-80 text-gray-1e break-words whitespace-pre-wrap comment-fold',
                     )}
                     ref={commentRef}
                     dangerouslySetInnerHTML={{
@@ -292,11 +296,33 @@ export default observer((props: IProps) => {
                   )}
                 </div>
               )}
-              <div className="items-center text-gray-af leading-none mt-2 h-3 relative w-full flex">
+              <div className="items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none mt-2 h-3 relative w-full flex">
+                {isSubComment && (
+                  <div
+                    className="text-12 mr-5 tracking-wide opacity-90 dark:opacity-50"
+                  >
+                    {ago(comment.timestamp, { trimmed: true })}
+                  </div>
+                )}
                 <div
-                  className="text-12 mr-3 tracking-wide opacity-90"
+                  className={classNames(
+                    {
+                      'hidden group-hover:flex': isSubComment,
+                    },
+                    'flex items-center cursor-pointer pr-6 tracking-wide leading-none',
+                  )}
+                  onClick={() => updateCounter(comment.trxId)}
                 >
-                  {ago(comment.timestamp)}
+                  <span className="flex items-center text-14 pr-[3px]">
+                    {comment.extra.liked ? (
+                      <RiThumbUpFill className="dark:text-white dark:text-opacity-80 text-black opacity-60 dark:opacity-80" />
+                    ) : (
+                      <RiThumbUpLine />
+                    )}
+                  </span>
+                  <span className="text-12 dark:text-white dark:text-opacity-80 text-gray-9b mr-[1px]">
+                    {comment.likeCount || ''}
+                  </span>
                 </div>
                 {!props.disabledReply && !(isSubComment && comment.userAddress === userStore.address) && (
                   <span
@@ -304,7 +330,7 @@ export default observer((props: IProps) => {
                       {
                         'hidden group-hover:flex': isSubComment,
                       },
-                      'flex items-center cursor-pointer justify-center w-10 tracking-wide',
+                      'flex items-center cursor-pointer pr-6 tracking-wide',
                     )}
                     onClick={() => {
                       modalStore.commentReply.show({
@@ -315,7 +341,9 @@ export default observer((props: IProps) => {
                       });
                     }}
                   >
-                    <span className="flex items-center text-12 pr-1">{lang.reply}</span>
+                    <span className="flex items-center text-14">
+                      <FaRegComment />
+                    </span>
                   </span>
                 )}
                 <div
@@ -323,27 +351,7 @@ export default observer((props: IProps) => {
                     {
                       'hidden group-hover:flex': isSubComment,
                     },
-                    'flex items-center cursor-pointer justify-center w-10 tracking-wide leading-none',
-                  )}
-                  onClick={() => updateCounter(comment.trxId)}
-                >
-                  <span className="flex items-center text-14 pr-[3px]">
-                    {comment.extra.liked ? (
-                      <RiThumbUpFill className="text-black opacity-60" />
-                    ) : (
-                      <RiThumbUpLine />
-                    )}
-                  </span>
-                  <span className="text-12 text-gray-9b mr-[1px]">
-                    {comment.likeCount || ''}
-                  </span>
-                </div>
-                <div
-                  className={classNames(
-                    {
-                      'hidden group-hover:flex': isSubComment,
-                    },
-                    'flex items-center cursor-pointer justify-center w-10 tracking-wide leading-none',
+                    'flex items-center cursor-pointer pr-6 tracking-wide leading-none',
                   )}
                   onClick={() => {
                     copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
@@ -359,12 +367,12 @@ export default observer((props: IProps) => {
                     title='复制链接'
                     arrow
                     >
-                    <div className="flex items-center text-14 pr-[6px]">
-                      <AiOutlineLink />
+                    <div className="flex items-center text-18">
+                      <TiArrowForwardOutline />
                     </div>
                   </Tooltip>
                 </div>
-                <div className='ml-1'>
+                <div className='ml-[2px] mt-[2px]'>
                   <ContentSyncStatus
                     trxId={comment.trxId}
                   storage={comment.storage}

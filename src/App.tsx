@@ -34,7 +34,7 @@ const App = observer(() => {
   return (
     <Router>
       <AliveScope>
-        <div>
+        <div className="dark:bg-[#181818] bg-gray-f7 min-h-screen w-screen">
           <Route path="/groups" exact component={Groups} />
 
           <Route path="/" component={Preload} />

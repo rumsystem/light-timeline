@@ -43,7 +43,7 @@ const PostDetail = observer(() => {
             post={post as IPost}
             where="postDetailModal"
           />
-          )}
+        )}
         {!state.loading && !post && (
           <div>
             404 not found
@@ -51,7 +51,7 @@ const PostDetail = observer(() => {
         )}
       </div>
       {state.loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white">
+        <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
           <Loading size={24} />
         </div>
       )}

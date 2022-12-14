@@ -1,6 +1,9 @@
 .comment-item.highlight {
   background: #e2f6ff;
 }
+.dark .comment-item.highlight {
+  background: #0a151a;
+}
 .comment-item .gray {
   color: #8b8b8b;
 }
