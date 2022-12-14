@@ -52,10 +52,16 @@ if (config.mixinBotKeystore) {
   });
 }
 
+let isBusy = false;
 exports.notifyByBot = async (data) => {
   if (!config.mixinBotKeystore) {
     return;
   }
+  while (isBusy) {
+    console.log(`别人正在 mixin notifying，我等待 ...`);
+    await sleep(1000);
+  }
+  isBusy = true;
   try {
     const { iconUrl, title, description, url } = data;
     const botSubs = await BotSubscription.findAll({ where: { status: 'open' } });
@@ -83,4 +89,5 @@ exports.notifyByBot = async (data) => {
   } catch (err) {
     console.log(err);
   }
+  isBusy = false;
 }
