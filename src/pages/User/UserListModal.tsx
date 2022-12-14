@@ -40,11 +40,11 @@ const UserList = observer((props: IProps) => {
       try {
         let relations = [] as IRelation[];
         if (props.type === 'following') {
-          relations = await RelationApi.listFollowing(groupStore.groupId, props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
+          relations = await RelationApi.listFollowing(props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
         } else if (props.type === 'followers') {
-          relations = await RelationApi.listFollowers(groupStore.groupId, props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
+          relations = await RelationApi.listFollowers(props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
         } else if (props.type === 'muted') {
-          relations = await RelationApi.listMuted(groupStore.groupId, props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
+          relations = await RelationApi.listMuted(props.userAddress, { offset: state.page * LIMIT, limit: LIMIT });
         }
         state.relations.push(...relations);
         state.hasMore = relations.length === LIMIT;
@@ -129,7 +129,7 @@ const UserList = observer((props: IProps) => {
                     onClick={async () => {
                       props.onClose();
                       await sleep(200);
-                      history.push(`/${groupStore.groupId}/users/${relation.to}`);
+                      history.push(`/users/${relation.to}`);
                     }}
                   >
                     <div className="flex items-center cursor-pointer">
@@ -186,7 +186,7 @@ const UserList = observer((props: IProps) => {
                       onClick={async () => {
                         props.onClose();
                         await sleep(200);
-                        history.push(`/${groupStore.groupId}/users/${relation.extra.userProfile.userAddress}`);
+                        history.push(`/users/${relation.extra.userProfile.userAddress}`);
                       }}>
                       打开主页
                     </Button>

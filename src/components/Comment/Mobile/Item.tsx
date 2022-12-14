@@ -132,7 +132,7 @@ export default observer((props: IProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.groupId,
+        groupId: comment.groupId,
         object: {
           id: trxId,
           type: comment.extra.liked ? 'Dislike' : 'Like',
@@ -214,7 +214,7 @@ export default observer((props: IProps) => {
                   <div
                     className='flex items-center justify-end cursor-pointer pl-1 pt-2-px pb-3-px w-12 pr-2'
                     onClick={() => {
-                      copy(`${window.origin}/${groupStore.groupId}/posts/${comment.objectId}?commentId=${comment.trxId}`);
+                      copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
                       snackbarStore.show({
                         message: `链接${lang.copied}`,
                       });

@@ -13,7 +13,6 @@ async function get(ctx) {
     muted
   ] = await Promise.all([
     Post.count({
-      groupId: ctx.params.groupId,
       userAddress: ctx.params.userAddress,
     }),
     Relation.count({

@@ -6,7 +6,7 @@ router.get('/:to/:type/unread_count', getUnreadCount);
 
 async function list(ctx) {
   const where = {
-    groupId: ctx.params.groupId,
+    groupId: '',
     to: ctx.params.to,
     type: ctx.params.type,
   };
@@ -24,7 +24,7 @@ async function list(ctx) {
 
 async function getUnreadCount(ctx) {
   const count = await Notification.getUnreadCount({
-    groupId: ctx.params.groupId,
+    groupId: '',
     to: ctx.params.to,
     type: ctx.params.type,
   });

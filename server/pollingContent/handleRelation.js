@@ -21,7 +21,7 @@ module.exports = async (item) => {
     });
     if (group) {
       const notification = {
-        groupId: relation.groupId,
+        groupId: '',
         status: group.loaded ? 'unread' : 'read',
         type: 'follow',
         toObjectId: '',
@@ -34,7 +34,7 @@ module.exports = async (item) => {
       };
       await Notification.create(notification);
       if (group.loaded) {
-        trySendSocket(group.groupId, notification.to, 'notification', notification);
+        trySendSocket(notification.to, 'notification', notification);
       }
     }
   }

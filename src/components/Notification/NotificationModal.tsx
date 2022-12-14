@@ -47,7 +47,7 @@ const TabLabel = (tab: ITab) => (
 const LIMIT = 10;
 
 const Notification = observer((props: IProps) => {
-  const { userStore, groupStore } = useStore();
+  const { userStore } = useStore();
   const history = useHistory();
   const tabs = [
     {
@@ -96,13 +96,13 @@ const Notification = observer((props: IProps) => {
     (async () => {
       try {
         for (const tab of state.tabs) {
-          tab.unreadCount = await NotificationApi.getUnreadCount(groupStore.groupId, userStore.address, tab.type);
+          tab.unreadCount = await NotificationApi.getUnreadCount(userStore.address, tab.type);
         }
         state.unreadCount = state.tab.unreadCount;
         if (!state.fetched) {
           await sleep(200);
         }
-        const notifications = await NotificationApi.list(groupStore.groupId, userStore.address, state.tab.type, {
+        const notifications = await NotificationApi.list(userStore.address, state.tab.type, {
           offset: state.offset,
           limit: LIMIT
         });
@@ -141,7 +141,7 @@ const Notification = observer((props: IProps) => {
   const toUserPage = async (userAddress: string) => {
     props.onClose();
     await sleep(400);
-    const path = `/${groupStore.groupId}/users/${userAddress}`;
+    const path = `/users/${userAddress}`;
     if (window.location.pathname !== path) {
       history.push(path);
     } 

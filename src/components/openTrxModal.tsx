@@ -12,6 +12,7 @@ import MiddleTruncate from 'components/MiddleTruncate';
 import { TrxApi } from 'apis';
 
 interface IProps {
+  groupId: string
   trxId: string
 }
 
@@ -25,7 +26,7 @@ const ModalWrapper = observer((props: IModalProps) => {
     loading: true,
     trx: {} as ITrx,
   }));
-  const { snackbarStore, groupStore } = useStore();
+  const { snackbarStore } = useStore();
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -41,7 +42,7 @@ const ModalWrapper = observer((props: IModalProps) => {
   React.useEffect(() => {
     (async () => {
       try {
-        state.trx = await TrxApi.get(groupStore.groupId, props.trxId);
+        state.trx = await TrxApi.get(props.groupId, props.trxId);
         state.loading = false;
       } catch (err) {
         console.error(err);

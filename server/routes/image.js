@@ -37,7 +37,6 @@ async function getCommentImage(ctx) {
 
 async function getProfileImage(ctx) {
   const profile = await Profile.get({
-    groupId: ctx.params.groupId,
     userAddress: ctx.params.userAddress
   });
   if (!profile || !profile.avatar) {

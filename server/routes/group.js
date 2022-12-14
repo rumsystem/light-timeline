@@ -6,6 +6,7 @@ const { shuffle } = require('lodash');
 const config = require('../config');
 const { Op } = require("sequelize");
 
+router.get('/default', getDefaultGroup);
 router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', shuffleChainApi);
@@ -36,6 +37,27 @@ async function list(ctx) {
               .map(group => pack(group.toJSON()));
 }
 
+async function getDefaultGroup(ctx) {
+  if (config.defaultGroupId) {
+    const group = await Group.findOne({
+      where: {
+        groupId: config.defaultGroupId
+      }
+    });
+    assert(group, Errors.ERR_NOT_FOUND('group'));
+    ctx.body = pack(group.toJSON());
+    return;
+  }
+  const groups = await Group.findAll({
+    order: [
+      ['contentCount', 'DESC']
+    ]
+  });
+  const group = groups.find(g => g.seedUrl.includes('group_timeline') && g.status === 'connected');
+  assert(group, Errors.ERR_NOT_FOUND('group'));
+  ctx.body = pack(group.toJSON());
+}
+
 async function getRelationGroup(ctx) {
   const group = await Group.findOne({
     where: {
@@ -45,7 +67,7 @@ async function getRelationGroup(ctx) {
     }
   });
   assert(group, Errors.ERR_NOT_FOUND('group'));
-  ctx.body = group;
+  ctx.body = group.toJSON();
 }
 
 async function shuffleChainApi(ctx) {

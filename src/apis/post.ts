@@ -4,7 +4,7 @@ import { IPost } from './types';
 import qs from 'query-string';
 
 export default {
-  async list(groupId: string, options: {
+  async list(options: {
     q?: string;
     minLike?: string;
     minComment?: string;
@@ -14,14 +14,14 @@ export default {
     offset?: number
     limit?: number
   } = {}) {
-    const items: IPost[] = await request(`${API_BASE_URL}/${groupId}/posts?${qs.stringify(options)}`);
+    const items: IPost[] = await request(`${API_BASE_URL}/posts?${qs.stringify(options)}`);
     return items;
   },
 
-  async get(groupId: string, trxId: string, options: {
+  async get(trxId: string, options: {
     viewer: string | undefined
   }) {
-    const item: IPost = await request(`${API_BASE_URL}/${groupId}/posts/${trxId}?${qs.stringify(options)}`);
+    const item: IPost = await request(`${API_BASE_URL}/posts/${trxId}?${qs.stringify(options)}`);
     return item;
   }
 }

@@ -12,7 +12,7 @@ import Button from 'components/Button';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 
 export default observer(() => {
-  const { postStore, groupStore, userStore } = useStore();
+  const { postStore, userStore } = useStore();
   const state = useLocalObservable(() => ({
     loading: true,
   }));
@@ -28,11 +28,11 @@ export default observer(() => {
     }
     (async () => {
       try {
-        const post = await PostApi.get(groupStore.groupId, trxId, {
+        const post = await PostApi.get(trxId, {
           viewer: userStore.address
         });
         if (post.latestTrxId) {
-          history.push(`/${groupStore.groupId}/posts/${post.latestTrxId}`);
+          history.push(`/posts/${post.latestTrxId}`);
           return;
         }
         if (post) {
@@ -74,7 +74,7 @@ export default observer(() => {
           <span
             className="text-gray-88 cursor-pointer text-12 opacity-90"
             onClick={() => {
-              history.push(`/${groupStore.groupId}`);
+              history.push(`/`);
             }}>
             返回首页
           </span>
