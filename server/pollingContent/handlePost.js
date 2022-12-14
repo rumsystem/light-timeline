@@ -3,6 +3,9 @@ const Comment = require('../database/comment');
 const UniqueCounter = require('../database/uniqueCounter');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { getSocketIo } = require('../socket');
+const config = require('../config');
+const Mixin = require('../mixin');
+const truncateByBytes = require('../utils/truncateByBytes');
 
 module.exports = async (item, group) => {
   const { post, extra } = await pack(item);
@@ -96,5 +99,13 @@ const notify = async (trxId) => {
   });
   if (post) {
     getSocketIo().emit('post', post);
+    const name = post.extra.userProfile.name.split('\n')[0];
+    Mixin.notifyByBot({
+      iconUrl: post.extra.userProfile.avatar,
+      title: (post.content || '').slice(0, 30) || '图片',
+      description: `${truncateByBytes(name, 14)} 发表内容`,
+      url: `${config.origin}/posts/${post.trxId}`
+    });
   }
 }
+
