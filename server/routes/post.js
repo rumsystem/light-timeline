@@ -4,8 +4,10 @@ const truncate = require('../utils/truncate');
 const { assert, Errors } = require('../utils/validator');
 const Relation = require('../database/sequelize/relation');
 const { Op, fn } = require("sequelize");
+const { ensurePermission } = require('../middleware/api');
 
 router.get('/:trxId', get);
+router.delete('/:trxId', ensurePermission, remove);
 router.get('/', list);
 
 async function get(ctx) {
@@ -110,5 +112,9 @@ async function list(ctx) {
   ctx.body = posts;
 }
 
+async function remove(ctx) {
+  await Post.destroy(ctx.params.trxId);
+  ctx.body = true;
+}
 
 module.exports = router;
