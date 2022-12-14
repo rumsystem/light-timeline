@@ -221,7 +221,7 @@ export default observer((props: RouteChildrenProps) => {
                 >
                   <div className="absolute top-0 left-0 right-0 bottom-0 blur-layer md:rounded-12" />
                 </div>
-                <div className="z-10 font-bold text-center text-20 md:text-26 text-white w-full py-4 tracking-wider">
+                <div className="z-10 font-bold text-center text-22 md:text-26 text-white w-full py-4 tracking-wider">
                   {state.group.groupName}
                 </div>
               </div>
