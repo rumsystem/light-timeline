@@ -201,7 +201,7 @@ export default observer((props: IProps) => {
                           await sleep(400);
                           commentStore.mobile.topCommentPage.setOpen(false);
                         }}
-                        className='truncate text-14 text-gray-88 name-max-width block'
+                        className='truncate text-14 text-gray-88 max-w-[150px] block'
                       >
                         {comment.extra.userProfile.name}
                       </span>
