@@ -109,35 +109,16 @@ export default observer((props: IProps) => {
   const { open, onClose } = props;
 
   return (
-    <div>
-      {!isMI && (
-        <DrawerModal
-          hideCloseButton
-          open={open}
-          onClose={onClose}
-        >
-          <div className="container m-auto">
-            <div className="w-11/12 md:w-7/12 m-auto md:pt-2 pb-1 md:pb-3">
-              <Editor {...props} />
-            </div>
-          </div>
-        </DrawerModal>
-      )}
-      {isMI && (
-        <Modal
-          open={open}
-          onClose={onClose}
-        >
-          <div
-            className="w-90-vw px-5 pb-1 box-border  md:pt-2"
-            style={{
-              marginTop: '-52vh',
-            }}
-          >
-            <Editor {...props} />
-          </div>
-        </Modal>
-      )}
-    </div>
+    <DrawerModal
+      hideCloseButton
+      open={open}
+      onClose={onClose}
+    >
+      <div className="container m-auto">
+        <div className="w-11/12 md:w-7/12 m-auto md:pt-2 pb-1 md:pb-3">
+          <Editor {...props} />
+        </div>
+      </div>
+    </DrawerModal>
   )
 });
