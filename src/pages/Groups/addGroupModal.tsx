@@ -45,7 +45,7 @@ const Main = observer((props: IProps) => {
           type: 'error',
         });
       }
-      if (group.appKey !== 'group_timeline') {
+      if (group.appKey !== 'group_timeline' && group.appKey !== 'group_relations') {
         return snackbarStore.show({
           message: '请添加 group_timeline 类型的种子网络',
           type: 'error',
