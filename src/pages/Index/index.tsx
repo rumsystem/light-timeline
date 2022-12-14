@@ -99,8 +99,7 @@ export default observer(() => {
       object: payload,
       aesKey: groupStore.cipherKey,
       privateKey: userStore.privateKey,
-      ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
-    });
+    }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
     console.log(res);
     const post: IPost = {
       content: payload.content || '',
