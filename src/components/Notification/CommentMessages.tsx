@@ -55,7 +55,7 @@ export default observer((props: IMessagesProps) => {
                     <div className="dark:text-white dark:text-opacity-80 text-gray-4a font-bold cursor-pointer" onClick={() => props.toUserPage(fromProfile.userAddress)}>
                       {fromProfile.name}
                     </div>
-                    <div className="ml-2 dark:text-white dark:text-opacity-80 text-gray-9b text-12">
+                    <div className="ml-2 dark:text-white dark:text-opacity-50 text-gray-9b text-12">
                       {notification.toObjectType === 'post' && lang.replyYourContent}
                       {notification.toObjectType === 'comment' && lang.replyYourComment}
                     </div>
@@ -77,12 +77,12 @@ export default observer((props: IMessagesProps) => {
                       </div>
                     )}
                   </div>
-                  <div className="pt-3 mt-[2px] text-12 flex items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none">
-                    <div className="mr-6 opacity-90">
-                      {ago(notification.timestamp)}
+                  <div className="pt-3 mt-[2px] text-12 flex items-center dark:text-white dark:text-opacity-50 text-gray-9b leading-none">
+                    <div className="mr-6 opacity-80">
+                      {ago(notification.timestamp, { trimmed: true })}
                     </div>
                     <div
-                      className="mr-3 cursor-pointer dark:text-white dark:text-opacity-80 hover:font-bold flex items-center opacity-90"
+                      className="mr-3 cursor-pointer dark:text-white dark:text-opacity-50 hover:font-bold flex items-center opacity-90"
                       onClick={async () => {
                         if (!toObject) {
                           snackbarStore.show({
