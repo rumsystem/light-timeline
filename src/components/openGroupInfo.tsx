@@ -12,6 +12,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import copy from 'copy-to-clipboard';
 import Modal from 'components/Modal';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import { FaSeedling } from 'react-icons/fa';
+import { BiCopy, BiSearch } from 'react-icons/bi';
 
 interface IModalProps {
   groupId: string
@@ -94,6 +96,36 @@ const Main = observer((props: IModalProps) => {
               <div className="mt-8">
                 <div className="flex">
                   <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
+                    种子
+                  </div>
+                </div>
+                <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                    <Tooltip
+                      enterDelay={300}
+                      enterNextDelay={300}
+                      placement="left"
+                      title="点击复制"
+                      arrow
+                      interactive
+                    >
+                    <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
+                      copy(state.group.seedUrl);
+                      snackbarStore.show({
+                        message: lang.copied,
+                      });
+                    }}>
+                      <div className="w-[22px] h-[22px] box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">
+                        <FaSeedling className="text-12" />
+                      </div>
+                      <div className="text-12 md:text-13 text-gray-88 flex-1 pr-1 truncate">{state.group.seedUrl}</div>
+                      <BiCopy className="mr-2 text-sky-400 text-16" />
+                    </div>
+                  </Tooltip>
+                </div>
+              </div>
+              <div className="mt-8">
+                <div className="flex">
+                  <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
                     节点
                   </div>
                 </div>
@@ -120,7 +152,8 @@ const Main = observer((props: IModalProps) => {
                         });
                       }}>
                         <div className="w-[22px] h-[22px] box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
-                        <div className="text-12 md:text-13 text-gray-88 flex-1 pr-2 truncate">{api}</div>
+                        <div className="text-12 md:text-13 text-gray-88 flex-1 pr-1 truncate">{api}</div>
+                        <BiCopy className="mr-2 text-sky-400 text-16" />
                       </div>
                     </Tooltip>
                   ))}
@@ -145,9 +178,10 @@ const Main = observer((props: IModalProps) => {
                         arrow
                         interactive
                         >
-                        <div className="flex items-center py-[2px]">
+                        <div className="flex items-center py-[2px] cursor-pointer">
                           <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{state.group.contentCount - index}</div>
                           <span className="text-12 md:text-13 text-gray-88 truncate">{content.TrxId}</span>
+                          <BiSearch className="ml-2 text-gray-88 text-16 opacity-80" />
                         </div>
                       </Tooltip>
                     ))}
