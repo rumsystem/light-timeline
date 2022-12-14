@@ -1,4 +1,3 @@
-const { Op } = require("sequelize");
 const Notification = require('./sequelize/notification');
 const Post = require('./post');
 const Comment = require('./comment');
@@ -17,19 +16,10 @@ exports.update = async (id, item) => {
   });
 };
 
-exports.markAsRead = async (ids) => {
-  if (ids.length === 0) {
-    return;
-  }
+exports.markAsRead = async (where) => {
   return await Notification.update({
     status: 'read'
-  }, {
-    where: {
-      id: {
-        [Op.or]: ids
-      }
-    }
-  });
+  }, { where });
 };
 
 exports.list = async (query) => {

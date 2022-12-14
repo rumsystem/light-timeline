@@ -18,7 +18,10 @@ async function list(ctx) {
     limit: Math.min(~~ctx.query.limit || 10, 50),
     offset: ctx.query.offset || 0
   });
-  await Notification.markAsRead(notifications.map(n => n.id));
+  const hasUnread = notifications.some(n => n.status === 'unread');
+  if (hasUnread) {
+    await Notification.markAsRead(where);
+  }
   ctx.body = await Promise.all(notifications.map(n => Notification.appendExtra(n)));
 }
 
