@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from 'components/Button';
 import { useStore } from 'store';
 import DrawerModal from 'components/DrawerModal';
+import Avatar from 'components/Avatar';
 
 interface IProps {
   open: boolean;
@@ -48,10 +49,10 @@ const Editor = observer((props: IProps) => {
         {replyingComment && (
           <div style={{ marginLeft: '1px' }} className="md:pl-3 pt-1">
             <div
-              className="dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-bd pl-2 text-12 cursor-pointer"
+              className="dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.15] border-gray-bd pl-2 text-12 cursor-pointer"
               style={{ borderLeftWidth: '3px' }}
             >
-              <div className="truncate dark:text-white dark:text-opacity-80 text-gray-99">{replyingComment.content}</div>
+              <div className="truncate dark:text-white dark:text-opacity-[0.65] text-gray-99">{replyingComment.content}</div>
             </div>
           </div>
         )}
@@ -76,7 +77,16 @@ const Editor = observer((props: IProps) => {
             inputProps={{ maxLength: 8000 }}
           />
           <div className="mt-1"></div>
-          <div className="text-right">
+          <div className="flex justify-between items-center">
+            <div>
+              {userStore.isLogin && (
+                <Avatar
+                  className="cursor-pointer"
+                  url={userStore.profile.avatar}
+                  size={32}
+                />
+              )}
+            </div>
             <Button
               onClick={async () => {
                 try {
