@@ -234,7 +234,7 @@ export default observer((props: IProps) => {
                   <span className="mx-[6px] transform scale-150 opacity-50">·</span>
                 )}
                 {ago(post.timestamp, {
-                  trimmed: inPostDetail
+                  trimmed: !inPostDetail
                 })}
               </div>
             </div>
