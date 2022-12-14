@@ -1,11 +1,10 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'store';
-import { GroupApi, ProfileApi, UserApi, VaultApi, PermissionApi } from 'apis';
+import { GroupApi, ProfileApi, UserApi, VaultApi, PermissionApi, TrxApi, ConfigApi } from 'apis';
 import { lang } from 'utils/lang';
 import Query from 'utils/query';
 import * as Vault from 'utils/vault';
-import { TrxApi } from 'apis';
 import Base64 from 'utils/base64';
 import { IVaultAppUser } from 'apis/types';
 import { isEmpty } from 'lodash';
@@ -20,7 +19,7 @@ import openNftAuthModal from './openNftAuthModal';
 import store from 'store2';
 
 const Preload = observer(() => {
-  const { userStore, groupStore, confirmDialogStore, modalStore } = useStore();
+  const { userStore, groupStore, confirmDialogStore, modalStore, configStore } = useStore();
   const history = useHistory();
   const token = Query.get('token');
   const accessToken = Query.get('access_token');
@@ -34,6 +33,7 @@ const Preload = observer(() => {
     (async () => {
       groupStore.setLoading(true);
       try {
+        initConfig();
         const groups = await GroupApi.list();
         groupStore.setMap(groups);
         if (token) {
@@ -164,6 +164,15 @@ const Preload = observer(() => {
           nft_info: collectionInfo
         });
       }
+    }
+  }
+
+  const initConfig = async () => {
+    try {
+      const config = await ConfigApi.get();
+      configStore.set(config);
+    } catch (err) {
+      console.log(err);
     }
   }
 
