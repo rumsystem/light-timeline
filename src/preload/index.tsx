@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
 import openNftAuthModal from './openNftAuthModal';
+import store from 'store2';
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore } = useStore();
@@ -55,6 +56,7 @@ const Preload = observer(() => {
         groupStore.setLoading(false);
         tryOpenLoginModal();
         tryOpenProfileModal();
+        tryLogout();
         if (userStore.isLogin) {
           handlePermission();
         }
@@ -167,25 +169,39 @@ const Preload = observer(() => {
 
   const tryOpenProfileModal = async () => {
     const action = Query.get('action');
-    if (action) {
+    if (action === 'openProfileEditor') {
       Query.remove('action');
-      if (action === 'openProfileEditor') {
-        await sleep(1000);
-        openProfileEditor({
-          emptyName: true
-        });
-      }
+      await sleep(1000);
+      openProfileEditor({
+        emptyName: true
+      });
     }
   }
 
   const tryOpenLoginModal = async () => {
     const action = Query.get('action');
-    if (action) {
+    if (action === 'openLoginModal') {
       Query.remove('action');
-      if (action === 'openLoginModal') {
-        await sleep(1000);
-        openLoginModal();
-      }
+      await sleep(1000);
+      openLoginModal();
+    }
+  }
+
+  const tryLogout = async () => {
+    const action = Query.get('action');
+    if (action === 'logout') {
+      Query.remove('action');
+      await sleep(500);
+      confirmDialogStore.show({
+        content: '确定退出当前帐号吗？',
+        ok: async () => {
+          confirmDialogStore.hide();
+          await sleep(400);
+          store.clear();
+          modalStore.pageLoading.show();
+          window.location.href = `/?action=openLoginModal`;
+        },
+      });
     }
   }
 
