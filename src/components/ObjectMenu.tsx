@@ -109,7 +109,7 @@ export default observer((props: IProps) => {
             </div>
           </MenuItem>
         )}
-        {(userStore.address === data.userAddress || userStore.user.role === 'admin') && (
+        {userStore.isLogin && (userStore.address === data.userAddress || userStore.user.role === 'admin') && (
           <div>
             {/* <MenuItem
               onClick={() => {

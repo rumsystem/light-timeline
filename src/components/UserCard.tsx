@@ -76,8 +76,7 @@ const UserCard = observer((props: IUserCardProps) => {
         },
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
-        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
-      });
+      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);
       userStore.updateUser(props.userAddress, {
         followerCount: user.followerCount + (type === 'follow' ? 1 : -1),

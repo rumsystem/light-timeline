@@ -84,8 +84,7 @@ const UserList = observer((props: IProps) => {
         },
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
-        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
-      });
+      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);
       state.relations = state.relations.filter(r => r.to !== relation.to);
       if (type === 'unfollow') {
