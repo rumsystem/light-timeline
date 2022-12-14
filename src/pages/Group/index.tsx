@@ -198,7 +198,7 @@ export default observer((props: RouteChildrenProps) => {
   }
 
   return (
-    <div className="box-border w-full h-screen overflow-auto bg-white md:bg-transparent posts-page" ref={rootRef}>
+    <div className="box-border w-full h-screen overflow-auto bg-white dark:bg-[#181818] md:bg-transparent posts-page" ref={rootRef}>
       <TopPlaceHolder />
       {!state.fetched && (
         <div className="py-[30vh] flex justify-center">
@@ -209,7 +209,7 @@ export default observer((props: RouteChildrenProps) => {
         <div className={classNames({
           'invisible': state.invisible
         }, "w-full md:w-[600px] box-border mx-auto relative pb-16")}>
-          {state.groupNotFound && <div className="py-32 text-center text-gray-500 text-14">空空如也 ~</div>}
+          {state.groupNotFound && <div className="py-32 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14">空空如也 ~</div>}
           {!state.groupNotFound && (
             <div>
               <div className="flex items-stretch overflow-hidden relative p-6 pb-5 md:pb-6 px-5 md:px-8 md:rounded-12 md:mt-5">
@@ -247,7 +247,7 @@ export default observer((props: RouteChildrenProps) => {
                 </div>
                 <div className={classNames({
                   'opacity-0': state.invisibleOverlay
-                }, "md:mt-5 w-full box-border")}>
+                }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:border-opacity-10 md:rounded-12")}>
                   {postStore.groupPosts.map((post) => (
                     <div key={post.trxId}>
                       <PostItem
@@ -269,7 +269,7 @@ export default observer((props: RouteChildrenProps) => {
                   </div>
                 )}
                 {state.fetchedPosts && postStore.groupTotal === 0 && (
-                  <div className="py-[30vh] text-center text-gray-500 text-14 tracking-wider opacity-80">
+                  <div className="py-[30vh] text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 tracking-wider opacity-80">
                     {['latest', 'random'].includes(postStore.feedType) && '来发布一条内容吧 ~'}
                     {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
                     {postStore.feedType === 'latest' && isMobile && !userStore.isLogin && (
