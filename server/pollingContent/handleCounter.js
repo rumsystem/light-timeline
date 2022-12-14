@@ -1,4 +1,3 @@
-const Counter = require('../database/counter');
 const UniqueCounter = require('../database/uniqueCounter');
 const Post = require('../database/post');
 const Comment = require('../database/comment');
@@ -17,10 +16,6 @@ module.exports = async (item, group) => {
   if (!counter) {
     return;
   }
-
-  await Counter.create({
-    trxId: counter.trxId
-  });
 
   const { objectId, value, name } = counter;
   const from = counter.userAddress;

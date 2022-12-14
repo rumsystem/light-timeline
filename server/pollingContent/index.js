@@ -19,8 +19,6 @@ const jobShareData = {
   jobMap: {}
 }
 
-const DEBUG = false;
-
 module.exports = (duration) => {
   let stop = false;
 
@@ -41,7 +39,6 @@ module.exports = (duration) => {
       }
       jobShareData.activeGroupMap = await getActiveGroupMap(groups);
       jobShareData.limit = getLimit(groups);
-      DEBUG && console.log({ limit: jobShareData.limit });
       for (const group of groups) {
         if (!jobShareData.jobMap[group.groupId]) {
           jobShareData.jobMap[group.groupId] = startJob(group.groupId, duration);
@@ -57,7 +54,8 @@ const startJob = async (groupId, duration) => {
   while (true) {
     const groupCount = await Group.count({ where: { groupId } })
     if (groupCount === 0) {
-      delete jobShareData.jobMap[groupId]
+      delete jobShareData.jobMap[groupId];
+      console.log({ '删除之后 jobShareData.jobMap': jobShareData.jobMap });
       break;
     }
     const group = jobShareData.activeGroupMap[groupId];
@@ -76,9 +74,7 @@ const startJob = async (groupId, duration) => {
           listOptions.startTrx = group.startTrx;
         }
         const contents = await QuorumLightNodeSDK.chain.Content.list(listOptions);
-        if (process.env.NODE_ENV === 'production') {
-          console.log(`${group.groupName} 请求回来了，获得 ${contents.length} 条`);
-        }
+        console.log(`${group.groupName} 请求回来了，获得 ${contents.length} 条`);
         while (jobShareData.handling) {
           console.log(`${group.groupName}: 别人正在 handling，我等待 ...`);
           await sleep(200);
@@ -94,7 +90,6 @@ const startJob = async (groupId, duration) => {
           if (!group.loaded && contents.length === 0) {
             await Group.update({ loaded: true }, { where });
           }
-          DEBUG && console.log(`处理 ${group.groupId} ${group.groupName}, 本次 ${contents.length} 条`);
         } catch(err) {
           throw err;
         } finally {
@@ -132,7 +127,7 @@ const handleContents = async (group, contents) => {
           case 'relation': await handleRelation(content); break;
           default: break;
         }
-        !DEBUG && console.log(`${content.TrxId} ✅`);
+        console.log(`${content.TrxId} ✅`);
       } catch (err) {
         console.log(content);
         console.log(err);
@@ -193,8 +188,6 @@ const getActiveGroupMap = async groups => {
     const hours = Math.abs(moment(timestamp).diff(new Date(), 'hours'));
     if (hours < 72) {
       map[group.groupId] = group;
-    } else {
-      DEBUG && console.log(`（大于 48 小时，跳过 ${group.groupId} ${group.groupName}）`);
     }
   }
   return map;
@@ -202,8 +195,6 @@ const getActiveGroupMap = async groups => {
 
 const getLimit = groups => {
   const unloadedCount = groups.filter(group => !group.loaded).length;
-  DEBUG && console.log('活跃群组');
-  DEBUG && console.log(groups.filter(group => !group.loaded).map(group => group.groupName))
   const configLimit = config.polling?.limit || 50;
   const limit = unloadedCount >= 2 ? Math.max(Math.round(configLimit/Math.pow(2, unloadedCount)), 10) : configLimit
   return limit;

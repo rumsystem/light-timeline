@@ -14,6 +14,7 @@ import Modal from 'components/Modal';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { FaSeedling } from 'react-icons/fa';
 import { BiCopy, BiSearch } from 'react-icons/bi';
+import Button from 'components/Button';
 
 interface IModalProps {
   groupId: string
@@ -21,7 +22,7 @@ interface IModalProps {
 }
 
 const Main = observer((props: IModalProps) => {
-  const { snackbarStore } = useStore();
+  const { snackbarStore, confirmDialogStore } = useStore();
   const state = useLocalObservable(() => ({
     group: {} as IGroup,
     loading: true,
@@ -73,6 +74,17 @@ const Main = observer((props: IModalProps) => {
     state.open = false;
     props.rs(result);
   };
+
+  const remove = () => {
+    confirmDialogStore.show({
+      content: '确定移除这个种子网络吗？<div class="text-12">（同时移除掉已同步的内容）</div>',
+      ok: async () => {
+        await GroupApi.remove(props.groupId);
+        confirmDialogStore.hide();
+        handleClose('removed');
+      },
+    });
+  }
 
   return (
     <Modal open={state.open} onClose={() => handleClose(false)}>
@@ -193,6 +205,7 @@ const Main = observer((props: IModalProps) => {
                   </div>
                 </div>
               )}
+              <Button className="w-full mt-8" color="red" outline onClick={remove}>移除</Button>
             </div>
           )}
         </div>
@@ -241,7 +254,7 @@ const ContentDetail = observer((props: {
   )
 });
 
-export default async (groupId: string) => {
+export default async (groupId: string) => new Promise((rs) => {
   const div = document.createElement('div');
   document.body.append(div);
   const unmount = () => {
@@ -254,7 +267,8 @@ export default async (groupId: string) => {
         <StoreProvider>
           <Main
             groupId={groupId}
-            rs={() => {
+            rs={(result: any) => {
+              rs(result);
               setTimeout(unmount, 500);
             }}
           />
@@ -263,4 +277,4 @@ export default async (groupId: string) => {
     ),
     div,
   );
-};
+});
