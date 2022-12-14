@@ -1,22 +1,25 @@
 import sleep from 'utils/sleep';
 import store from 'store2';
+import { API_BASE_URL } from 'apis/common';
 
 const BASE = '';
 export default async (url: any, options: any = {}) => {
   const hasEffectMethod = ['post', 'delete', 'put'].includes((options.method || '').toLocaleLowerCase());
-  options.headers = {
-    'X-Address': store('address') || ''
+  if (url.startsWith(API_BASE_URL)) {
+    options.headers = {
+      'X-Address': store('address') || ''
+    }
   }
   if (hasEffectMethod) {
     options.headers = {
-      ...options.headers,
+      ...(options.headers || {}),
       'Content-Type': 'application/json',
     };
     options.body = JSON.stringify(options.body);
   }
   if (options.jwt) {
     options.headers = {
-      ...options.headers,
+      ...(options.headers || {}),
       Authorization: `Bearer ${options.jwt}`,
     }
   }
