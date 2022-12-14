@@ -291,12 +291,12 @@ export default observer((props: IProps) => {
               <Images images={post.images || []} />
             </div>}
 
-            <div className="flex pt-1 pb-2 tracking-wide">
+            <div className="flex pt-1 pb-2 tracking-wider">
               <div className="bg-stone-100 text-12 py-1 px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
                 history.push(`/groups/${post.groupId}`)
               }}>
                 <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-60" />
-                <span className="text-sky-400 font-bold opacity-80 tracking-wider">{post.extra.groupName}</span>
+                <span className="text-sky-400 font-bold opacity-80">{post.extra.groupName}</span>
               </div>
             </div>
           </div>
