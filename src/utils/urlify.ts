@@ -9,6 +9,6 @@ export default (text: string, options?: { disabled: boolean }) => {
         return item;
       }
     } catch(_) {}
-    return `<a class="text-sky-400" href="${item}" ${options && options.disabled ? 'disabled' : ''}>查看链接</a>`
+    return `<a class="text-sky-500" href="${item}" ${options && options.disabled ? 'disabled' : ''}>查看链接</a>`
   });
 };

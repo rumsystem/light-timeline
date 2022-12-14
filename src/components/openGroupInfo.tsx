@@ -140,7 +140,7 @@ const Main = observer((props: IModalProps) => {
                         <FaSeedling className="text-12" />
                       </div>
                       <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate">{state.group.seedUrl}</div>
-                      <BiCopy className="mr-2 text-sky-400 text-16" />
+                      <BiCopy className="mr-2 text-sky-500 text-16" />
                     </div>
                   </Tooltip>
                 </div>
@@ -175,7 +175,7 @@ const Main = observer((props: IModalProps) => {
                       }}>
                         <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
                         <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate">{api}</div>
-                        <BiCopy className="mr-2 text-sky-400 text-16" />
+                        <BiCopy className="mr-2 text-sky-500 text-16" />
                       </div>
                     </Tooltip>
                   ))}
@@ -209,7 +209,7 @@ const Main = observer((props: IModalProps) => {
                     ))}
                     {state.hasMoreContent && (
                       <div className="text-center pt-1 text-12" onClick={fetchMoreContents}>
-                        <span className="text-sky-400 cursor-pointer">加载更多</span>
+                        <span className="text-sky-500 cursor-pointer">加载更多</span>
                       </div>
                     )}
                   </div>

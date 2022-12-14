@@ -301,7 +301,7 @@ export default observer((props: IProps) => {
                           {!state.showSubCommentsMap[comment.trxId]
                             && visibleSubComments.length < subComments.length && (
                             <span
-                              className="text-sky-400 cursor-pointer text-13 flex items-center pl-8 ml-[2px] mt-[6px]"
+                              className="text-sky-500 cursor-pointer text-13 flex items-center pl-8 ml-[2px] mt-[6px]"
                               onClick={() => {
                                 state.showSubCommentsMap[comment.trxId] = !state.showSubCommentsMap[comment.trxId];
                               }}

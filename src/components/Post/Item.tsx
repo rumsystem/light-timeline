@@ -216,7 +216,7 @@ export default observer((props: IProps) => {
                     normalNameClass="font-bold max-w-[40vw] md:max-w-[250px] truncate opacity-90 mt-[-4px] h-[18px] md:h-[20px]"
                     fromClass='mt-[-2px] h-[15px] md:h-[17px]'
                     fromNameClass="opacity-80 truncate font-bold max-w-[160px] md:max-w-[250px]"
-                    fromIconClass="text-22 text-sky-400 mx-1"
+                    fromIconClass="text-22 text-sky-500 mx-1"
                     fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[60px] hidden md:block md:max-w-[140px]"
                     />
                 </div>
@@ -256,7 +256,7 @@ export default observer((props: IProps) => {
                   dangerouslySetInnerHTML={{
                     __html: replaceContent(`${post.content}`, {
                       disabled: isMobile && !inPostDetail
-                    }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
+                    }) +`${isTweet ? ` <a class="text-sky-500 text-12" href="${post.title || ''}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {
@@ -267,7 +267,7 @@ export default observer((props: IProps) => {
                 {!state.expandContent && state.canExpandContent && (
                   <div className="relative mt-6-px pb-4">
                     <div
-                      className="text-sky-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
+                      className="text-sky-500 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
                       onClick={() => { state.expandContent = true; }}
                     >
                       {lang.expand}
@@ -278,7 +278,7 @@ export default observer((props: IProps) => {
                 {state.expandContent && state.canExpandContent && (
                   <div className="relative mt-6-px pb-4">
                     <div
-                      className="text-sky-400 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
+                      className="text-sky-500 cursor-pointer tracking-wide flex items-center text-12 absolute w-full top-1 left-0 mt-[-6px]"
                       onClick={async () => {
                         state.expandContent = false;
                         await sleep(1);
@@ -292,7 +292,7 @@ export default observer((props: IProps) => {
                 )}
                 {isPc && state.expandContent && state.canExpandContent && post.content.length > 600 && (
                   <div
-                    className="text-sky-400 cursor-pointer tracking-wide flex items-center text-12 absolute top-[2px] right-[-90px] opacity-80"
+                    className="text-sky-500 cursor-pointer tracking-wide flex items-center text-12 absolute top-[2px] right-[-90px] opacity-80"
                     onClick={() => {
                       state.expandContent = false;
                     }}
