@@ -236,7 +236,7 @@ export default observer((props: IProps) => {
           buttonClassName="transform scale-90"
           hideButtonDefault
           buttonBorder={() =>
-            comments.length > 0 && <div className="border-t dark:border-white dark:border-opacity-10 border-gray-f2 mt-3" />}
+            comments.length > 0 && <div className="border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-f2 mt-3" />}
           enabledImage
           imagesClassName='ml-12'
           enabledProfile
@@ -274,7 +274,7 @@ export default observer((props: IProps) => {
                   {hasSubComments && (
                     <div className="mt-[-1px]">
                       <div style={{ paddingLeft: '42px' }}>
-                        <div className="border-l-2 dark:border-white dark:border-opacity-10 border-gray-ec pl-2 mb-4">
+                        <div className="border-l-2 dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec pl-2 mb-4">
                           <Fade in={true} timeout={500}>
                             <div>
                               {visibleSubComments.map(
@@ -322,7 +322,7 @@ export default observer((props: IProps) => {
               && topComments.length > PREVIEW_TOP_COMMENT_COUNT
               && visibleTopComments.length < topComments.length && (
               <div className="pt-10">
-                <div className="text-center border-t dark:border-white dark:border-opacity-10 border-gray-f2 pt-3 bg-white dark:bg-[#181818] cursor-pointer flex items-center justify-center absolute bottom-3 left-0 w-full opacity-90" onClick={() => {
+                <div className="text-center border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-f2 pt-3 bg-white dark:bg-[#181818] cursor-pointer flex items-center justify-center absolute bottom-3 left-0 w-full opacity-90" onClick={() => {
                   history.push(`/posts/${props.post.trxId}?scrollIntoView=1`);
                 }}>
                   {lang.checkMoreComments(comments.length)}

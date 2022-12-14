@@ -97,7 +97,7 @@ const UserCard = observer((props: IUserCardProps) => {
   }
 
   return (
-    <div className="popover-paper bg-white dark:bg-[#181818] mr-2 shadow-lg rounded-12 overflow-hidden border dark:border-white dark:border-opacity-10 border-gray-bd leading-none relative w-[270px] pt-5 pb-5 px-[22px] min-h-[175px]">
+    <div className="popover-paper bg-white dark:bg-[#181818] mr-2 shadow-lg rounded-12 overflow-hidden border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-bd leading-none relative w-[270px] pt-5 pb-5 px-[22px] min-h-[175px]">
       {state.fetched && (
         <div>
           <div

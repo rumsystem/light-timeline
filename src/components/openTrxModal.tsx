@@ -61,7 +61,7 @@ const ModalWrapper = observer((props: IModalProps) => {
           <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center pb-5">
             {lang.blockInfo}
           </div>
-          <div className="p-6 dark:text-white dark:text-opacity-80 text-gray-88 text-13 border dark:border-white dark:border-opacity-10 border-gray-d8 rounded-0 shadow">
+          <div className="p-6 dark:text-white dark:text-opacity-80 text-gray-88 text-13 border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-d8 rounded-0 shadow">
             <div className="flex items-center">
               <span className="w-22">ID：</span>
               <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">{state.trx.TrxId}</span>

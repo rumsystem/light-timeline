@@ -167,7 +167,7 @@ export default observer((props: IProps) => {
         className={classNames(
           {
             highlight: highlight,
-            'border-b dark:border-white dark:border-opacity-10 border-gray-200': !hideDivider && noSubComments,
+            'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200': !hideDivider && noSubComments,
             'md:pb-1': !isTopComment,
           },
           'comment-item pt-4 pr-4 duration-500 ease-in-out pl-4 md:pt-4',

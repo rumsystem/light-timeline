@@ -44,9 +44,9 @@ export default observer((props: IMessagesProps) => {
                 {
                   'pb-2': showLastReadFlag,
                   'pb-[18px]': !showLastReadFlag,
-                  'border-b dark:border-white dark:border-opacity-10 border-gray-ec': index !== notifications.length - 1
+                  'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec': index !== notifications.length - 1
                 },
-                'p-2 pt-6 border-b dark:border-white dark:border-opacity-10 border-gray-ec',
+                'p-2 pt-6 border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec',
               )}
             >
               <div className="relative">
@@ -66,7 +66,7 @@ export default observer((props: IMessagesProps) => {
                     </div>
                   </div>
                   <div
-                    className="mt-3 border-l-[3px] dark:border-white dark:border-opacity-10 border-gray-9b pl-[9px] text-12 dark:text-white dark:text-opacity-80 text-gray-4a"
+                    className="mt-3 border-l-[3px] dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-9b pl-[9px] text-12 dark:text-white dark:text-opacity-80 text-gray-4a"
                   >
                     <div
                       className="inline-block like-messages-content"

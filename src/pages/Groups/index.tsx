@@ -70,7 +70,7 @@ export default observer(() => {
           <div className="pt-[5vh]" />
         )}
         {state.groups.map(group => (
-          <div className="bg-white dark:bg-[#181818] rounded-full shadow-xl w-full flex justify-between items-center pt-5 pb-4 px-8 md:px-10 border dark:border-white dark:border-opacity-10 border-gray-ec leading-none mb-8" key={group.groupId}>
+          <div className="bg-white dark:bg-[#181818] rounded-full shadow-xl w-full flex justify-between items-center pt-5 pb-4 px-8 md:px-10 border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec leading-none mb-8" key={group.groupId}>
             <div>
               <div className="flex items-center">
                 <span className="font-bold text-18 md:text-20 dark:text-white dark:text-opacity-80 text-gray-33 tracking-wider truncate max-w-[180px] md:max-w-[280px]">
