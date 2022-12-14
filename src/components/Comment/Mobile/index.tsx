@@ -229,6 +229,7 @@ export default observer((props: IProps) => {
         message: '发布成功',
         duration: 1000,
       });
+      return true;
     } catch (err) {
       console.error(err);
       snackbarStore.show({
@@ -238,7 +239,6 @@ export default observer((props: IProps) => {
       return false;
     } finally {
       state.isCreating = false;
-      return true;
     }
   };
 
