@@ -322,7 +322,7 @@ export default observer((props: IProps) => {
               && topComments.length > PREVIEW_TOP_COMMENT_COUNT
               && visibleTopComments.length < topComments.length && (
               <div className="pt-10">
-                <div className="text-center border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] dark:text-white dark:text-opacity-50 text-black text-opacity-60 tracking-widest border-gray-f2 pt-3 bg-white dark:bg-[#181818] cursor-pointer flex items-center justify-center absolute bottom-3 left-0 w-full" onClick={() => {
+                <div className="text-center border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] dark:text-white dark:text-opacity-80 text-black text-opacity-60 tracking-widest border-gray-f2 pt-3 bg-white dark:bg-[#181818] cursor-pointer flex items-center justify-center absolute bottom-3 left-0 w-full" onClick={() => {
                   history.push(`/posts/${props.post.trxId}?scrollIntoView=1`);
                 }}>
                   {lang.checkMoreComments(comments.length)}
