@@ -30,7 +30,7 @@ export default (props: IProps) => {
         title='本号所有内容来自同名推特'
         arrow
         >
-        <div>
+        <div className="mt-[-1px]">
           <AiOutlineTwitter className={props.fromIconClass} />
         </div>
       </Tooltip>
