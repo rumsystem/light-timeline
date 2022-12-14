@@ -145,6 +145,13 @@ export default observer(() => {
         hidden: isSearchPage
       }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white dark:bg-[#181818] border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100")}>
         <div className="w-[600px] flex items-center justify-between">
+          {isPc && (
+            <div className="absolute top-0 left-[50%] ml-[-400px] mt-1 cursor-pointer px-4" onClick={() => {
+              history.push('/');
+            }}>
+              <img src="/logo192.png" alt="logo" width={32} height={32} />
+            </div>
+          )}
           {isHomePage && (
             <Tabs />
           )}
