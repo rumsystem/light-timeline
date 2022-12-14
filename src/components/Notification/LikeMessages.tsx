@@ -32,10 +32,6 @@ export default observer((props: IMessagesProps) => {
       {notifications.map((notification, index) => {
         const { fromProfile, toObject } = notification.extra;
 
-        if (!toObject) {
-          return lang.notFound(lang.object);
-        }
-
         const showLastReadFlag = (index === props.unreadCount - 1) && index < notifications.length - 1;
         return (
           <div key={notification.id}>
@@ -68,54 +64,63 @@ export default observer((props: IMessagesProps) => {
                   <div
                     className="mt-3 border-l-[3px] dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-9b pl-[9px] text-12 dark:text-white dark:text-opacity-80 text-gray-4a"
                   >
-                    <div
-                      className="inline-block like-messages-content"
-                      dangerouslySetInnerHTML={{
-                        __html: urlify(toObject.content || '')
-                      }}
-                    >
-                    </div>
-                    {!toObject.content && toObject.images && (<Images images={toObject.images || []} />)}
+                    {toObject && (
+                      <div
+                        className="inline-block like-messages-content"
+                        dangerouslySetInnerHTML={{
+                          __html: urlify(toObject.content || '')
+                        }}
+                      >
+                      </div>
+                    )}
+                    {toObject && !toObject.content && toObject.images && (<Images images={toObject.images || []} />)}
+                    {!toObject && (
+                      <div className="inline-block like-messages-content opacity-60">
+                        内容已被删除
+                      </div>
+                    )}
                   </div>
                   <div className="pt-3 mt-[5px] text-12 flex items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none">
                     <div className="mr-6 opacity-90">
                       {ago(notification.timestamp)}
                     </div>
-                    <div
-                      className="mr-3 cursor-pointer dark:text-white dark:text-opacity-80 hover:font-bold flex items-center opacity-90"
-                      onClick={async () => {
-                        if (notification.toObjectType === 'post') {
-                          if (isMobile) {
-                            props.close();
-                            await sleep(400);
-                            history.push(`/posts/${(toObject as IPost).trxId}`);
-                          } else {
-                            modalStore.postDetail.show({
-                              trxId: (toObject as IPost).trxId,
-                            });
+                    {toObject && (
+                      <div
+                        className="mr-3 cursor-pointer dark:text-white dark:text-opacity-80 hover:font-bold flex items-center opacity-90"
+                        onClick={async () => {
+                          if (notification.toObjectType === 'post') {
+                            if (isMobile) {
+                              props.close();
+                              await sleep(400);
+                              history.push(`/posts/${(toObject as IPost).trxId}`);
+                            } else {
+                              modalStore.postDetail.show({
+                                trxId: (toObject as IPost).trxId,
+                              });
+                            }
                           }
-                        }
-                        if (notification.toObjectType === 'comment') {
-                          if (isMobile) {
-                            const objectId = (toObject as IComment).objectId;
-                            const commentId = (toObject as IComment).trxId;
-                            props.close();
-                            await sleep(400);
-                            history.push(`/posts/${objectId}?commentId=${commentId}`);
-                          } else {
-                            Query.set({
-                              commentId: (toObject as IComment).trxId
-                            });
-                            modalStore.postDetail.show({
-                              trxId: (toObject as IComment).objectId,
-                            });
+                          if (notification.toObjectType === 'comment') {
+                            if (isMobile) {
+                              const objectId = (toObject as IComment).objectId;
+                              const commentId = (toObject as IComment).trxId;
+                              props.close();
+                              await sleep(400);
+                              history.push(`/posts/${objectId}?commentId=${commentId}`);
+                            } else {
+                              Query.set({
+                                commentId: (toObject as IComment).trxId
+                              });
+                              modalStore.postDetail.show({
+                                trxId: (toObject as IComment).objectId,
+                              });
+                            }
                           }
-                        }
-                      }}
-                    >
-                      {lang.open}
-                      <GoChevronRight className="text-12 opacity-70 ml-[-1px]" />
-                    </div>
+                        }}
+                      >
+                        {lang.open}
+                        <GoChevronRight className="text-12 opacity-70 ml-[-1px]" />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
