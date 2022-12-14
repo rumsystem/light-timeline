@@ -3,6 +3,7 @@ import { TrxStorage } from '../common';
 
 export interface IPostContent {
   content: string
+  title?: string
   images?: string[]
 }
 

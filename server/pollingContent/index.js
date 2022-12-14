@@ -15,14 +15,14 @@ const moment = require('moment');
 const jobShareData = {
   limit: 0,
   activeGroupMap: {},
-  handling: false
+  handling: false,
+  jobMap: {}
 }
 
 const DEBUG = false;
 
 module.exports = (duration) => {
   let stop = false;
-  const jobMap = {};
 
   QuorumLightNodeSDK.cache.Group.clear();
 
@@ -43,8 +43,8 @@ module.exports = (duration) => {
       jobShareData.limit = getLimit(groups);
       DEBUG && console.log({ limit: jobShareData.limit });
       for (const group of groups) {
-        if (!jobMap[group.groupId]) {
-          jobMap[group.groupId] = startJob(group.groupId, duration);
+        if (!jobShareData.jobMap[group.groupId]) {
+          jobShareData.jobMap[group.groupId] = startJob(group.groupId, duration);
           await sleep(500);
         }
       }
@@ -55,6 +55,11 @@ module.exports = (duration) => {
 
 const startJob = async (groupId, duration) => {
   while (true) {
+    const groupCount = await Group.count({ where: { groupId } })
+    if (groupCount === 0) {
+      delete jobShareData.jobMap[groupId]
+      break;
+    }
     const group = jobShareData.activeGroupMap[groupId];
     if (group) {
       const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
