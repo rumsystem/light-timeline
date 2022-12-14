@@ -7,7 +7,6 @@ router.get('/:userAddress/exist', exist);
 
 async function get(ctx) {
   const profile = await Profile.get({
-    groupId: ctx.params.groupId,
     userAddress: ctx.params.userAddress
   }, {
     withReplacedImage: true
@@ -17,7 +16,6 @@ async function get(ctx) {
 
 async function exist(ctx) {
   const profile = await Profile.get({
-    groupId: ctx.params.groupId,
     userAddress: ctx.params.userAddress
   }, {
     withReplacedImage: true

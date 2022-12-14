@@ -21,7 +21,7 @@ import { useAliveController } from 'react-activation';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 
 export default observer(() => {
-  const { userStore, postStore, groupStore } = useStore();
+  const { userStore, postStore } = useStore();
   const total = postStore.searchedPosts.length;
   const history = useHistory();
   const aliveController = useAliveController();
@@ -59,7 +59,7 @@ export default observer(() => {
     state.fetching = true;
     try {
       const limit = 15;
-      const posts = await PostApi.list(groupStore.groupId, {
+      const posts = await PostApi.list({
         q: state.q,
         minLike: state.minLike,
         minComment: state.minComment,
@@ -109,7 +109,7 @@ export default observer(() => {
     state.page = 1;
     state.fetched = false;
     postStore.resetSearchedTrxIds();
-    history.replace(`/${groupStore.groupId}/search?${qs.stringify({
+    history.replace(`/search?${qs.stringify({
       q: state.q,
       minLike: state.minLike,
       minComment: state.minComment,
@@ -127,7 +127,7 @@ export default observer(() => {
           <div className="fixed top-0 left-0 md:left-[50%] md:ml-[-300px] z-[100] w-full md:w-[600px]">
             <div className="bg-white flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b border-gray-ec md:rounded-12 shadow-sm">
               <div className="flex items-center text-30 ml-1 mr-3 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
-                history.push(`/${groupStore.groupId}`);
+                history.push(`/`);
                 postStore.resetSearchedTrxIds();
                 await aliveController.drop('search');
               }}>

@@ -1,139 +1,195 @@
 import React from 'react';
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import Button from 'components/Button';
-import { BiChevronRight } from 'react-icons/bi';
-import { RiAddFill } from 'react-icons/ri';
-import AddGroupModal from './addGroupModal';
-import { GroupApi } from 'apis';
-import { IGroup } from 'apis/types';
-import { useStore } from 'store';
-import { lang } from 'utils/lang';
-import sleep from 'utils/sleep';
-import Loading from 'components/Loading';
-import classNames from 'classnames';
-import openGroupInfo from 'components/openGroupInfo';
 import { runInAction } from 'mobx';
-import { isPc, getMixinContext, isMobile } from 'utils/env';
-import { MdOutlineErrorOutline } from 'react-icons/md';
+import { observer, useLocalObservable } from 'mobx-react-lite';
+import { IPost, IProfile } from 'apis/types';
+import { TrxStorage } from 'apis/common';
+import PostItem from 'components/Post/Item';
+import { PostApi, TrxApi } from 'apis';
+import Editor from 'components/Editor';
+import { lang } from 'utils/lang';
+import { useStore } from 'store';
+import classNames from 'classnames';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import Loading from 'components/Loading';
+import openLoginModal from 'components/openLoginModal';
+import { IObject } from 'quorum-light-node-sdk';
+import Button from 'components/Button';
+import { isMobile } from 'utils/env';
+import Base64 from 'utils/base64';
+import TopPlaceHolder from 'components/TopPlaceHolder';
 
 export default observer(() => {
-  const { snackbarStore } = useStore();
+  const { userStore, postStore, groupStore } = useStore();
   const state = useLocalObservable(() => ({
-    openAddGroupModal: false,
-    loading: true,
-    idSet: new Set() as Set<string>,
-    map: {} as Record<string, IGroup>,
-    get groups() {
-      return Array.from(this.idSet).map(id => this.map[id]);
-    },
+    content: '',
+    profileMap: {} as Record<string, IProfile>,
+    invisibleOverlay: false,
+    fetching: false,
+    fetched: false,
+    hasMore: false,
+    page: 1,
+    get myProfile () {
+      return this.profileMap[userStore.address]
+    }
   }));
 
-  React.useEffect(() => {
-    document.title = 'Rum 微博网页版';
-  }, []);
+  const fetchData = async () => {
+    state.fetching = true;
+    try {
+      const limit = 15;
+      const posts = await PostApi.list({
+        type: postStore.feedType,
+        viewer: userStore.address,
+        offset: (state.page - 1) * limit,
+        limit,
+      });
+      postStore.addPosts(posts);
+      state.hasMore = posts.length === limit;
+      const showImageSmoothly = !state.fetched && postStore.trxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+        if (showImageSmoothly) {
+          runInAction(() => {
+            state.invisibleOverlay = true;
+          });
+          setTimeout(() => {
+            runInAction(() => {
+              state.invisibleOverlay = false;
+            });
+          }, 100);
+        }
+    } catch (err) {
+      console.log(err);
+    }
+    state.fetching = false;
+    state.fetched = true;
+  }
 
   React.useEffect(() => {
-    (async () => {
-      await sleep(300);
-      try {
-        const groups = await GroupApi.list();
-        runInAction(() => {
-          for (const group of groups) {
-            state.idSet.add(group.groupId);
-            state.map[group.groupId] = group;
-          }
-        });
-      } catch (err) {
-        console.log(err);
-        snackbarStore.show({
-          message: lang.somethingWrong,
-          type: 'error',
-        });
+    if (state.fetching) {
+      return;
+    }
+    fetchData();
+  }, [state.page]);
+
+  React.useEffect(() => {
+    if (state.fetched) {
+      state.fetched = false;
+      state.fetching = true;
+      state.page = 1;
+      postStore.resetTrxIds();
+      fetchData();
+    }
+  }, [postStore.feedType])
+
+  const [sentryRef, { rootRef }] = useInfiniteScroll({
+    loading: state.fetching,
+    hasNextPage: state.hasMore,
+    rootMargin: '0px 0px 300px 0px',
+    onLoadMore: async () => {
+      state.page += 1;
+    },
+  });
+
+  const submitPost = async (payload: IObject) => {
+    if (!userStore.isLogin) {
+      openLoginModal();
+      return;
+    }
+    const res = await TrxApi.createObject({
+      groupId: groupStore.groupId,
+      object: payload,
+      aesKey: groupStore.cipherKey,
+      privateKey: userStore.privateKey,
+      ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
+    });
+    console.log(res);
+    const post: IPost = {
+      content: payload.content || '',
+      images: (payload.image || []).map(image => Base64.getUrl(image)),
+      userAddress: userStore.address,
+      groupId: groupStore.groupId,
+      trxId: res.trx_id,
+      latestTrxId: '',
+      storage: TrxStorage.cache,
+      commentCount: 0,
+      hotCount: 0,
+      likeCount: 0,
+      imageCount: (payload.image || []).length,
+      timestamp: Date.now(),
+      extra: {
+        userProfile: userStore.profile
       }
-      state.loading = false;
-    })();
-  }, []);
-
-  if (state.loading) {
-    return (
-      <div className="pt-[30vh] flex justify-center">
-        <Loading />
-      </div>
-    )
+    };
+    postStore.addPost(post);
+    userStore.updateUser(userStore.address, {
+      postCount: userStore.user.postCount + 1
+    });
+    state.content = '';
   }
 
   return (
-    <div className="w-full md:w-[520px] px-4 md:px-0 mx-auto py-10 md:py-20">
-      {getMixinContext().isMixinImmersive && (
-        <div className="pt-[5vh]" />
-      )}
-      {state.groups.map(group => (
-        <div className="bg-white rounded-full shadow-xl w-full flex justify-between items-center p-6 px-8 md:px-10 border border-gray-ec leading-none mb-8" key={group.groupId}>
-          <div>
-            <div className="flex items-center">
-              <span className="font-bold text-18 md:text-20 text-gray-33 tracking-wider truncate max-w-[180px] md:max-w-[280px]">
-                {group.groupName}
-              </span>
-            </div>
-            <div className="mt-[15px] text-gray-9b md:flex md:items-center cursor-pointer" onClick={() => {
-              openGroupInfo(group.groupId);
-            }}>
-              {group.status === 'connected' && (
-                <div className="flex items-center">
-                  连接<span className="text-emerald-500 font-bold mx-[6px]">{group.extra.rawGroup.chainAPIs.length}</span>个节点
-                </div>
-              )}
-              {isPc && group.status === 'disconnected' && (
-                <div className="flex items-center bg-red-400 text-white p-1 px-2 text-12 rounded-12 mr-2 text-center">
-                  <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
-                </div>
-              )}
-              <div className="mt-[10px] md:mt-0">
-                {group.contentCount > 0 && (
-                  <div>
-                    {isPc && group.status === 'connected' && '，'}同步<span className="text-gray-64 font-bold mx-[6px]">{group.contentCount}</span>条内容
-                  </div>
-                )}
-              </div>
-              {isPc && (group.status === 'connected' || group.contentCount > 0) && <BiChevronRight className="text-18 ml-[2px]" />}
-              {isMobile && group.status === 'disconnected' && (
-                <div className="flex">
-                  <div className="flex items-center bg-red-400 text-white p-1 px-2 text-12 rounded-12 mt-[10px] text-center">
-                    <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
-                  </div>
-                </div>
-              )}
-            </div>
+    <div className="box-border w-full h-screen overflow-auto bg-white md:bg-transparent" ref={rootRef}>
+      <TopPlaceHolder />
+      <div className="w-full md:w-[600px] box-border mx-auto relative pb-16">
+        <div className="md:pt-5">
+          <div className="hidden md:block">
+            <Editor
+              editorKey="post"
+              placeholder={lang.andNewIdea}
+              autoFocusDisabled
+              minRows={3}
+              submit={(data) => {
+                const payload: IObject = {
+                  type: 'Note',
+                  content: data.content,
+                };
+                if (data.images) {
+                  payload.image = data.images;
+                }
+                return submitPost(payload);
+              }}
+              enabledImage
+            />
           </div>
-          <Button onClick={() => {
-            window.location.href = `/${group.groupId}`;
-            // if (isPc) {
-            //   window.open(`/${group.groupId}`);
-            // } else {
-            // }
-          }}>打开</Button>
+          <div className={classNames({
+            'opacity-0': state.invisibleOverlay
+          }, "md:mt-5 w-full box-border")}>
+            {postStore.posts.map((post) => (
+              <div key={post.trxId}>
+                <PostItem
+                  post={post}
+                  where="postList"
+                  withBorder
+                />
+              </div>
+            ))}
+          </div>
+          {!state.fetched && state.fetching && (
+            <div className="pt-[30vh]">
+              <Loading />
+            </div>
+          )}
+          {state.fetched && state.fetching && (
+            <div className="pt-6 md:pt-3 pb-12 md:pb-5">
+              <Loading />
+            </div>
+          )}
+          {state.fetched && postStore.total === 0 && (
+            <div className="py-[30vh] text-center text-gray-500 text-14 tracking-wider opacity-80">
+              {['latest', 'random'].includes(postStore.feedType) && '来发布一条内容吧 ~'}
+              {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
+              {postStore.feedType === 'latest' && isMobile && !userStore.isLogin && (
+                <div className="flex justify-center mt-5">
+                  <Button onClick={openLoginModal} >
+                    点击发布
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+          <div ref={sentryRef} />
         </div>
-      ))}
-      <div className={classNames({
-        'w-10 h-10': state.groups.length > 0,
-        'h-16': state.groups.length === 0
-      }, "items-center justify-center mx-auto mt-10 bg-black rounded-full cursor-pointer text-white hidden md:flex")} onClick={() => {
-        state.openAddGroupModal = true;
-      }}>
-        <RiAddFill className="text-26" />
-        {state.groups.length === 0 && (
-          <div className="ml-2">添加种子网络</div>
-        )}
       </div>
-
-      <AddGroupModal
-        open={state.openAddGroupModal}
-        onClose={() => state.openAddGroupModal = false}
-        addGroup={group => {
-          state.idSet.add(group.groupId);
-          state.map[group.groupId] = group;
-        }}
-      />
     </div>
   )
-})
+});
+

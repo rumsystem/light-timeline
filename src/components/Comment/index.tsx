@@ -63,7 +63,7 @@ export default observer((props: IProps) => {
   React.useEffect(() => {
     (async () => {
       try {
-        const comments = await CommentApi.list(groupStore.groupId, {
+        const comments = await CommentApi.list({
           objectId: props.post.trxId,
           viewer: userStore.address,
           offset: 0,
@@ -84,7 +84,7 @@ export default observer((props: IProps) => {
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: groupStore.groupId,
+      groupId: props.post.groupId,
       object: payload,
       aesKey: groupStore.cipherKey,
       privateKey: userStore.privateKey,
@@ -323,7 +323,7 @@ export default observer((props: IProps) => {
               && visibleTopComments.length < topComments.length && (
               <div className="pt-10">
                 <div className="text-center border-t border-gray-f2 pt-3 bg-white cursor-pointer flex items-center justify-center absolute bottom-3 left-0 w-full opacity-90" onClick={() => {
-                  history.push(`/${groupStore.groupId}/posts/${props.post.trxId}?scrollIntoView=1`);
+                  history.push(`/posts/${props.post.trxId}?scrollIntoView=1`);
                 }}>
                   {lang.checkMoreComments(comments.length)}
                   <GoChevronRight className="text-14 ml-1" />

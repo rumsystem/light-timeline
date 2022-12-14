@@ -9,7 +9,7 @@ const pack = (item) => {
   const { name, image } = item.Data;
   const data = {
     userAddress: QuorumLightNodeSDK.utils.pubkeyToAddress(item.SenderPubkey),
-    groupId: item.GroupId,
+    groupId: '',
     updatedAt: Date.now()
   };
   if (name) {

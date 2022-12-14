@@ -6,6 +6,7 @@ import { TrxStorage } from 'apis/common';
 import { IComment, IPost } from 'apis/types';
 import { useLocation, useHistory } from 'react-router-dom';
 import Sidebar from 'components/Sidebar';
+import { isMobile } from 'utils/env';
 
 export default observer(() => {
   const { userStore, commentStore, postStore, groupStore, pathStore } = useStore();
@@ -16,9 +17,9 @@ export default observer(() => {
   }));
 
   React.useEffect(() => {
-    if (location.pathname === `/${groupStore.groupId}` || !pathStore.prevPath) {
-      document.title = groupStore.group.groupName;
-    } else if (location.pathname === `/${groupStore.groupId}/search`) {
+    if (location.pathname === `/` || !pathStore.prevPath) {
+      document.title = 'Rum 微博广场';
+    } else if (location.pathname === `/search`) {
       document.title = '搜索';
     }
     pathStore.push(location.pathname);
@@ -85,7 +86,11 @@ export default observer(() => {
           e.stopPropagation();
           const href = e.target.getAttribute('href');
           if (href && href.startsWith('http')) {
-            window.open(href);
+            if (isMobile) {
+              window.location.href = href;
+            } else {
+              window.open(href);
+            }
           }
         }
       };

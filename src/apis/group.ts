@@ -17,4 +17,9 @@ export default {
     const item: IGroup = await request(`${API_BASE_URL}/groups/relation`);
     return item;
   },
+
+  async getDefaultGroup() {
+    const item: IGroup = await request(`${API_BASE_URL}/groups/default`);
+    return item;
+  },
 }

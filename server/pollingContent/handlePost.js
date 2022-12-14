@@ -93,6 +93,6 @@ const notify = async (trxId) => {
     withExtra: true
   });
   if (post) {
-    getSocketIo().to(post.groupId).emit('post', post);
+    getSocketIo().emit('post', post);
   }
 }

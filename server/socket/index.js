@@ -20,17 +20,12 @@ const init = (server) => {
 
     socket.on("authenticate", (data) => {
       const {
-        groupId,
         userAddress
       } = data;
-      if (!groupId) {
-        socket.emit('authenticateResult', 'groupId is required');
-      }
       if (!userAddress) {
         socket.emit('authenticateResult', 'userAddress is required');
       }
-      userToSocketId[groupId + userAddress] = socket.id;
-      socket.join(groupId);
+      userToSocketId[userAddress] = socket.id;
       socket.emit('authenticateResult', 'socket connected');
     });
   });
@@ -38,9 +33,9 @@ const init = (server) => {
 
 const userToSocketId = {};
 
-const trySendSocket = async (groupId, userAddress, event, data) => {
+const trySendSocket = async (userAddress, event, data) => {
   try {
-    const socketId = userToSocketId[groupId + userAddress];
+    const socketId = userToSocketId[userAddress];
     if (socketId) {
       io.to(socketId).emit(event, data);
     }

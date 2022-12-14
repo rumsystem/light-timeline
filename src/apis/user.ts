@@ -4,10 +4,10 @@ import { IUser } from './types';
 import qs from 'query-string';
 
 export default {
-  async get(groupId: string, userAddress: string, options: {
+  async get(userAddress: string, options: {
     viewer: string
   }) {
-    const item: IUser = await request(`${API_BASE_URL}/${groupId}/users/${userAddress}?${qs.stringify(options)}`);
+    const item: IUser = await request(`${API_BASE_URL}/users/${userAddress}?${qs.stringify(options)}`);
     return item;
   }
 }

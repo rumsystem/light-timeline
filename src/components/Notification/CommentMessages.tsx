@@ -21,7 +21,7 @@ interface IMessagesProps {
 }
 
 export default observer((props: IMessagesProps) => {
-  const { modalStore, groupStore } = useStore();
+  const { modalStore } = useStore();
   const { notifications } = props;
   const history = useHistory();
 
@@ -86,7 +86,7 @@ export default observer((props: IMessagesProps) => {
                           const commentId = (notification.extra.fromObject as IComment).trxId;
                           props.close();
                           await sleep(400);
-                          history.push(`/${groupStore.groupId}/posts/${objectId}?commentId=${commentId}`);
+                          history.push(`/posts/${objectId}?commentId=${commentId}`);
                         } else {
                           Query.set({
                             commentId: (notification.extra.fromObject as IComment).trxId

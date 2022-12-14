@@ -102,11 +102,11 @@ export default observer((props: RouteChildrenProps) => {
       if (isMyself) {
         state.profile = userStore.profile;
       } else {
-        const profile = await ProfileApi.get(groupStore.groupId, userAddress);
+        const profile = await ProfileApi.get(userAddress);
         state.profile = profile;
       }
       if (!user) {
-        const user = await UserApi.get(groupStore.groupId, userAddress, {
+        const user = await UserApi.get(userAddress, {
           viewer: userStore.address
         });
         userStore.setUser(userAddress, user);
@@ -129,7 +129,7 @@ export default observer((props: RouteChildrenProps) => {
         postStore.resetUserTrxIds();
       }
       const limit = 10;
-      const posts = await PostApi.list(groupStore.groupId, {
+      const posts = await PostApi.list({
         userAddress,
         viewer: userStore.address,
         offset: (state.postPage - 1) * limit,
@@ -352,7 +352,7 @@ export default observer((props: RouteChildrenProps) => {
                               await sleep(400);
                               store.clear();
                               modalStore.pageLoading.show();
-                              window.location.href = `/${groupStore.groupId}`;
+                              window.location.href = `/`;
                             },
                           });
                         }}>  

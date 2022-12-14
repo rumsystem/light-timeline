@@ -58,7 +58,7 @@ export default observer((props: IProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.groupId,
+        groupId: post.groupId,
         object: {
           id: trxId,
           type: post.extra.liked ? 'Dislike' : 'Like'
@@ -98,7 +98,7 @@ export default observer((props: IProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.groupId,
+        groupId: post.groupId,
         object: {
           type: 'Note',
           content: OBJECT_STATUS_DELETED_LABEL,
@@ -123,7 +123,7 @@ export default observer((props: IProps) => {
             className="text-12 tracking-wide cursor-pointer mr-[20px] mt-[-1px] opacity-80 hidden md:block"
             onClick={() => {
               if (!inPostDetail) {
-                history.push(`/${groupStore.groupId}/posts/${post.trxId}`)
+                history.push(`/posts/${post.trxId}`)
               }
             }}
           >
@@ -141,7 +141,7 @@ export default observer((props: IProps) => {
                 return;
               }
               if (isMobile) {
-                history.push(`/${groupStore.groupId}/posts/${post.trxId}`);
+                history.push(`/posts/${post.trxId}`);
                 return;
               }
               state.showComment = !state.showComment;
@@ -188,7 +188,7 @@ export default observer((props: IProps) => {
           <div
             className='flex items-center p-2 mr-5 cursor-pointer tracking-wide hover:text-gray-33'
             onClick={() => {
-              copy(`${window.origin}/${groupStore.groupId}/posts/${post.trxId}`);
+              copy(`${window.origin}/posts/${post.trxId}`);
               snackbarStore.show({
                 message: `链接${lang.copied}`,
               });
@@ -214,6 +214,7 @@ export default observer((props: IProps) => {
                 <div className="mt-[-3px]">
                   <Menu
                     data={{
+                      groupId: post.groupId,
                       trxId: post.trxId,
                       userAddress: post.userAddress
                     }}
@@ -245,7 +246,7 @@ export default observer((props: IProps) => {
                             await sleep(400);
                           }
                           if (inPostDetail) {
-                            history.push(`/${groupStore.groupId}`);
+                            history.push(`/`);
                           }
                           postStore.removePost(post.trxId);
                           snackbarStore.show({

@@ -98,7 +98,6 @@ const bulkAppendExtra = async (items, options = {}) => {
   }
   
   const profiles = await Profile.bulkGet(items.map((item) => ({
-    groupId: item.groupId,
     userAddress: item.userAddress
   })), {
     withReplacedImage: true
@@ -124,7 +123,7 @@ const replaceImages = item => {
   if (item.imageCount > 0) {
     item.images = [];
     for (let i = 0; i < item.imageCount; i++) {
-      item.images.push(`${config.serverOrigin || ''}/api/${item.groupId}/images/comments/${item.trxId}/${i}`);
+      item.images.push(`${config.serverOrigin || ''}/api/images/comments/${item.trxId}/${i}`);
     }
   }
   return item;
