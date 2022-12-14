@@ -1,6 +1,7 @@
 const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 const config = require('../config');
 const BotSubscription = require('../database/sequelize/botSubscription');
+const sleep = require('../utils/sleep');
 
 if (config.mixinBotKeystore) {
   const client = MixinApi({
@@ -60,7 +61,8 @@ exports.notifyByBot = async (data) => {
     });
     for (const botSub of botSubs) {
       try {
-        await client.message.sendAppCard(botSub.userId, {
+        await sleep(100);
+        client.message.sendAppCard(botSub.userId, {
           icon_url: iconUrl,
           title,
           description,
