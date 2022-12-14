@@ -191,7 +191,10 @@ const Main = observer((props: IProps) => {
           {state.group.contentCount > 0 && (
             <span>已同步 {state.group.contentCount} 条内容 <br /></span>
           )}
-          请稍候...
+          <span>请稍候... <br /></span>
+          <span>如果内容比较多 <br /></span>
+          <span>您可以关闭此窗口 <br /></span>
+          <span>后台会继续同步数据的<br /></span>
         </div>
       )}
     </div>

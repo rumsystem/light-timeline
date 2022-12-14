@@ -77,8 +77,18 @@ export default observer(() => {
                   {group.groupName}
                 </span>
               </div>
-              <div className="mt-[15px] text-gray-9b flex items-center cursor-pointer" onClick={() => {
-                openGroupInfo(group.groupId);
+              <div className="mt-[15px] text-gray-9b flex items-center cursor-pointer" onClick={async () => {
+                const result = await openGroupInfo(group.groupId);
+                console.log(`[openGroupInfo]:`, { result });
+                if (result === 'removed') {
+                  await sleep(500);
+                  state.idSet.delete(group.groupId);
+                  delete state.map[group.groupId];
+                  await sleep(300);
+                  snackbarStore.show({
+                    message: '已移除',
+                  });
+                }
               }}>
                 {group.status === 'connected' && (
                   <div className="flex items-center">
