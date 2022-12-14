@@ -66,8 +66,7 @@ export default observer((props: IProps) => {
         },
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
-        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
-      });
+      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);
       postStore.updatePost({
         ...post,
@@ -104,8 +103,7 @@ export default observer((props: IProps) => {
         },
         aesKey: groupStore.cipherKey,
         privateKey: userStore.privateKey,
-        ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
-      });
+      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);
     } catch (err) {
       console.log(err);
