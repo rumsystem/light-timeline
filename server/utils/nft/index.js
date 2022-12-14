@@ -18,8 +18,8 @@ async function getOutputs(token, ids) {
     }
   } catch (err) {
     console.log(err);
-    return [];
   }
+  return [];
 }
 
 async function getUserId(token) {
@@ -33,8 +33,8 @@ async function getUserId(token) {
     return resp.data.data.user_id;
   } catch (err) {
     console.log(err);
-    return '';
   }
+  return null;
 };
 
 async function getNFT(userId, token, collectionId) {
@@ -68,8 +68,8 @@ async function getNFTToken(token, id) {
     }
   } catch (err) {
     console.log(err);
-    return null;
   }
+  return null;
 };
 
 function hashMembers(ids) {
@@ -85,8 +85,8 @@ async function getTokensFromExplorer(address) {
     return resp.data.result
   } catch (err) {
     console.log(err);
-    return [];
   }
+  return [];
 }
 
 async function getERC721TokensFromExplorer(address) {
@@ -121,8 +121,8 @@ async function getNFTFromExplorer(address, collectionId) {
     }
   } catch (err) {
     console.log(err);
-    return [];
   }
+  return null;
 }
 
 async function getNFTByTokenURI(tokenURI) {

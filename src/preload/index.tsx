@@ -148,7 +148,7 @@ const Preload = observer(() => {
         }
       }
     } catch (err: any) {
-      if (err.code === 'ERR_IS_INVALID' && err.message.includes('userId')) {
+      if (err.code === 'ERR_NOT_FOUND' && err.message.includes('userId')) {
         userStore.setVaultAppUser({
           ...userStore.vaultAppUser,
           status: 'token_expired'
