@@ -447,8 +447,8 @@ export default observer((props: RouteChildrenProps) => {
         </div>
         <div>
           <div className={classNames({
-            'opacity-0': state.invisibleOverlay
-          }, "md:mt-5 w-full box-border  dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:border-opacity-10 md:rounded-12")}>
+            'opacity-0': state.invisibleOverlay|| !state.fetched || user.postCount === 0
+          }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:border-opacity-10 md:rounded-12")}>
             {postStore.userPosts.map((post) => (
               <div key={post.trxId}>
                 <PostItem
