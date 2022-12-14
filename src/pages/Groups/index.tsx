@@ -79,7 +79,6 @@ export default observer(() => {
               </div>
               <div className="mt-[15px] text-gray-9b flex items-center cursor-pointer" onClick={async () => {
                 const result = await openGroupInfo(group.groupId);
-                console.log(`[openGroupInfo]:`, { result });
                 if (result === 'removed') {
                   await sleep(500);
                   state.idSet.delete(group.groupId);

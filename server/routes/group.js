@@ -11,13 +11,14 @@ const Post = require('../database/sequelize/post');
 const Comment = require('../database/sequelize/comment');
 const Profile = require('../database/sequelize/profile');
 const Notification = require('../database/sequelize/notification');
+const { ensurePermission } = require('../middleware/api');
 
 router.get('/default', getDefaultGroup);
 router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', shuffleChainApi);
 router.get('/:groupId/ping', ping);
-router.delete('/:groupId', remove);
+router.delete('/:groupId', ensurePermission, remove);
 router.get('/', list);
 
 async function get(ctx) {
