@@ -214,21 +214,25 @@ export default observer((props: IProps) => {
                     name={profile.name}
                     normalNameClass="font-bold max-w-[40vw] md:max-w-[250px] truncate opacity-90 mt-[-4px] h-[18px] md:h-[20px]"
                     fromClass='mt-[-2px] h-[15px] md:h-[17px]'
-                    fromNameClass="opacity-80 truncate font-bold max-w-[120px] md:max-w-[250px]"
+                    fromNameClass="opacity-80 truncate font-bold max-w-[160px] md:max-w-[250px]"
                     fromIconClass="text-22 text-sky-400 mx-1"
-                    fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[120px] md:max-w-[160px]"
+                    fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[60px] hidden md:block md:max-w-[140px]"
                     />
                 </div>
               </UserCard>
               <div
-                className="flex items-center dark:text-white dark:opacity-40 text-gray-88 text-12 tracking-wide cursor-pointer opacity-80"
+                className={classNames({
+                  'mt-[-2px]': isMobile && isTweet
+                }, "flex items-center dark:text-white dark:opacity-40 text-gray-88 text-12 tracking-wide cursor-pointer opacity-80")}
                 onClick={() => {
                   if (isMobile || !inPostDetail) {
                     history.push(`/posts/${post.trxId}`);
                   }
                 }}
               >
-                <span className="mx-[6px] transform scale-150 opacity-50">·</span>
+                {(isPc || !isTweet) && (
+                  <span className="mx-[6px] transform scale-150 opacity-50">·</span>
+                )}
                 {ago(post.timestamp, {
                   trimmed: inPostDetail
                 })}
@@ -246,7 +250,7 @@ export default observer((props: IProps) => {
                       'text-[15px]': inPostDetail,
                       'text-[14px]': !inPostDetail
                     },
-                    'mt-[8px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide',
+                    'mt-[3px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
                     __html: urlify(`${post.content}`) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}">查看原文</a>` : ''}`,
