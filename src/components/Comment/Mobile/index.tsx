@@ -349,11 +349,11 @@ export default observer((props: IProps) => {
         likePost={props.updateCounter}
         post={props.post}
       />
-      {topComments.length > 5 && (
-        <div className="pt-3 pb-5">
+      <div className="pt-3 pb-6">
+        {topComments.length > 5 && (
           <BottomLine />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 });
