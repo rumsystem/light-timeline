@@ -119,7 +119,7 @@ const replaceImages = item => {
   if (item.imageCount > 0) {
     item.images = [];
     for (let i = 0; i < item.imageCount; i++) {
-      item.images.push(`${config.serverOrigin || ''}/api/images/posts/${item.trxId}/${i}`);
+      item.images.push(`${config.serverOrigin || config.origin || ''}/api/images/posts/${item.trxId}/${i}`);
     }
   }
   return item;
