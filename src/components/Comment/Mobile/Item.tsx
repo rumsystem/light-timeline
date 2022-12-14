@@ -3,7 +3,7 @@ import { observer, useLocalStore } from 'mobx-react-lite';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { isSafari, isIPhone } from 'utils/env';
-import urlify from 'utils/urlify';
+import replaceContent from 'utils/replaceContent';
 import { FaRegComment } from 'react-icons/fa';
 import { useStore } from 'store';
 import { IComment, IPost } from 'apis/types';
@@ -104,7 +104,7 @@ export default observer((props: IProps) => {
       <div className="pt-[2px]" id={`comment_${commentStore.mobile.topCommentPage.open ? '_xxx_' : ''}${comment.trxId}`}>
         <span
           className="dark:text-white dark:text-opacity-80 text-gray-1e break-words"
-          dangerouslySetInnerHTML={{ __html: urlify(`${previewContentPrefix}${comment.content}`, { disabled: true }) }}
+          dangerouslySetInnerHTML={{ __html: replaceContent(`${previewContentPrefix}${comment.content}`, { disabled: true }) }}
         />
         {comment.images && comment.images.length > 0 && (
           <span
@@ -263,7 +263,7 @@ export default observer((props: IProps) => {
                 }}
                 ref={commentRef}
                 dangerouslySetInnerHTML={{
-                  __html: urlify(`${contentPrefix}${comment.content}`),
+                  __html: replaceContent(`${contentPrefix}${comment.content}`),
                 }}
               />
 

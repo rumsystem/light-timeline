@@ -76,7 +76,10 @@ export default observer(() => {
           e.stopPropagation();
           const href = e.target.getAttribute('href');
           const disabled = e.target.hasAttribute('disabled');
-          if (!disabled && href && href.startsWith('http')) {
+          if (disabled || !href) {
+            return;
+          }
+          if (href.startsWith('http')) {
             const { origin } = new URL(href);
             if (origin !== window.origin) {
               confirmDialogStore.show({
@@ -88,6 +91,14 @@ export default observer(() => {
               });
             } else {
               isMobile ? window.location.href = href : window.open(href);
+            }
+          }
+          if (href.startsWith('#')) {
+            const { pathname } = location;
+            if (pathname === '/search') {
+              history.replace(`/search?q=${encodeURIComponent(href)}`);
+            } else {
+              history.push(`/search?q=${encodeURIComponent(href)}`);
             }
           }
         }
