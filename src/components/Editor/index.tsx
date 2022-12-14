@@ -277,8 +277,6 @@ const Editor = observer((props: IProps) => {
         if (!url.startsWith('data:')) {
           const res: any = await Base64.getFromBlobUrl(url);
           url = res.url;
-          console.log(` ------------- 转换成 base64 ---------------`);
-          console.log(image.url, url);
         }
         return {
           mediaType: Base64.getMimeType(url),
@@ -291,7 +289,9 @@ const Editor = observer((props: IProps) => {
     if (isUpdating) {
       payload.updatedTrxId = props.post!.trxId;
     }
+    let _draft = '';
     if (!isUpdating) {
+      _draft = localStorage.getItem(draftKey) || '';
       localStorage.removeItem(draftKey);
     }
     try {
@@ -309,6 +309,9 @@ const Editor = observer((props: IProps) => {
         message: lang.somethingWrong,
         type: 'error',
       });
+      if (_draft) {
+        localStorage.setItem(draftKey, _draft);
+      }
     }
     state.submitting = false;
   };
