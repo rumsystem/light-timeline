@@ -70,6 +70,7 @@ const Editor = observer((props: IProps) => {
             fullWidth
             disabled={!userStore.isLogin}
             minRows={3}
+            maxRows={10}
             value={state.value}
             onChange={handleEditorChange}
             margin="normal"
