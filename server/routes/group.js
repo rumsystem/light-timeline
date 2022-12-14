@@ -40,7 +40,7 @@ async function list(ctx) {
   ctx.body = groups
               .filter(group => (
                 group.seedUrl.includes('group_timeline') ||
-                (config.presetGroup.userRelation?.visible && group.seedUrl.includes('group_relations'))
+                (config.userRelation?.visible && group.seedUrl.includes('group_relations'))
               ))
               .map(group => pack(group.toJSON()));
 }
