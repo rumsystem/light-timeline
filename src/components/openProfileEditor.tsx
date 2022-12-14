@@ -69,7 +69,7 @@ const ModalWrapper = observer((props: IModalProps) => {
       const res = await TrxApi.createPerson({
         groupId: groupStore.groupId,
         person,
-        aesKey: groupStore.cipherKey,
+        aesKey: groupStore.getCipherKey(groupStore.groupId),
         privateKey: userStore.privateKey,
       }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
       console.log(res);

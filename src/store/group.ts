@@ -8,12 +8,10 @@ export function createGroupStore() {
 
     relationGroupId: '' as string,
 
+    groupMap: {} as Record<string, IGroup>,
+
     get groupId() {
       return this.group.groupId || '';
-    },
-
-    get cipherKey() {
-      return this.group?.extra.rawGroup.cipherKey || '';
     },
 
     setGroup(group: IGroup) {
@@ -26,6 +24,14 @@ export function createGroupStore() {
 
     setLoading(loading: boolean) {
       this.loading = loading;
+    },
+
+    setGroupMap(map: Record<string, IGroup>) {
+      this.groupMap = map;
+    },
+
+    getCipherKey(groupId: string) {
+      return this.groupMap[groupId]?.extra.rawGroup.cipherKey
     }
   };
 }
