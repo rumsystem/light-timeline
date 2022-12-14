@@ -141,7 +141,7 @@ export default observer(() => {
     <div>
       <div className={classNames({
         hidden: isSearchPage
-      }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white dark:bg-[#181818] border-b dark:border-white dark:border-opacity-10 border-neutral-100")}>
+      }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white dark:bg-[#181818] border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100")}>
         <div className="w-[600px] flex items-center justify-between">
           {isHomePage && (
             <Tabs />
@@ -269,7 +269,7 @@ export default observer(() => {
           {state.showBackToTop && (
             <Fade in={true} timeout={350}>
               <div
-                className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center cursor-pointer border dark:border-white dark:border-opacity-10 border-gray-c4'
+                className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4'
                 onClick={scrollToTop}
               >
                 <MdArrowUpward className="text-20 dark:text-white dark:text-opacity-80 text-gray-af" />
@@ -286,7 +286,7 @@ export default observer(() => {
             interactive
             >
               <div
-                className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:border-opacity-10 border-gray-c4 hidden'
+                className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 hidden'
                 onClick={() => openGroupInfo(groupStore.groupId)}
               >
                 <BsInfo className="text-24 dark:text-white dark:text-opacity-80 text-gray-af" />
@@ -309,7 +309,7 @@ export default observer(() => {
           )}
           {(isHomePage || isMyUserPage || isSearchPage) && (
             <div>
-              <div className="pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:border-opacity-10 border-neutral-100 bg-white dark:bg-[#181818] z-50">
+              <div className="pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100 bg-white dark:bg-[#181818] z-50">
                 <div
                   className={classNames(
                     {

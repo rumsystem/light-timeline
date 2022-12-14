@@ -87,7 +87,7 @@ export default observer(() => {
     <div className="box-border w-full overflow-y-auto h-screen" id="post-detail-page">
       <TopPlaceHolder />
       <div className="w-full md:w-[600px] box-border mx-auto min-h-screen dark:md-0 md:my-5">
-        <div className="dark:md:border dark:border-white dark:border-opacity-10 rounded-12 overflow-hidden">
+        <div className="dark:md:border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] rounded-12 overflow-hidden">
           <PostItem
             post={post as IPost}
             where="postDetail"

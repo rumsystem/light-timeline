@@ -31,7 +31,7 @@ export default observer((props: IProps) => {
 
   return (
     <div>
-      <div className="-mt-2 md:mt-0 md:border-t md:dark:border-white dark:border-opacity-10 border-gray-300 md:pt-5">
+      <div className="-mt-2 md:mt-0 md:border-t md:dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-300 md:pt-5">
         {topComments.map((comment: IComment, index: number) => {
           const isTopLast = index === topComments.length - 1;
           const highlight = selectedComment?.trxId === comment.trxId;
@@ -47,7 +47,7 @@ export default observer((props: IProps) => {
             <div
               key={index}
               className={classNames({
-                'border-b dark:border-white dark:border-opacity-10 border-gray-200': !isTopLast && !noSubComments,
+                'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200': !isTopLast && !noSubComments,
               })}
             >
               <CommentItem

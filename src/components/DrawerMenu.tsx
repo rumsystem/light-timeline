@@ -19,7 +19,7 @@ const MenuItem = (props: any) => {
   const { onClick, className } = props;
   return (
     <div
-      className={`py-4 dark:text-white dark:text-opacity-80 text-gray-4a text-center border-b dark:border-white dark:border-opacity-10 border-gray-ec bg-white dark:bg-[#181818] text-16 ${className}`}
+      className={`py-4 dark:text-white dark:text-opacity-80 text-gray-4a text-center border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec bg-white dark:bg-[#181818] text-16 ${className}`}
       onClick={onClick}
     >
       {props.children}

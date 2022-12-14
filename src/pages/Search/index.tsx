@@ -125,7 +125,7 @@ export default observer(() => {
       <div className="w-full md:w-[600px] box-border mx-auto relative">
         <div className="pt-[23px] md:pt-[38px] pb-12 md:pb-4">
           <div className="fixed top-0 left-0 md:left-[50%] md:ml-[-300px] z-[100] w-full md:w-[600px]">
-            <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b dark:border dark:border-white dark:border-opacity-10 border-gray-ec md:rounded-12 shadow-sm">
+            <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b dark:border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec md:rounded-12 shadow-sm">
               <div className="flex items-center text-30 ml-1 mr-3 dark:text-white dark:text-opacity-80 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
                 history.push(`/`);
                 postStore.resetSearchedTrxIds();
@@ -172,7 +172,7 @@ export default observer(() => {
           </div>
           <div className={classNames({
             'opacity-0': state.invisibleOverlay || !state.fetched || total === 0
-          }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:border-opacity-10 md:rounded-12 overflow-hidden")}>
+          }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12 overflow-hidden")}>
             {postStore.searchedPosts.map((post) => (
               <div key={post.trxId}>
                 <PostItem
