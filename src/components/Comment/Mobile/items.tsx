@@ -66,7 +66,7 @@ export default observer((props: IProps) => {
                 >
                   <div className="ml-10-px md:ml-3" style={{ paddingLeft: '36px' }}>
                     <div
-                      className='dark:bg-[#202020] bg-gray-f7 rounded md:bg-none p-3 pb-10-px mt-2 mr-4'
+                      className='dark:bg-[#242424] bg-gray-f7 rounded md:bg-none p-3 pb-10-px mt-2 mr-4'
                       onClick={() => {
                         commentStore.mobile.topCommentPage.setTopComment(comment);
                         commentStore.mobile.topCommentPage.setOpen(true);
