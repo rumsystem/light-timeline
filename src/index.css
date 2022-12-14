@@ -266,12 +266,20 @@ body::-webkit-scrollbar { /* WebKit */
   background: #181818;
   color: rgba(255, 255, 255, 0.8);
 }
-
 .dark .MuiPopover-paper  {
   box-shadow: rgb(255 255 255 / 20%) 0px 0px 15px, rgb(255 255 255 / 15%) 0px 0px 3px 1px;
 }
-
 .dark .popover-paper  {
   box-shadow: rgb(255 255 255 / 20%) 0px 0px 15px, rgb(255 255 255 / 15%) 0px 0px 3px 1px;
 }
 
+
+/************************************** IOS SAFE AREA **************************************/
+.ios-safe-area-margin {
+  margin-bottom: constant(safe-area-inset-bottom) !important;
+  margin-bottom: env(safe-area-inset-bottom) !important;
+}
+.ios-safe-area-padding {
+  padding-bottom: constant(safe-area-inset-bottom) !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
