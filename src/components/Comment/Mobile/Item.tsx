@@ -176,7 +176,7 @@ export default observer((props: IProps) => {
       >
         <div className="relative">
           <div className="avatar absolute top-0 left-0">
-            <Link to={`/${comment.groupId}/users/${comment.userAddress}`}>
+            <Link to={`/users/${comment.userAddress}`}>
               <img
                 onClick={async () => {
                   await sleep(400);
