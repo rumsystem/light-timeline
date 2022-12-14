@@ -42,7 +42,10 @@ async function list(ctx) {
       threadId: {
         [Op.or]: subCommentTrxIds
       }
-    }
+    },
+    order: [
+      ['timestamp', 'ASC']
+    ],
   }, {
     withReplacedImage: true,
     withExtra: true,
