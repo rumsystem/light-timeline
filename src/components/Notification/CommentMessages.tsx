@@ -21,7 +21,7 @@ interface IMessagesProps {
 }
 
 export default observer((props: IMessagesProps) => {
-  const { modalStore } = useStore();
+  const { modalStore, snackbarStore } = useStore();
   const { notifications } = props;
   const history = useHistory();
 
@@ -29,10 +29,6 @@ export default observer((props: IMessagesProps) => {
     <div>
       {notifications.map((notification, index) => {
         const { fromProfile, fromObject, toObject } = notification.extra;
-
-        if (!fromObject || !toObject) {
-          return lang.notFound(lang.comment);
-        }
 
         const showLastReadFlag = (index === props.unreadCount - 1) && index < notifications.length - 1;
         return (
@@ -67,12 +63,19 @@ export default observer((props: IMessagesProps) => {
                   <div
                     className="mt-[9px] opacity-90 break-words"
                   >
-                    <div>
-                      <div dangerouslySetInnerHTML={{
-                        __html: urlify(fromObject.content || '')
-                      }}/>
-                      {!fromObject.content && fromObject.images && <Images images={fromObject.images || []} />}
-                    </div>
+                    {fromObject &&  (
+                      <div>
+                        <div dangerouslySetInnerHTML={{
+                          __html: urlify(fromObject.content || '')
+                        }}/>
+                        {!fromObject.content && fromObject.images && <Images images={fromObject.images || []} />}
+                      </div>
+                    )}
+                    {!fromObject && (
+                      <div className="opacity-60">
+                        内容已被删除
+                      </div>
+                    )}
                   </div>
                   <div className="pt-3 mt-[2px] text-12 flex items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none">
                     <div className="mr-6 opacity-90">
@@ -81,6 +84,13 @@ export default observer((props: IMessagesProps) => {
                     <div
                       className="mr-3 cursor-pointer dark:text-white dark:text-opacity-80 hover:font-bold flex items-center opacity-90"
                       onClick={async () => {
+                        if (!toObject) {
+                          snackbarStore.show({
+                            message: '内容已被删除',
+                            type: 'error',
+                          });
+                          return;
+                        }
                         if (isMobile) {
                           const objectId = (notification.extra.fromObject as IComment).objectId;
                           const commentId = (notification.extra.fromObject as IComment).trxId;
