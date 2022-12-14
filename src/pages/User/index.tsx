@@ -325,7 +325,7 @@ export default observer((props: RouteChildrenProps) => {
                   </span>
                 </div>
                 {isTweet && (
-                  <div className="dark:text-white dark:text-opacity-80 text-black bg-white dark:bg-[#181818] py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
+                  <div className="text-black bg-white dark:bg-opacity-90 py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
                     本号所有内容来自推特用户 @{profile.name.split('\n@')[1]}
                   </div>
                 )}
