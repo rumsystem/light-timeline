@@ -22,6 +22,18 @@ export function createPostStore() {
       return this.trxIds.length;
     },
 
+    get groupTotal() {
+      return this.groupTrxIds.length;
+    },
+
+    get userTotal() {
+      return this.userTrxIds.length;
+    },
+
+    get searchTotal() {
+      return this.searchedTrxIds.length;
+    },
+
     get posts() {
       return this.trxIds.map((rId: string) => this.map[rId]);
     },

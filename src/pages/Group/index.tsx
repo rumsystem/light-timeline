@@ -263,7 +263,7 @@ export default observer((props: RouteChildrenProps) => {
                     <Loading />
                   </div>
                 )}
-                {state.fetchedPosts && postStore.total === 0 && (
+                {state.fetchedPosts && postStore.groupTotal === 0 && (
                   <div className="py-[30vh] text-center text-gray-500 text-14 tracking-wider opacity-80">
                     {['latest', 'random'].includes(postStore.feedType) && '来发布一条内容吧 ~'}
                     {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
