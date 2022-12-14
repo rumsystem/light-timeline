@@ -5,6 +5,7 @@ import { unmountComponentAtNode, render } from 'react-dom';
 import { ThemeRoot } from 'utils/theme';
 import PhotoSwipe from 'photoswipe';
 import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
+import { isMobile } from 'utils/env';
 
 import 'photoswipe/dist/photoswipe.css';
 import 'photoswipe/dist/default-skin/default-skin.css';
@@ -64,6 +65,7 @@ const PhotoSwipeComponent = observer((props: IPhotoSwipeProps) => {
       bgOpacity: 0.85,
       closeOnScroll: false,
       arrowEl: true,
+      tapAction: 'close'
     };
     const pswpElement = document.getElementById('pswp');
     if (pswpElement) {
@@ -88,7 +90,11 @@ const PhotoSwipeComponent = observer((props: IPhotoSwipeProps) => {
   }, []);
 
   return (
-    <div id="pswp" className="pswp" tabIndex={-1} role="dialog" aria-hidden="true">
+    <div id="pswp" className="pswp" tabIndex={-1} role="dialog" aria-hidden="true" onClick={(e: any) => {
+      if (isMobile) {
+        props.rs();
+      }
+    }}>
       <div className="pswp__bg" />
       <div className="pswp__scroll-wrap">
         <div className="pswp__container">
@@ -97,7 +103,7 @@ const PhotoSwipeComponent = observer((props: IPhotoSwipeProps) => {
           <div className="pswp__item" />
         </div>
         <div className="pswp__ui pswp__ui--hidden">
-          <div className="pswp__top-bar">
+          <div className="pswp__top-bar hidden">
             <div className="pswp__counter" />
             <button className="pswp__button pswp__button--close" />
             <button className="pswp__button pswp__button--share" />
