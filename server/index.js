@@ -36,6 +36,7 @@ const feature = require('./routes/feature');
 const image = require('./routes/image');
 const relation = require('./routes/relation');
 const permission = require('./routes/permission');
+const config = require('./routes/config');
 
 const {
   errorHandler,
@@ -76,6 +77,7 @@ router.use('/api/images', image.routes(), image.allowedMethods());
 router.use('/api/relations', relation.routes(), relation.allowedMethods());
 router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
 router.use('/api/:groupId/permission', permission.routes(), permission.allowedMethods());
+router.use('/api/config', config.routes(), config.allowedMethods());
 
 router.use('(.*)', async ctx => ctx.render('index'));
 

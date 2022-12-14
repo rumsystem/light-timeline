@@ -9,7 +9,14 @@ import Sidebar from 'components/Sidebar';
 import { isMobile } from 'utils/env';
 
 export default observer(() => {
-  const { userStore, commentStore, postStore, pathStore, confirmDialogStore } = useStore();
+  const {
+    userStore,
+    commentStore,
+    postStore,
+    pathStore,
+    confirmDialogStore,
+    configStore
+  } = useStore();
   const location = useLocation();
   const history = useHistory();
   const state = useLocalObservable(() => ({
@@ -110,7 +117,7 @@ export default observer(() => {
   React.useEffect(() => {
     const { pathname } = location;
     if (pathname === `/`) {
-      document.title = 'CNFT Mixin Story Club';
+      document.title = configStore.config.title || 'CNFT Mixin Story Club';
     } else if (pathname === `/search`) {
       document.title = '搜索';
     }

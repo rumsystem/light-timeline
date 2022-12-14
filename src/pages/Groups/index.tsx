@@ -17,7 +17,7 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 
 export default observer(() => {
-  const { snackbarStore, groupStore } = useStore();
+  const { snackbarStore, groupStore, configStore } = useStore();
   const state = useLocalObservable(() => ({
     openAddGroupModal: false,
     loading: true,
@@ -29,7 +29,7 @@ export default observer(() => {
   }));
 
   React.useEffect(() => {
-    document.title = 'CNFT Mixin Story Club';
+    document.title = configStore.config.title || 'CNFT Mixin Story Club';
   }, []);
 
   React.useEffect(() => {
