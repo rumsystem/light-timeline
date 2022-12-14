@@ -64,9 +64,7 @@ export default observer((props: IProps) => {
           id: trxId,
           type: post.extra.liked ? 'Dislike' : 'Like'
         },
-        aesKey: groupStore.map.group_counters.extra.rawGroup.cipherKey,
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       postStore.updatePost({
         ...post,
@@ -101,9 +99,7 @@ export default observer((props: IProps) => {
           content: OBJECT_STATUS_DELETED_LABEL,
           id: trxId
         },
-        aesKey: groupStore.map.group_timeline.extra.rawGroup.cipherKey,
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
     } catch (err) {
       console.log(err);

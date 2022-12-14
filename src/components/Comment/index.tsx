@@ -86,9 +86,7 @@ export default observer((props: IProps) => {
     const res = await TrxApi.createObject({
       groupId: groupStore.map.group_comments.groupId,
       object: payload,
-      aesKey: groupStore.map.group_comments.extra.rawGroup.cipherKey,
-      privateKey: userStore.privateKey,
-    }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+    });
     console.log(res);
     const comment: IComment = {
       content: payload.content || '',

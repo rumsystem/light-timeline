@@ -140,9 +140,7 @@ export default observer((props: IProps) => {
           id: trxId,
           type: comment.extra.liked ? 'Dislike' : 'Like',
         },
-        aesKey: groupStore.map.group_counters.extra.rawGroup.cipherKey,
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       commentStore.updateComment({
         ...comment,

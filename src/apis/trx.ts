@@ -1,6 +1,7 @@
 import request from 'request';
 import { API_BASE_URL } from './common';
-import { ICreateObjectPayload, ICreatePersonPayload, ITrx, utils } from 'quorum-light-node-sdk';
+import { IObject, IPerson, ITrx, utils } from 'quorum-light-node-sdk';
+import { Store } from 'store';
 
 interface IVaultOptions {
   ethPubKey: string
@@ -8,36 +9,12 @@ interface IVaultOptions {
 }
 
 export default {
-  async createObject(p: ICreateObjectPayload, vaultOptions: IVaultOptions | null) {
-    const payload = await utils.signTrx({
-      type: '_Object',
-      ...p,
-      data: p.object,
-      version: (window as any).store.configStore.config.version,
-      ...(vaultOptions ? getVaultTrxCreateParam(vaultOptions) : {})
-    });
-    console.log(payload);
-    const res: { trx_id: string } = await request(`${API_BASE_URL}/${p.groupId}/trx`, {
-      method: 'POST',
-      body: payload,
-    });
-    return res;
+  createObject(p: { groupId: string, object: IObject }) {
+    return createTrx(p.groupId, p.object, '_Object');
   },
 
-  async createPerson(p: ICreatePersonPayload, vaultOptions: IVaultOptions | null) {
-    const payload = await utils.signTrx({
-      type: 'Person',
-      ...p,
-      data: p.person,
-      version: (window as any).store.configStore.config.version,
-      ...(vaultOptions ? getVaultTrxCreateParam(vaultOptions) : {})
-    });
-    console.log(payload);
-    const res: { trx_id: string } = await request(`${API_BASE_URL}/${p.groupId}/trx`, {
-      method: 'POST',
-      body: payload
-    });
-    return res;
+  createPerson(p: { groupId: string, person: IPerson }) {
+    return createTrx(p.groupId, p.person, 'Person');
   },
 
   async get(groupId: string, trxId: string) {
@@ -45,6 +22,27 @@ export default {
     return res;
   }
 }
+
+async function createTrx(groupId: string, data: IObject | IPerson, type: '_Object' | 'Person') {
+  const { configStore, groupStore, userStore } = (window as any).store as Store;
+  const payload = await utils.signTrx({
+    type,
+    data,
+    groupId,
+    aesKey: groupStore.groupIdMap[groupId].extra.rawGroup.cipherKey,
+    version: configStore.config.version,
+    privateKey: userStore.privateKey,
+    ...(userStore.jwt ? getVaultTrxCreateParam({
+      ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt
+    }) : {})
+  });
+  console.log(payload);
+  const res: { trx_id: string } = await request(`${API_BASE_URL}/${groupId}/trx`, {
+    method: 'POST',
+    body: payload
+  });
+  return res;
+};
 
 const getVaultTrxCreateParam = (vaultOptions: IVaultOptions) => {
   const { ethPubKey, jwt } = vaultOptions;

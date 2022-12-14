@@ -82,9 +82,7 @@ const UserList = observer((props: IProps) => {
             to: relation.to
           })
         },
-        aesKey: groupStore.map.group_relations.extra.rawGroup.cipherKey,
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       state.relations = state.relations.filter(r => r.to !== relation.to);
       if (type === 'unfollow') {

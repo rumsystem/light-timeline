@@ -97,9 +97,7 @@ export default observer(() => {
     const res = await TrxApi.createObject({
       groupId: groupStore.map.group_timeline.groupId,
       object: payload,
-      aesKey: groupStore.map.group_timeline.extra.rawGroup.cipherKey,
-      privateKey: userStore.privateKey,
-    }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+    });
     console.log(res);
     const post: IPost = {
       content: payload.content || '',

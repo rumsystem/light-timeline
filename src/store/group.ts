@@ -8,6 +8,8 @@ export function createGroupStore() {
 
     map: {} as Record<APP_KEY, IGroup>,
 
+    groupIdMap: {} as Record<string, IGroup>,
+
     setLoading(loading: boolean) {
       this.loading = loading;
     },
@@ -15,6 +17,7 @@ export function createGroupStore() {
     setMap(groups: IGroup[]) {
       for (const group of groups) {
         this.map[group.extra.rawGroup.appKey as APP_KEY] = group;
+        this.groupIdMap[group.groupId] = group;
       }
     },
   };

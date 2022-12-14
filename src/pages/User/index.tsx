@@ -200,9 +200,7 @@ export default observer((props: RouteChildrenProps) => {
             to: userAddress
           })
         },
-        aesKey: groupStore.map.group_relations.extra.rawGroup.cipherKey,
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       if (type.includes('follow')) {
         userStore.updateUser(userAddress, {

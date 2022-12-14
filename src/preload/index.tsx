@@ -114,9 +114,7 @@ const Preload = observer(() => {
               content: Base64.getContent(avatar.url),
             },
           },
-          aesKey: groupStore.map.group_profiles.extra.rawGroup.cipherKey,
-          privateKey: userStore.privateKey,
-        }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+        });
         console.log(res);
         userStore.setProfile({
           name: vaultUser.display_name,
