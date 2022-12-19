@@ -79,7 +79,11 @@ export default observer((props: IProps) => {
                     },
                   )}
                 </div>
-                {subCommentsGroupMap[topComment.trxId].length > 2 && <BottomLine />}
+                {subCommentsGroupMap[topComment.trxId].length > 2 && (
+                  <div className="pt-5">
+                    <BottomLine />
+                  </div>
+                )}
                 <div className="pb-20" />
               </div>
             )}

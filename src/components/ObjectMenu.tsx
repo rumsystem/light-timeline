@@ -45,7 +45,7 @@ export default observer((props: IProps) => {
     return (
       <div>
         <div
-          className="dark:text-white dark:text-opacity-80 text-gray-af px-[2px] opacity-80 cursor-pointer mt-[1px]"
+          className="dark:text-white dark:text-opacity-40 text-gray-af px-[2px] opacity-80 cursor-pointer mt-[1px]"
           onClick={handleMenuClick}
         >
           <RiMoreFill className="text-20" />
@@ -73,7 +73,7 @@ export default observer((props: IProps) => {
   return (
     <div>
       <div
-        className="dark:text-white dark:text-opacity-80 text-gray-af px-[2px] opacity-80 cursor-pointer"
+        className="dark:text-white dark:text-opacity-40 text-gray-af px-[2px] opacity-80 cursor-pointer"
         onClick={handleMenuClick}
       >
         <RiMoreFill className="text-20" />
@@ -101,7 +101,7 @@ export default observer((props: IProps) => {
             });
             handleMenuClose();
           }}>
-            <div className="flex items-center dark:text-white dark:text-opacity-80 text-gray-600 leading-none pl-1 py-2 font-bold pr-5">
+            <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-600 leading-none pl-1 py-2 font-bold pr-5">
               <span className="flex items-center mr-3">
                 <MdInfoOutline className="text-18 opacity-50" />
               </span>
@@ -117,7 +117,7 @@ export default observer((props: IProps) => {
               handleMenuClose();
             }}
             >
-              <div className="flex items-center dark:text-white dark:text-opacity-80 text-gray-600 leading-none pl-1 py-2 font-bold pr-2">
+              <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-600 leading-none pl-1 py-2 font-bold pr-2">
                 <span className="flex items-center mr-3">
                   <MdOutlineEdit className="text-18 opacity-50" />
                 </span>
