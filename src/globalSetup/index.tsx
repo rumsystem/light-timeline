@@ -109,7 +109,6 @@ export default observer(() => {
       push(path);
     }
     history.listen((data, action) => {
-      console.log(`[history.listen]:`, { data, action });
       const { pathname } = data;
       if (action === 'PUSH') {
         pathStore.push(pathname);
