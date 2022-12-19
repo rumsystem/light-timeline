@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
 import store from 'store2';
+import { keyBy } from 'lodash';
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore } = useStore();
@@ -33,8 +34,8 @@ const Preload = observer(() => {
     (async () => {
       groupStore.setLoading(true);
       try {
-        const groups = await GroupApi.list();
-        groupStore.setMap(groups);
+        const group = await GroupApi.getDefaultGroup();
+        groupStore.setGroup(group);
         if (token) {
           modalStore.pageLoading.show();
           await handleToken(token, accessToken);
@@ -53,6 +54,8 @@ const Preload = observer(() => {
           userStore.setUser(userStore.address, user);
         }
         groupStore.setLoading(false);
+        initRelationGroup();
+        initGroupMap();
         tryOpenLoginModal();
         tryOpenProfileModal();
         tryLogout();
@@ -102,7 +105,7 @@ const Preload = observer(() => {
       if (!profileExist && !isJWT(token)) {
         const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
         const res = await TrxApi.createPerson({
-          groupId: groupStore.map.group_profiles.groupId,
+          groupId: groupStore.groupId,
           person: {
             name: vaultUser.display_name,
             image: {
@@ -110,17 +113,35 @@ const Preload = observer(() => {
               content: Base64.getContent(avatar.url),
             },
           },
-          aesKey: groupStore.map.group_profiles.extra.rawGroup.cipherKey,
+          aesKey: groupStore.getCipherKey(groupStore.groupId),
           privateKey: userStore.privateKey,
         }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
         console.log(res);
         userStore.setProfile({
           name: vaultUser.display_name,
           avatar: avatar.url,
-          groupId: groupStore.map.group_profiles.groupId,
+          groupId: groupStore.groupId,
           userAddress: vaultAppUser.eth_address
         });
       }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const initRelationGroup = async () => {
+    try {
+      const relationGroup = await GroupApi.getRelationGroup();
+      groupStore.setRelationGroupId(relationGroup.groupId);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const initGroupMap = async () => {
+    try {
+      const groups = await GroupApi.list();
+      groupStore.setGroupMap(keyBy(groups, 'groupId'));
     } catch (err) {
       console.log(err);
     }
