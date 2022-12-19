@@ -167,8 +167,7 @@ const Preload = observer(() => {
           },
           aesKey: groupStore.cipherKey,
           privateKey: userStore.privateKey,
-          ...(userStore.jwt ? { eth_pub_key: vaultAppUser.eth_pub_key, jwt } : {})
-        });
+        }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
         console.log(res);
         userStore.setProfile({
           name: vaultUser.display_name,
