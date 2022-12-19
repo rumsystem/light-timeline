@@ -61,7 +61,7 @@ const pack = (profile, options = {}) => {
 }
 
 const replaceImage = profile => {
-  profile.avatar = `${config.serverOrigin || ''}/api/images/profiles/${profile.userAddress}`
+  profile.avatar = `${config.serverOrigin || config.origin || ''}/api/images/profiles/${profile.userAddress}`
   if (profile.updatedAt) {
     profile.avatar += `?${new Date(profile.updatedAt).getTime()}`;
   }
