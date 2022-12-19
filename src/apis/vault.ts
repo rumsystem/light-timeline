@@ -44,5 +44,19 @@ export default {
       address: string
       signature: string
     };
-  }
+  },
+
+  async createUserBySignature(p: {
+    address: string
+    data: string
+    signature: string
+  }) {
+    console.log(`[createUserBySignature]:`, { p });
+    const res = await request(`/user/eth/address`, {
+      base: VAULT_API_BASE_URL,
+      method: 'POST',
+      body: p,
+    });
+    return res as IVaultAppUser;
+  },
 }
