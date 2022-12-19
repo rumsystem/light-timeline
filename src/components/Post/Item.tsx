@@ -222,8 +222,8 @@ export default observer((props: IProps) => {
               </UserCard>
               <div
                 className={classNames({
-                  'mt-[-2px]': isMobile && isTweet
-                }, "flex items-center dark:text-white dark:opacity-40 text-gray-88 text-12 tracking-wide cursor-pointer opacity-80")}
+                  'mt-[-2px]': isTweet
+                }, "flex items-center text-gray-88 opacity-70 dark:text-white dark:opacity-40 text-12 tracking-wide cursor-pointer")}
                 onClick={() => {
                   if (isMobile || !inPostDetail) {
                     history.push(`/posts/${post.trxId}`);

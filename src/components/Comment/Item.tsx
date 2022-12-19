@@ -189,7 +189,7 @@ export default observer((props: IProps) => {
                       />
                     </UserCard>
                     <div
-                      className="text-12 mr-3 tracking-wide opacity-90 dark:opacity-50 flex items-center"
+                      className="text-12 mr-3 tracking-wide text-gray-88 opacity-70 dark:text-white dark:opacity-40 flex items-center"
                     >
                       <span className="mx-[6px] transform scale-150 opacity-50">·</span>
                       {ago(comment.timestamp, { trimmed: true })}
@@ -299,7 +299,7 @@ export default observer((props: IProps) => {
               <div className="items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none mt-2 h-3 relative w-full flex">
                 {isSubComment && (
                   <div
-                    className="text-12 mr-5 tracking-wide opacity-90 dark:opacity-50"
+                    className="text-12 mr-5 tracking-wide text-gray-88 opacity-70 dark:text-white dark:opacity-40"
                   >
                     {ago(comment.timestamp, { trimmed: true })}
                   </div>
