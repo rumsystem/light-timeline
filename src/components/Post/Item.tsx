@@ -203,7 +203,7 @@ export default observer((props: IProps) => {
             />
           </UserCard>
           <div className="pl-12 ml-1">
-            <div className="pt-[1px]">
+            <div className="pt-[1px] flex">
               <UserCard
                 disableHover={props.disabledUserCardTooltip}
                 userAddress={post.userAddress}
