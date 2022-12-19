@@ -21,7 +21,7 @@ import { useAliveController } from 'react-activation';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 
 export default observer(() => {
-  const { userStore, postStore } = useStore();
+  const { userStore, postStore, pathStore } = useStore();
   const total = postStore.searchedPosts.length;
   const history = useHistory();
   const aliveController = useAliveController();
@@ -127,7 +127,7 @@ export default observer(() => {
           <div className="fixed top-0 left-0 md:left-[50%] md:ml-[-300px] z-[100] w-full md:w-[600px]">
             <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b dark:border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec md:rounded-12 shadow-sm">
               <div className="flex items-center text-30 ml-1 mr-3 dark:text-white dark:text-opacity-80 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
-                history.push(`/`);
+                pathStore.paths.length > 0 ? history.goBack() : history.replace(`/`);
                 postStore.resetSearchedTrxIds();
                 await aliveController.drop('search');
               }}>
