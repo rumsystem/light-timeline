@@ -1,6 +1,6 @@
 const sleep = require('./utils/sleep');
 const Group = require('./database/sequelize/group');
-// const Seed = require('./database/sequelize/seed');
+const Seed = require('./database/sequelize/seed');
 const Content = require('./database/sequelize/content');
 const Post = require('./database/sequelize/post');
 const Comment = require('./database/sequelize/comment');
@@ -15,15 +15,8 @@ const Relation = require('./database/sequelize/relation');
 (async () => {
   await sleep(5000);
   try {
-    // await Group.sync({ force: true });
-    // await Seed.sync({ force: true });
-    await Group.update({
-      startTrx: '',
-      loaded: false,
-      contentCount: 0
-    }, {
-      where: {}
-    });
+    await Group.sync({ force: true });
+    await Seed.sync({ force: true });
     await Content.sync({ force: true });
     await Post.sync({ force: true });
     await Comment.sync({ force: true });
