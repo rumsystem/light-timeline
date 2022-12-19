@@ -13,4 +13,4 @@ pipelines:
             - docker
           script:
             - ssh -tt huoju@103.61.37.242 "cd /data/deploy/build-server/build_shortcuts && git pull && ./10_build_all_in_one_light_timeline.sh"
-            - ssh -tt huoju@103.61.39.166 "cd /data/deploy/xue-testing && git pull && ./redeploy_all_in_one_light_timeline.sh"
+            - ssh -tt Junhong@34.131.81.93 "cd ~/deploy/feedbaseone && git pull && ./redeploy_all_in_one_light_timeline.sh"
