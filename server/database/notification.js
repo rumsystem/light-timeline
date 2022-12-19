@@ -73,7 +73,6 @@ exports.appendExtra = async (item) => {
   }
 
   item.extra.fromProfile = await Profile.get({
-    groupId: item.groupId,
     userAddress: item.from
   }, {
     withReplacedImage: true

@@ -105,7 +105,7 @@ export default observer((props: IProps) => {
     state.submitting = true;
     try {  
       const res = await TrxApi.createObject({
-        groupId: groupStore.groupId,
+        groupId: comment.groupId,
         object: {
           id: trxId,
           type: comment.extra.liked ? 'Dislike' : 'Like'
@@ -346,7 +346,7 @@ export default observer((props: IProps) => {
                     'flex items-center cursor-pointer justify-center w-10 tracking-wide leading-none',
                   )}
                   onClick={() => {
-                    copy(`${window.origin}/${groupStore.groupId}/posts/${comment.objectId}?commentId=${comment.trxId}`);
+                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
                     snackbarStore.show({
                       message: `链接${lang.copied}`,
                     });
@@ -369,7 +369,10 @@ export default observer((props: IProps) => {
                     trxId={comment.trxId}
                   storage={comment.storage}
                     SyncedComponent={() => (
-                      <TrxInfo trxId={comment.trxId} />
+                      <TrxInfo
+                        groupId={comment.groupId}
+                        trxId={comment.trxId}
+                      />
                     )}
                   />
                 </div>

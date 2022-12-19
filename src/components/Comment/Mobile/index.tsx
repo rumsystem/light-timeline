@@ -53,7 +53,7 @@ export default observer((props: IProps) => {
   React.useEffect(() => {
     (async () => {
       try {
-        const comments = await CommentApi.list(groupStore.groupId, {
+        const comments = await CommentApi.list({
           objectId: props.post.trxId,
           viewer: userStore.address,
           offset: 0,
@@ -138,7 +138,7 @@ export default observer((props: IProps) => {
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: groupStore.groupId,
+      groupId: props.post.groupId,
       object: payload,
       aesKey: groupStore.cipherKey,
       privateKey: userStore.privateKey,

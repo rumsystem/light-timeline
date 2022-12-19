@@ -51,7 +51,7 @@ module.exports = async (item, group) => {
     }
     if (value > 0 && from !== post.userAddress) {
       const notification = {
-        groupId: counter.groupId,
+        groupId: '',
         status: group.loaded ? 'unread' : 'read',
         type: 'like',
         toObjectId: post.trxId,
@@ -64,7 +64,7 @@ module.exports = async (item, group) => {
       };
       await Notification.create(notification);
       if (group.loaded) {
-        trySendSocket(group.groupId, notification.to, 'notification', notification);
+        trySendSocket(notification.to, 'notification', notification);
       }
     }
   }
@@ -86,7 +86,7 @@ module.exports = async (item, group) => {
     await Comment.update(comment.trxId, comment);
     if (value > 0 && from !== comment.userAddress) {
       const notification = {
-        groupId: counter.groupId,
+        groupId: '',
         status: group.loaded ? 'unread' : 'read',
         type: 'like',
         toObjectId: comment.trxId,
@@ -99,7 +99,7 @@ module.exports = async (item, group) => {
       };
       await Notification.create(notification);
       if (group.loaded) {
-        trySendSocket(group.groupId, notification.to, 'notification', notification);
+        trySendSocket(notification.to, 'notification', notification);
       }
     }
   }

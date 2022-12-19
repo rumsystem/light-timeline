@@ -9,7 +9,11 @@ import { isMobile, isPc } from 'utils/env';
 import DrawerMenu from 'components/DrawerMenu';
 
 interface IProps {
-  data: { trxId: string, userAddress: string }
+  data: {
+    groupId: string,
+    trxId: string,
+    userAddress: string
+  }
   onClickUpdateMenu: () => void
   onClickDeleteMenu: () => void
 }
@@ -91,7 +95,10 @@ export default observer((props: IProps) => {
       >
         {isPc && (
           <MenuItem onClick={() => {
-            openTrxModal({ trxId: data.trxId });
+            openTrxModal({
+              groupId: data.groupId,
+              trxId: data.trxId
+            });
             handleMenuClose();
           }}>
             <div className="flex items-center text-gray-600 leading-none pl-1 py-2 font-bold pr-5">

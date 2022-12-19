@@ -40,9 +40,9 @@ const UserCard = observer((props: IUserCardProps) => {
   React.useEffect(() => {
     (async () => {
       try {
-        state.profile = await ProfileApi.get(groupStore.groupId, props.userAddress);
+        state.profile = await ProfileApi.get(props.userAddress);
         if (!user) {
-          const user = await UserApi.get(groupStore.groupId, props.userAddress, {
+          const user = await UserApi.get(props.userAddress, {
             viewer: userStore.address
           });
           userStore.setUser(props.userAddress, user);
@@ -96,7 +96,7 @@ const UserCard = observer((props: IUserCardProps) => {
   }
 
   return (
-    <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-[250px] pt-5 pb-5 px-[22px] min-h-[175px]">
+    <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-[270px] pt-5 pb-5 px-[22px] min-h-[175px]">
       {state.fetched && (
         <div>
           <div
@@ -122,7 +122,7 @@ const UserCard = observer((props: IUserCardProps) => {
               {' '}
               <span className="text-14 font-bold">
                 {user.postCount}
-              </span> 条内容{' '}
+              </span> 内容{' '}
             </span>
             <span className="mx-[10px] opacity-50">|</span>
             <span>
@@ -161,7 +161,6 @@ const UserCard = observer((props: IUserCardProps) => {
 });
 
 export default observer((props: IProps) => {
-  const { groupStore } = useStore();
   const history = useHistory();
   const state = useLocalObservable(() => ({
     resetting: false
@@ -181,7 +180,7 @@ export default observer((props: IProps) => {
       await sleep(200);
       state.resetting = false;
     }
-    history.push(`/${groupStore.groupId}/users/${props.userAddress}`);
+    history.push(`/users/${props.userAddress}`);
   }
 
   if (isMobile) {

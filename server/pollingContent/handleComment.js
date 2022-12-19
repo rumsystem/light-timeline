@@ -34,7 +34,7 @@ module.exports = async (item, group) => {
   await Post.update(post.trxId, post);
   if (!threadId && from !== post.userAddress) {
     const notification = {
-      groupId: comment.groupId,
+      groupId: '',
       status: group.loaded ?'unread' : 'read',
       type: 'comment',
       to: post.userAddress,
@@ -47,7 +47,7 @@ module.exports = async (item, group) => {
     };
     await Notification.create(notification);
     if (group.loaded) {
-      trySendSocket(group.groupId, notification.to, 'notification', notification);
+      trySendSocket(notification.to, 'notification', notification);
     }
   }
 
@@ -70,7 +70,7 @@ module.exports = async (item, group) => {
       }
       if (from !== replyComment.userAddress) {
         const notification = {
-          groupId: comment.groupId,
+          groupId: '',
           status: group.loaded ?'unread' : 'read',
           type: 'comment',
           to: replyComment.userAddress,
@@ -83,13 +83,13 @@ module.exports = async (item, group) => {
         };
         await Notification.create(notification);
         if (group.loaded) {
-          trySendSocket(group.groupId, notification.to, 'notification', notification);
+          trySendSocket(notification.to, 'notification', notification);
         }
       }
     } else {
       if (from !== threadComment.userAddress) {
         const notification = {
-          groupId: comment.groupId,
+          groupId: '',
           status: group.loaded ?'unread' : 'read',
           type: 'comment',
           toObjectId: threadComment.trxId,
@@ -102,7 +102,7 @@ module.exports = async (item, group) => {
         };
         await Notification.create(notification);
         if (group.loaded) {
-          trySendSocket(group.groupId, notification.to, 'notification', notification);
+          trySendSocket(notification.to, 'notification', notification);
         }
       }
     }
@@ -160,6 +160,6 @@ const notify = async (trxId) => {
     withExtra: true
   });
   if (comment) {
-    getSocketIo().to(comment.groupId).emit('comment', comment);
+    getSocketIo().emit('comment', comment);
   }
 }

@@ -23,7 +23,7 @@ interface IMessagesProps {
 }
 
 export default observer((props: IMessagesProps) => {
-  const { modalStore, groupStore } = useStore();
+  const { modalStore } = useStore();
   const { notifications } = props;
   const history = useHistory();
 
@@ -88,7 +88,7 @@ export default observer((props: IMessagesProps) => {
                           if (isMobile) {
                             props.close();
                             await sleep(400);
-                            history.push(`/${groupStore.groupId}/posts/${(toObject as IPost).trxId}`);
+                            history.push(`/posts/${(toObject as IPost).trxId}`);
                           } else {
                             modalStore.postDetail.show({
                               trxId: (toObject as IPost).trxId,
@@ -101,7 +101,7 @@ export default observer((props: IMessagesProps) => {
                             const commentId = (toObject as IComment).trxId;
                             props.close();
                             await sleep(400);
-                            history.push(`/${groupStore.groupId}/posts/${objectId}?commentId=${commentId}`);
+                            history.push(`/posts/${objectId}?commentId=${commentId}`);
                           } else {
                             Query.set({
                               commentId: (toObject as IComment).trxId

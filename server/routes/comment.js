@@ -20,9 +20,7 @@ async function get(ctx) {
 
 async function list(ctx) {
   const query = {
-    where: {
-      groupId: ctx.params.groupId
-    },
+    where: {},
     limit: Math.min(~~ctx.query.limit || 10, 100),
     offset: ctx.query.offset || 0,
     order: [

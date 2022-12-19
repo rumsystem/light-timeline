@@ -4,7 +4,6 @@ const config = require('../config');
 
 exports.upsert = async (item) => {
   const where = {
-    groupId: item.groupId,
     userAddress: item.userAddress,
   };
   const exist = await Profile.findOne({
@@ -25,7 +24,7 @@ exports.upsert = async (item) => {
 
 exports.get = async (index, options = {}) => {
   const query = {
-    where: index
+    where: index,
   };
   if (options.withReplacedImage) {
     query.attributes = { exclude: ['avatar'] };
@@ -62,7 +61,7 @@ const pack = (profile, options = {}) => {
 }
 
 const replaceImage = profile => {
-  profile.avatar = `${config.serverOrigin || ''}/api/${profile.groupId}/images/profiles/${profile.userAddress}`
+  profile.avatar = `${config.serverOrigin || ''}/api/images/profiles/${profile.userAddress}`
   if (profile.updatedAt) {
     profile.avatar += `?${new Date(profile.updatedAt).getTime()}`;
   }

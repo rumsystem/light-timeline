@@ -57,18 +57,16 @@ export default observer(() => {
   const location = useLocation();
   const aliveController = useAliveController();
 
-  const isHomePage = location.pathname === `/${groupStore.groupId}`;
-  const isSearchPage = location.pathname === `/${groupStore.groupId}/search`;
-  const isUserPage = location.pathname.startsWith(`/${groupStore.groupId}/users`);
-  const isMyUserPage = location.pathname === `/${groupStore.groupId}/users/${userStore.address}`;
+  const isHomePage = location.pathname === `/`;
+  const isSearchPage = location.pathname === `/search`;
+  const isGroupsPage = location.pathname === `/groups`;
+  const isMyUserPage = location.pathname === `/users/${userStore.address}`;
 
   const fetchUnreadCount = async () => {
     try {
-      const count1 = await NotificationApi.getUnreadCount(groupStore.groupId,
-        userStore.address,
-        'like');
-      const count2 = await NotificationApi.getUnreadCount(groupStore.groupId, userStore.address, 'comment');
-      const count3 = await NotificationApi.getUnreadCount(groupStore.groupId, userStore.address, 'follow');
+      const count1 = await NotificationApi.getUnreadCount(userStore.address, 'like');
+      const count2 = await NotificationApi.getUnreadCount(userStore.address, 'comment');
+      const count3 = await NotificationApi.getUnreadCount(userStore.address, 'follow');
       state.unreadCount = count1 + count2 + count3;
     } catch (err) {
       console.log(err);
@@ -128,7 +126,7 @@ export default observer(() => {
         await sleep(400);
         store.clear();
         modalStore.pageLoading.show();
-        window.location.href = `/${groupStore.groupId}`;
+        window.location.href = `/`;
       },
     });
   }
@@ -146,7 +144,7 @@ export default observer(() => {
             <div
               className="flex items-center cursor-pointer text-neutral-500"
               onClick={() => {
-                pathStore.prevPath ? history.goBack() : history.push(`/${groupStore.groupId}`)
+                pathStore.prevPath ? history.goBack() : history.push(`/`)
               }}>
               <div className="flex items-center text-20 ml-3 md:ml-2">
                 <BiArrowBack />
@@ -154,7 +152,7 @@ export default observer(() => {
               <span className="ml-3 text-15 leading-none mt-[1px]">返回</span>
             </div>
           )}
-          {isPc && !userStore.isLogin && (
+          {isPc && !userStore.isLogin && !isGroupsPage && (
             <div className="px-2 opacity-70">
               <Button outline size="mini" onClick={openLoginModal}>登录</Button>
             </div>
@@ -169,7 +167,7 @@ export default observer(() => {
                     if (result) {
                       postStore.resetSearchedTrxIds();
                       await aliveController.drop('search');
-                      history.push(`/${groupStore.groupId}/search?${qs.stringify(result!, {
+                      history.push(`/search?${qs.stringify(result!, {
                         skipEmptyString: true
                       })}`);
                     }
@@ -219,7 +217,7 @@ export default observer(() => {
                     <MenuItem 
                       onClick={() => {
                         state.anchorEl = null;
-                        history.push(`/${groupStore.groupId}/users/${userStore.address}`);
+                        history.push(`/users/${userStore.address}`);
                       }}>
                       <div className="py-1 px-3 flex items-center">
                         我的主页
@@ -293,7 +291,7 @@ export default observer(() => {
               </div>
             </Fade>
           )}
-          {(isHomePage || isUserPage || isSearchPage) && (
+          {(isHomePage || isMyUserPage || isSearchPage) && (
             <div>
               <div className="pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around text-gray-88 text-12 border-t border-neutral-100 bg-white z-50">
                 <div
@@ -304,7 +302,7 @@ export default observer(() => {
                     'px-4 text-center',
                   )}
                   onClick={() => {
-                    const path = `/${groupStore.groupId}`;
+                    const path = `/`;
                     if (location.pathname !== path) {
                       history.push(path);
                     } else {
@@ -338,7 +336,7 @@ export default observer(() => {
                     }
                     postStore.resetSearchedTrxIds();
                     await aliveController.drop('search');
-                    history.push(`/${groupStore.groupId}/search`);
+                    history.push(`/search`);
                   }}
                 >
                   <div className="flex items-center justify-center text-24 h-6 w-6">
@@ -358,7 +356,7 @@ export default observer(() => {
                       openLoginModal();
                       return;
                     }
-                    const path = `/${groupStore.groupId}/users/${userStore.address}`;
+                    const path = `/users/${userStore.address}`;
                     if (location.pathname !== path) {
                       history.push(path);
                     }

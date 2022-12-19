@@ -21,7 +21,6 @@ async function get(ctx) {
 
 async function list(ctx) {
   const where = {
-    groupId: ctx.params.groupId,
     latestTrxId: '',
   };
 

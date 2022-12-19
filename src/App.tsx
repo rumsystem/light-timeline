@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Index from './pages/Index';
-import Group from './pages/Group';
+import Groups from './pages/Groups';
 import Search from './pages/Search';
 import PostDetail from './pages/PostDetail';
 import User from './pages/User';
@@ -18,7 +18,6 @@ import { GroupApi, ProfileApi, UserApi, VaultApi } from 'apis';
 import { useStore } from 'store';
 import GlobalSetup from './globalSetup';
 import { lang } from 'utils/lang';
-import { useParams } from 'react-router-dom';
 import Query from 'utils/query';
 import * as Vault from 'utils/vault';
 import { TrxApi } from 'apis';
@@ -27,8 +26,7 @@ import { IVaultAppUser } from 'apis/types';
 import { isEmpty } from 'lodash';
 import openProfileEditor from 'components/openProfileEditor';
 import sleep from 'utils/sleep';
-
-(window as any).Base64 = Base64;
+import { useHistory } from 'react-router-dom';
 
 const App = observer(() => {
   const { groupStore, userStore } = useStore();
@@ -36,26 +34,26 @@ const App = observer(() => {
     <Router>
       <AliveScope>
         <div>
-          <Route path="/" exact component={Index} />
+          <Route path="/groups" exact component={Groups} />
 
-          <Route path="/:groupId" component={Preload} />
+          <Route path="/" component={Preload} />
           {!groupStore.loading && (
             <div>
               <GlobalSetup />
-              <Route path="/:groupId" exact component={() => (
+              <Route path="/" exact component={() => (
                 <KeepAlive>
-                  <Group />
+                  <Index />
                 </KeepAlive>
               )} />
-              <Route path="/:groupId/search" exact component={() => (
+              <Route path="/search" exact component={() => (
                 <KeepAlive name='search'>
                   <Search />
                 </KeepAlive>
               )} />
-              <Route path="/:groupId/posts/:trxId" exact component={PostDetail} />
-              <Route path="/:groupId/users/:userAddress" exact render={props => (
+              <Route path="/posts/:trxId" exact component={PostDetail} />
+              <Route path="/users/:userAddress" exact render={props => (
                 <KeepAlive name='user' when={() => (
-                  window.location.pathname.startsWith(`/${groupStore.groupId}/posts`)
+                  window.location.pathname.startsWith(`/posts`)
                 )}>
                   <User { ...props } />
                 </KeepAlive>
@@ -77,7 +75,7 @@ const App = observer(() => {
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore } = useStore();
-  const { groupId } = useParams() as { groupId: string };
+  const history = useHistory();
   const token = Query.get('token');
   if (token) {
     console.log({ token });
@@ -89,7 +87,7 @@ const Preload = observer(() => {
     (async () => {
       groupStore.setLoading(true);
       try {
-        const group = await GroupApi.get(groupId);
+        const group = await GroupApi.getDefaultGroup();
         groupStore.setGroup(group);
         let createdByToken = false;
         if (token) {
@@ -99,8 +97,8 @@ const Preload = observer(() => {
         }
         if (userStore.isLogin && !createdByToken) {
           const [profile, user] = await Promise.all([
-            ProfileApi.get(groupStore.groupId, userStore.address),
-            UserApi.get(groupStore.groupId, userStore.address, {
+            ProfileApi.get(userStore.address),
+            UserApi.get(userStore.address, {
               viewer: userStore.address
             })
           ]);
@@ -115,21 +113,14 @@ const Preload = observer(() => {
       } catch (err: any) {
         console.log(err);
         if (err.message === 'group not found') {
-          confirmDialogStore.show({
-            content: '您访问种子网络不存在',
-            okText: '返回首页',
-            cancelDisabled: true,
-            ok: () => {
-              window.location.href = '/';
-            },
-          });
+          history.push('/groups');
         } else {
           confirmDialogStore.show({
             content: lang.somethingWrong,
-            okText: '返回首页',
+            okText: '刷新页面',
             cancelDisabled: true,
             ok: () => {
-              window.location.href = `/${groupStore.groupId}`;
+              window.location.href = '/';
             },
           });
         }
@@ -156,7 +147,7 @@ const Preload = observer(() => {
       createdByToken = true;
     }
     try {
-      const profileExist = await ProfileApi.exist(groupStore.groupId, userStore.address);
+      const profileExist = await ProfileApi.exist(userStore.address);
       if (!profileExist) {
         const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
         const res = await TrxApi.createPerson({

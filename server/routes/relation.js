@@ -38,7 +38,6 @@ async function list(ctx, type) {
   });
   items = items.map(item => item.toJSON());
   const profiles = await Profile.bulkGet(items.map((item) => ({
-    groupId: ctx.params.groupId,
     userAddress: type === 'followers' ? item.from : item.to
   })), {
     withReplacedImage: true

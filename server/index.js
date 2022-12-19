@@ -65,14 +65,14 @@ router.use('/api/groups', group.routes(), group.allowedMethods());
 router.use('/api/contents', content.routes(), content.allowedMethods());
 router.use('/api/seeds', seed.routes(), seed.allowedMethods());
 router.use('/api/features', feature.routes(), feature.allowedMethods());
+router.use('/api/posts', post.routes(), post.allowedMethods());
+router.use('/api/comments', comment.routes(), comment.allowedMethods());
+router.use('/api/profiles', profile.routes(), profile.allowedMethods());
+router.use('/api/notifications', notification.routes(), notification.allowedMethods());
+router.use('/api/users', user.routes(), user.allowedMethods());
+router.use('/api/images', image.routes(), image.allowedMethods());
+router.use('/api/relations', relation.routes(), relation.allowedMethods());
 router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
-router.use('/api/:groupId/posts', post.routes(), post.allowedMethods());
-router.use('/api/:groupId/comments', comment.routes(), comment.allowedMethods());
-router.use('/api/:groupId/profiles', profile.routes(), profile.allowedMethods());
-router.use('/api/:groupId/notifications', notification.routes(), notification.allowedMethods());
-router.use('/api/:groupId/users', user.routes(), user.allowedMethods());
-router.use('/api/:groupId/images', image.routes(), image.allowedMethods());
-router.use('/api/:groupId/relations', relation.routes(), relation.allowedMethods());
 
 router.use('(.*)', async ctx => ctx.render('index'));
 
