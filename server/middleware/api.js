@@ -1,4 +1,6 @@
 const httpStatus = require('http-status');
+const config = require('../config');
+const { assert, Errors } = require('../utils/validator');
 
 exports.errorHandler = async (ctx, next) => {
   try {
@@ -44,3 +46,10 @@ exports.extendCtx = async (ctx, next) => {
   };
   await next();
 };
+
+exports.ensurePermission = async (ctx, next) => {
+  if (config.admins && config.admins.length > 0) {
+    assert(config.admins.includes(ctx.headers['x-address']), Errors.ERR_NO_PERMISSION('this api'))
+  }
+  await next();
+}

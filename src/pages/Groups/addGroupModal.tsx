@@ -122,6 +122,12 @@ const Main = observer((props: IProps) => {
           message: '该种子已经添加过了哦',
           type: 'error',
         });
+      } else if (err.code === 'ERR_NOT_PERMISSION') {
+        snackbarStore.show({
+          message: '您还没有权限执行这个操作，请让站长给您加权限',
+          type: 'error',
+          duration: 4000
+        });
       } else {
         snackbarStore.show({
           message: lang.somethingWrong,
