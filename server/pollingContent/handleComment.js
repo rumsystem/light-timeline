@@ -168,7 +168,7 @@ const notify = async (trxId) => {
     Mixin.notifyByBot({
       iconUrl: comment.extra.userProfile.avatar,
       title: (comment.content || '').slice(0, 30) || '图片',
-      description: `${truncateByBytes(name, 14)} 发表评论`,
+      description: `${truncateByBytes(name, 14)} 发布评论`,
       url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`
     });
   }

@@ -103,7 +103,7 @@ const notify = async (trxId) => {
     Mixin.notifyByBot({
       iconUrl: post.extra.userProfile.avatar,
       title: (post.content || '').slice(0, 30) || '图片',
-      description: `${truncateByBytes(name, 14)} 发表内容`,
+      description: `${truncateByBytes(name, 14)} 发布内容`,
       url: `${config.origin}/posts/${post.trxId}`
     });
   }
