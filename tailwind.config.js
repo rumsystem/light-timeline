@@ -116,6 +116,15 @@ module.exports = {
           ),
         ),
       },
+      keyframes: {
+        scale: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.5)' },
+        }
+      },
+      animation: {
+        scale: 'scale 0.5s ease-in-out',
+      }
     },
   },
 };

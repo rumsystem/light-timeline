@@ -41,6 +41,7 @@ export default observer((props: IProps) => {
   const state = useLocalObservable(() => ({
     showComment: inPostDetail || false,
     submitting: false,
+    likeAnimating: false,
   }));
   const liked = post.extra?.liked;
   const likeCount = post.likeCount;
@@ -55,6 +56,7 @@ export default observer((props: IProps) => {
       return;
     }
     state.submitting = true;
+    state.likeAnimating = !post.extra.liked;
     try {
       const res = await TrxApi.createObject({
         groupId: post.groupId,
@@ -84,6 +86,7 @@ export default observer((props: IProps) => {
     }
     await sleep(2000);
     state.submitting = false;
+    state.likeAnimating = false;
   }
 
   const deletePost = async (trxId: string) => {
@@ -121,7 +124,7 @@ export default observer((props: IProps) => {
           <div
             className={classNames(
               {
-                'dark:text-white dark:text-opacity-50 text-gray-33': liked,
+                'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': liked,
               },
               'flex items-center pl-0 p-2 pr-5 cursor-pointer tracking-wide',
             )}
@@ -129,15 +132,17 @@ export default observer((props: IProps) => {
               updateCounter(post.trxId);
             }}
           >
-            <div className="text-16 mr-[6px] opacity-90">
+            <div className="text-16 mr-[6px]">
               {liked ? (
-                <RiThumbUpFill className="dark:text-white dark:text-opacity-50 text-black opacity-60 dark:opacity-80" />
+                <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
               ) : (
                 <RiThumbUpLine />
               )}
             </div>
             {likeCount ? (
-              <span className="mr-[10px] md:mr-1">{likeCount || ''}</span>
+              <span className={classNames({
+                'dark:opacity-90': liked
+              }, "mr-[10px] md:mr-1")}>{likeCount || ''}</span>
             )
               : <span className={classNames({
                 'invisible': isMobile
@@ -146,7 +151,7 @@ export default observer((props: IProps) => {
           <div
             className={classNames(
               {
-                'dark:text-white dark:text-opacity-50 text-gray-33': state.showComment,
+                'dark:text-white dark:text-opacity-80 text-black text-opacity-60': state.showComment,
               },
               'flex items-center p-2 pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide mt-[-1px]',
             )}
@@ -162,9 +167,9 @@ export default observer((props: IProps) => {
             }}
             data-test-id="timeline-post-comment-button"
           >
-            <div className="text-16 mr-[6px] opacity-90">
+            <div className="text-16 mr-[6px]">
               {state.showComment ? (
-                <FaComment className="dark:text-white dark:text-opacity-50 text-black opacity-60 dark:opacity-80" />
+                <FaComment />
               ) : (
                 <FaRegComment />
               )}

@@ -38,6 +38,7 @@ interface IProps {
 export default observer((props: IProps) => {
   const state = useLocalStore(() => ({
     submitting: false,
+    likeAnimating: false,
     canExpand: false,
     expand: false,
     readyToFold: isSafari || isIPhone ? false : true,
@@ -131,6 +132,7 @@ export default observer((props: IProps) => {
       return;
     }
     state.submitting = true;
+    state.likeAnimating = !comment.extra.liked;
     try {
       const res = await TrxApi.createObject({
         groupId: comment.groupId,
@@ -159,6 +161,7 @@ export default observer((props: IProps) => {
       });
     }
     state.submitting = false;
+    state.likeAnimating = false;
   }
 
   return (
@@ -280,17 +283,21 @@ export default observer((props: IProps) => {
 
               <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-9b leading-none mt-3">
                 <div
-                  className='flex items-center cursor-pointer pr-6'
+                  className={classNames({
+                    'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': comment.extra.liked
+                  }, 'flex items-center cursor-pointer pr-6')}
                   onClick={() => updateCounter(comment.trxId)}
                 >
                   <span className="flex items-center text-16 pr-1 md">
                     {comment.extra.liked ? (
-                      <RiThumbUpFill className="dark:text-white text-black opacity-60 dark:opacity-80" />
+                      <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
                     ) : (
                       <RiThumbUpLine />
                     )}
                   </span>
-                  <span className="font-bold">{Number(comment.likeCount) || ''}</span>
+                  <span className={classNames({
+                    'dark:opacity-90': comment.extra.liked
+                  }, "text-12")}>{Number(comment.likeCount) || ''}</span>
                 </div>
                 {(isTopComment || comment.userAddress !== userStore.address) && (  
                   <div
