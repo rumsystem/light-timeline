@@ -8,6 +8,8 @@ export function createPostStore() {
   return {
     trxIds: [] as string[],
 
+    groupTrxIds: [] as string[],
+
     userTrxIds: [] as string[],
 
     searchedTrxIds: [] as string[],
@@ -22,6 +24,10 @@ export function createPostStore() {
 
     get posts() {
       return this.trxIds.map((rId: string) => this.map[rId]);
+    },
+
+    get groupPosts() {
+      return this.groupTrxIds.map((rId: string) => this.map[rId]);
     },
 
     get userPosts() {
@@ -57,6 +63,17 @@ export function createPostStore() {
       })
     },
 
+    addGroupPosts(posts: IPost[]) {
+      runInAction(() => {
+        for (const post of posts) {
+          if (!this.groupTrxIds.includes(post.trxId)) {
+            this.groupTrxIds.push(post.trxId);
+          }
+          this.tryAddPostToMap(post);
+        }
+      });
+    },
+
     addUserPosts(posts: IPost[]) {
       runInAction(() => {
         for (const post of posts) {
@@ -77,6 +94,13 @@ export function createPostStore() {
           this.tryAddPostToMap(post);
         }
       });
+    },
+
+    addGroupPost(post: IPost) {
+      runInAction(() => {
+        this.groupTrxIds.unshift(post.trxId);
+        this.tryAddPostToMap(post);
+      })
     },
 
     addUserPost(post: IPost) {
@@ -117,6 +141,10 @@ export function createPostStore() {
 
     resetTrxIds() {
       this.trxIds = [];
+    },
+
+    resetGroupTrxIds() {
+      this.groupTrxIds = [];
     },
 
     resetUserTrxIds() {

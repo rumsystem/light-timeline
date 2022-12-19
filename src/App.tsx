@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Index from './pages/Index';
+import Group from './pages/Group';
 import Groups from './pages/Groups';
 import Search from './pages/Search';
 import PostDetail from './pages/PostDetail';
@@ -43,6 +44,11 @@ const App = observer(() => {
               <Route path="/" exact component={() => (
                 <KeepAlive>
                   <Index />
+                </KeepAlive>
+              )} />
+              <Route path="/groups/:groupId" exact render={props => (
+                <KeepAlive>
+                  <Group { ...props } />
                 </KeepAlive>
               )} />
               <Route path="/search" exact component={() => (

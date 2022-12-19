@@ -24,6 +24,10 @@ async function list(ctx) {
     latestTrxId: '',
   };
 
+  if (ctx.query.groupId) {
+    where.groupId = ctx.query.groupId;
+  }
+
   if (ctx.query.userAddress) {
     where.userAddress = ctx.query.userAddress;
   }
