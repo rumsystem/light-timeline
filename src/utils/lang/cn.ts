@@ -53,7 +53,7 @@ export const content = {
   exit: '退出',
   name: '名称',
   owner: '创建人',
-  somethingWrong: '貌似出错了',
+  somethingWrong: '貌似出错了，请重新试试',
   nickname: '昵称',
   yes: '确定',
   editProfile: '编辑资料',
