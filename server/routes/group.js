@@ -1,6 +1,8 @@
 const router = require('koa-router')();
 const { assert, Errors } = require('../utils/validator');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const { shuffle } = require('lodash');
+const config = require('../config');
 const { Op } = require("sequelize");
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
@@ -10,13 +12,11 @@ const Comment = require('../database/sequelize/comment');
 const Profile = require('../database/sequelize/profile');
 const Notification = require('../database/sequelize/notification');
 const { ensurePermission } = require('../middleware/api');
-const shuffleChainApi = require('../utils/shuffleChainApi');
-const config = require('../config');
 
 router.get('/default', getDefaultGroup);
 router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
-router.get('/:groupId/shuffle', _shuffleChainApi);
+router.get('/:groupId/shuffle', shuffleChainApi);
 router.get('/:groupId/ping', ping);
 router.delete('/:groupId', ensurePermission, remove);
 router.get('/', list);
@@ -40,7 +40,7 @@ async function list(ctx) {
   ctx.body = groups
               .filter(group => (
                 group.seedUrl.includes('group_timeline') ||
-                (config.presetGroup.userRelation?.visible && group.seedUrl.includes('group_relations'))
+                (config.userRelation?.visible && group.seedUrl.includes('group_relations'))
               ))
               .map(group => pack(group.toJSON()));
 }
@@ -78,9 +78,26 @@ async function getRelationGroup(ctx) {
   ctx.body = group.toJSON();
 }
 
-async function _shuffleChainApi(ctx) {
+async function shuffleChainApi(ctx) {
   const { groupId } = ctx.params;
-  const chainAPIs = await shuffleChainApi(groupId);
+  const group = await Group.findOne({
+    where: {
+      groupId
+    }
+  });
+  assert(group, Errors.ERR_NOT_FOUND('group'));
+  const [ baseUrl, chainUrl ] = group.seedUrl.split('&u=');
+  const chainAPIs = shuffle(chainUrl.split('|'));
+  const seedUrl = baseUrl + '&u=' + chainAPIs.join('|');
+  await Group.update({
+    seedUrl
+  }, {
+    where: {
+      groupId
+    }
+  })
+  QuorumLightNodeSDK.cache.Group.remove(groupId);
+  QuorumLightNodeSDK.cache.Group.add(seedUrl);
   ctx.body = chainAPIs;
 }
 

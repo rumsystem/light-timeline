@@ -11,8 +11,6 @@ const Group = require('../database/sequelize/group');
 const config = require('../config');
 const { shuffle } = require('lodash');
 const moment = require('moment');
-const shuffleChainApi = require('../utils/shuffleChainApi');
-const pendingTrxHelper = require('../utils/pendingTrxHelper');
 
 const jobShareData = {
   limit: 0,
@@ -74,10 +72,6 @@ const startJob = async (groupId, duration) => {
         if (group.startTrx) {
           listOptions.startTrx = group.startTrx;
         }
-        if (pendingTrxHelper.isTimeOut(group.groupId)) {
-          const chainAPIs = await shuffleChainApi(group.groupId);
-          console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
-        }
         const contents = await QuorumLightNodeSDK.chain.Content.list(listOptions);
         console.log(`${group.groupName} 请求回来了，获得 ${contents.length} 条`);
         while (jobShareData.handling) {
@@ -115,7 +109,6 @@ const handleContents = async (group, contents) => {
     for (const content of contents) {
       let log = '';
       try {
-        pendingTrxHelper.tryRemove(group.groupId, content.TrxId);
         const existContent = await Content.findOne({
           where: {
             TrxId: content.TrxId
