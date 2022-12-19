@@ -6,7 +6,8 @@ const { trySendSocket } = require('../socket');
 
 module.exports = async (item) => {
   const relation = pack(item);
-  const { type } = relation;
+  const { type, groupId } = relation;
+  delete relation.groupId;
   if (type === 'follow') {
     await Relation.findOrCreate({
       where: {
@@ -16,7 +17,7 @@ module.exports = async (item) => {
     });
     const group = await Group.findOne({
       where: {
-        groupId: relation.groupId
+        groupId
       }
     });
     if (group) {
