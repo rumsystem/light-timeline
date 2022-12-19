@@ -277,9 +277,9 @@ export default observer((props: RouteChildrenProps) => {
                     name={profile.name}
                     normalNameClass="leading-snug font-bold w-[230px] md:w-[320px] break-words"
                     fromClass='mt-[2px]'
-                    fromNameClass="py-1 truncate font-bold max-w-[180px] md:max-w-[300px]"
+                    fromNameClass="py-1 truncate font-bold max-w-[70vw] md:max-w-[350px]"
                     fromIconClass="text-28 text-sky-400 mx-1"
-                    fromIdClass="opacity-60 truncate text-16 max-w-[120px] md:max-w-[150px] mt-[1px] hidden"
+                    fromIdClass="hidden"
                     />
                 </div>
                 <div className="text-14 md:text-16 flex items-center pt-1 md:pt-0">

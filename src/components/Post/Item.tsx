@@ -207,16 +207,15 @@ export default observer((props: IProps) => {
               <UserCard
                 disableHover={props.disabledUserCardTooltip}
                 userAddress={post.userAddress}
-                className="inline-block"
               >
                 <div className="text-gray-4a md:text-15">
                   <UserName
                     name={profile.name}
-                    normalNameClass="font-bold max-w-40 truncate opacity-80 inline-block"
+                    normalNameClass="font-bold max-w-[60vw] md:max-w-[250px] truncate opacity-80 mt-[-4px] h-[18px] md:h-[20px]"
                     fromClass='mt-[-2px] h-[15px] md:h-[17px]'
-                    fromNameClass="opacity-80 truncate font-bold max-w-[120px]"
+                    fromNameClass="opacity-80 truncate font-bold max-w-[120px] md:max-w-[250px]"
                     fromIconClass="text-22 text-sky-400 mx-1"
-                    fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[120px] md:max-w-[150px]"
+                    fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[120px] md:max-w-[160px]"
                     />
                 </div>
               </UserCard>
