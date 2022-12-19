@@ -11,6 +11,7 @@ const Profile = require('../database/sequelize/profile');
 const Notification = require('../database/sequelize/notification');
 const { ensurePermission } = require('../middleware/api');
 const shuffleChainApi = require('../utils/shuffleChainApi');
+const config = require('../config');
 
 router.get('/default', getDefaultGroup);
 router.get('/relation', getRelationGroup);
@@ -39,7 +40,7 @@ async function list(ctx) {
   ctx.body = groups
               .filter(group => (
                 group.seedUrl.includes('group_timeline') ||
-                (config.userRelation?.visible && group.seedUrl.includes('group_relations'))
+                (config.presetGroup.userRelation?.visible && group.seedUrl.includes('group_relations'))
               ))
               .map(group => pack(group.toJSON()));
 }

@@ -80,8 +80,8 @@ const createSeed = async (url) => {
 
 const tryCreateUserRelationSeed = async () => {
   try {
-    if (config.userRelation?.seed) {
-      await createSeed(config.userRelation.seed);
+    if (config.presetGroup.userRelation?.seed) {
+      await createSeed(config.presetGroup.userRelation.seed);
     }
   } catch (_) {}
 }
