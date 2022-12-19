@@ -186,7 +186,7 @@ export default observer((props: IProps) => {
     <Fade in={true} timeout={350}>          
       <div
         className={classNames({
-          'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec border-opacity-60 md:border-opacity-80': (isMobile && !inPostDetail) || (isPc && props.withBorder),
+          'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec border-opacity-60': (isMobile && !inPostDetail) || (isPc && props.withBorder),
           'pt-6 pb-3': inPostDetail,
           'pt-[18px] pb-2': !inPostDetail
         }, 'post-item bg-white dark:bg-transparent pl-4 pr-2 md:pl-8 md:pr-6 w-full lg:w-full md:w-[600px] relative')}
