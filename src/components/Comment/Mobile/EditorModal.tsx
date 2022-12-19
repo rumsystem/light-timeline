@@ -4,9 +4,7 @@ import { IComment } from 'apis/types';
 import TextField from '@material-ui/core/TextField';
 import Button from 'components/Button';
 import { useStore } from 'store';
-import { isMI } from 'utils/env';
 import DrawerModal from 'components/DrawerModal';
-import Modal from 'components/Modal';
 
 interface IProps {
   open: boolean;
@@ -70,7 +68,7 @@ const Editor = observer((props: IProps) => {
             multiline
             fullWidth
             disabled={!userStore.isLogin}
-            minRows={!isMI ? 3 : 5}
+            minRows={3}
             value={state.value}
             onChange={handleEditorChange}
             margin="normal"
