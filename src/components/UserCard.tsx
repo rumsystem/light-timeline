@@ -14,6 +14,7 @@ import Button from 'components/Button';
 import openLoginModal from 'components/openLoginModal';
 import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
+import UserName from 'components/UserName';
 
 interface IProps {
   disableHover?: boolean
@@ -109,9 +110,13 @@ const UserCard = observer((props: IUserCardProps) => {
                 size={70}
               />
               <div className="pt-[88px]">
-                <div className="font-bold text-15 truncate w-44 text-gray-6d">
-                  {profile.name}
-                </div>
+                <UserName
+                  name={profile.name}
+                  normalNameClass="text-15 truncate text-gray-6d font-bold"
+                  fromNameClass="text-15 opacity-80 md:opacity-100 truncate font-bold text-gray-6d max-w-[120px]"
+                  fromIconClass="text-20 text-sky-400 mx-1"
+                  fromIdClass="text-gray-6d opacity-50 truncate text-13 max-w-[80px] mt-[1px]"
+                  />
                 {user.postCount === 0 && <div className="pb-2" />}
               </div>
             </div>
