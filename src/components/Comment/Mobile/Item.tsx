@@ -90,12 +90,12 @@ export default observer((props: IProps) => {
 
   const contentPrefix =
     comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.trxId
-      ? `回复 <span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.replyComment.extra.userProfile.name}</span>：`
+      ? `回复 <span class="text-sky-500">${comment.extra.replyComment.extra.userProfile.name}</span>：`
       : '';
   const previewContentPrefix =
     comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.trxId
-      ? `<span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.userProfile.name}</span> 回复 <span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.replyComment.extra.userProfile.name}</span>：`
-      : `<span class="dark:text-white dark:text-opacity-80 text-gray-88">${comment.extra.userProfile.name}</span>：`;
+      ? `<span class="text-sky-500">${comment.extra.userProfile.name}</span> 回复 <span class="text-sky-500">${comment.extra.replyComment.extra.userProfile.name}</span>：`
+      : `<span class="text-sky-500">${comment.extra.userProfile.name}</span>：`;
 
   if (isPreview) {
     return (
