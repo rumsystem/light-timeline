@@ -139,8 +139,8 @@ const Main = observer((props: IProps) => {
   }
 
   return (
-    <div className="bg-white py-8 px-10 w-[350px] box-border">
-      <div className="text-18 font-bold text-gray-700 text-center">添加种子网络</div>
+    <div className="bg-white dark:bg-[#181818] py-8 px-10 w-[350px] box-border">
+      <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center">添加种子网络</div>
       <div className="pt-4 relative">
         <TextField
           className="w-full"
@@ -163,14 +163,14 @@ const Main = observer((props: IProps) => {
           variant="outlined"
         />
         {state.loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white">
+          <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
             <Fade in={true} timeout={350}>
               <Loading size={40} />
             </Fade>
           </div>
         )}
         {state.loaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white">
+          <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
             <Fade in={true} timeout={350}>
               <BsFillCheckCircleFill className="text-[64px]" />
             </Fade>
@@ -190,7 +190,7 @@ const Main = observer((props: IProps) => {
         </div>
       )}
       {(state.loading || state.loaded) && (
-        <div className="text-center text-gray-88 leading-7">
+        <div className="text-center dark:text-white dark:text-opacity-80 text-gray-88 leading-7">
           {state.group.contentCount === 0 && (
             <span>新添加的种子网络需要同步内容 <br /></span>
           )}
