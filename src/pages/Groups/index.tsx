@@ -133,10 +133,7 @@ export default observer(() => {
             }
             state.idSet.add(group.groupId);
             state.map[group.groupId] = group;
-            groupStore.setGroupMap({
-              ...groupStore.groupMap,
-              [group.groupId]: group
-            });
+            groupStore.addGroup(group);
           }}
         />
       </div>

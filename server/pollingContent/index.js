@@ -16,7 +16,7 @@ const pendingTrxHelper = require('../utils/pendingTrxHelper');
 
 const jobShareData = {
   limit: 0,
-  activeGroupMap: {},
+  defaultGroupMap: {},
   handling: false,
   jobMap: {}
 }
@@ -39,7 +39,7 @@ module.exports = (duration) => {
         console.log('==================================================');
         return;
       }
-      jobShareData.activeGroupMap = await getActiveGroupMap(groups);
+      jobShareData.defaultGroupMap = await getdefaultGroupMap(groups);
       jobShareData.limit = getLimit(groups);
       for (const group of groups) {
         if (!jobShareData.jobMap[group.groupId]) {
@@ -59,7 +59,7 @@ const startJob = async (groupId, duration) => {
       delete jobShareData.jobMap[groupId];
       break;
     }
-    const group = jobShareData.activeGroupMap[groupId];
+    const group = jobShareData.defaultGroupMap[groupId];
     if (group) {
       const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
       if (isLazyGroup) {
@@ -163,7 +163,7 @@ const handleContents = async (group, contents) => {
 }
 
 
-const getActiveGroupMap = async groups => {
+const getdefaultGroupMap = async groups => {
   const map = {};
   const loadedGroups = groups.filter(group => group.loaded);
   const unloadedGroups = groups.filter(group => !group.loaded);

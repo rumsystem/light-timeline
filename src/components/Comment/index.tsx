@@ -86,9 +86,7 @@ export default observer((props: IProps) => {
     const res = await TrxApi.createObject({
       groupId: props.post.groupId,
       object: payload,
-      aesKey: groupStore.getCipherKey(props.post.groupId),
-      privateKey: userStore.privateKey,
-    }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+    });
     console.log(res);
     const comment: IComment = {
       content: payload.content || '',
@@ -97,7 +95,7 @@ export default observer((props: IProps) => {
       threadId: '',
       replyId: '',
       userAddress: userStore.address,
-      groupId: groupStore.groupId,
+      groupId: groupStore.defaultGroup.groupId,
       trxId: res.trx_id,
       storage: TrxStorage.cache,
       commentCount: 0,
@@ -209,6 +207,7 @@ export default observer((props: IProps) => {
     <div className="comment" id="comment-section">
       <div className="mt-[14px]">
         <Editor
+          groupId={groupStore.defaultGroup.groupId}
           editorKey={`comment_${props.post.trxId}`}
           minRows={
             inPostDetail && comments.length === 0 ? 3 : 1

@@ -16,7 +16,6 @@ import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
 import store from 'store2';
-import { keyBy } from 'lodash';
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore, configStore } = useStore();
@@ -33,9 +32,14 @@ const Preload = observer(() => {
     (async () => {
       groupStore.setLoading(true);
       try {
-        initConfig();
-        const group = await GroupApi.getDefaultGroup();
-        groupStore.setGroup(group);
+        await Promise.all([
+          initGroups(),
+          initConfig()
+        ]);
+        if (!groupStore.defaultGroup) {
+          history.push('/groups');
+          return;
+        }
         if (token) {
           modalStore.pageLoading.show();
           await handleToken(token, accessToken);
@@ -54,25 +58,19 @@ const Preload = observer(() => {
           userStore.setUser(userStore.address, user);
         }
         groupStore.setLoading(false);
-        initRelationGroup();
-        initGroupMap();
         tryOpenLoginModal();
         tryOpenProfileModal();
         tryLogout();
       } catch (err: any) {
         console.log(err);
-        if (err.message === 'group not found') {
-          history.push('/groups');
-        } else {
-          confirmDialogStore.show({
-            content: lang.somethingWrong,
-            okText: '刷新页面',
-            cancelDisabled: true,
-            ok: () => {
-              window.location.href = '/';
-            },
-          });
-        }
+        confirmDialogStore.show({
+          content: lang.somethingWrong,
+          okText: '刷新页面',
+          cancelDisabled: true,
+          ok: () => {
+            window.location.href = '/';
+          },
+        });
       }
     })();
   }, []);
@@ -105,7 +103,7 @@ const Preload = observer(() => {
       if (!profileExist && !isJWT(token)) {
         const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
         const res = await TrxApi.createPerson({
-          groupId: groupStore.groupId,
+          groupId: groupStore.defaultGroup.groupId,
           person: {
             name: vaultUser.display_name,
             image: {
@@ -113,14 +111,12 @@ const Preload = observer(() => {
               content: Base64.getContent(avatar.url),
             },
           },
-          aesKey: groupStore.getCipherKey(groupStore.groupId),
-          privateKey: userStore.privateKey,
-        }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+        });
         console.log(res);
         userStore.setProfile({
           name: vaultUser.display_name,
           avatar: avatar.url,
-          groupId: groupStore.groupId,
+          groupId: groupStore.defaultGroup.groupId,
           userAddress: vaultAppUser.eth_address
         });
       }
@@ -129,19 +125,10 @@ const Preload = observer(() => {
     }
   }
 
-  const initRelationGroup = async () => {
-    try {
-      const relationGroup = await GroupApi.getRelationGroup();
-      groupStore.setRelationGroupId(relationGroup.groupId);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const initGroupMap = async () => {
+  const initGroups = async () => {
     try {
       const groups = await GroupApi.list();
-      groupStore.setGroupMap(keyBy(groups, 'groupId'));
+      groupStore.addGroups(groups);
     } catch (err) {
       console.log(err);
     }
@@ -151,6 +138,9 @@ const Preload = observer(() => {
     try {
       const config = await ConfigApi.get();
       configStore.set(config);
+      if (config.defaultGroupId) {
+        groupStore.setDefaultGroupId(config.defaultGroupId);
+      }
     } catch (err) {
       console.log(err);
     }

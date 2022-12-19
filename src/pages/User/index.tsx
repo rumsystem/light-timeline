@@ -191,18 +191,16 @@ export default observer((props: RouteChildrenProps) => {
     state.submitting = true;
     try {
       const res = await TrxApi.createObject({
-        groupId: groupStore.relationGroupId,
+        groupId: groupStore.relationGroup.groupId,
         object: {
           type: 'Note',
           content: JSON.stringify({
-            groupId: groupStore.groupId,
+            groupId: groupStore.defaultGroup.groupId,
             type,
             to: userAddress
           })
         },
-        aesKey: groupStore.getCipherKey(groupStore.relationGroupId),
-        privateKey: userStore.privateKey,
-      }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+      });
       console.log(res);
       if (type.includes('follow')) {
         userStore.updateUser(userAddress, {

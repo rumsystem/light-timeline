@@ -95,17 +95,15 @@ export default observer(() => {
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: groupStore.groupId,
+      groupId: groupStore.defaultGroup.groupId,
       object: payload,
-      aesKey: groupStore.getCipherKey(groupStore.groupId),
-      privateKey: userStore.privateKey,
-    }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+    });
     console.log(res);
     const post: IPost = {
       content: payload.content || '',
       images: (payload.image || []).map(image => Base64.getUrl(image)),
       userAddress: userStore.address,
-      groupId: groupStore.groupId,
+      groupId: groupStore.defaultGroup.groupId,
       trxId: res.trx_id,
       latestTrxId: '',
       storage: TrxStorage.cache,
@@ -116,7 +114,7 @@ export default observer(() => {
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
-        groupName: groupStore.group.groupName
+        groupName: groupStore.defaultGroup.groupName
       }
     };
     postStore.addPost(post);
@@ -133,6 +131,7 @@ export default observer(() => {
         <div className="md:pt-5">
           <div className="hidden md:block">
             <Editor
+              groupId={groupStore.defaultGroup.groupId}
               editorKey="post"
               placeholder={lang.andNewIdea}
               autoFocusDisabled

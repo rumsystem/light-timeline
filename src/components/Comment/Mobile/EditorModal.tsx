@@ -29,7 +29,7 @@ const Editor = observer((props: IProps) => {
         const replyValue = cachedContent ? cachedContent : state.value;
         state.value = replyValue;
       } else {
-        state.value = localStorage.getItem(`COMMENT_CONTENT_${groupStore.groupId}`) || '';
+        state.value = localStorage.getItem(`COMMENT_CONTENT_${groupStore.defaultGroup.groupId}`) || '';
       }
     }, 400);
   }, []);
@@ -39,7 +39,7 @@ const Editor = observer((props: IProps) => {
     if (replyingComment) {
       localStorage.setItem(`COMMENT_REPLY:${replyingComment.trxId}_CONTENT`, e.target.value);
     } else {
-      localStorage.setItem(`COMMENT_CONTENT_${groupStore.groupId}`, e.target.value);
+      localStorage.setItem(`COMMENT_CONTENT_${groupStore.defaultGroup.groupId}`, e.target.value);
     }
   };
 
@@ -94,7 +94,7 @@ const Editor = observer((props: IProps) => {
                   const isSuccess = await props.submit(state.value);
                   if (isSuccess) {
                     state.value = '';
-                    localStorage.removeItem(`COMMENT_CONTENT_${groupStore.groupId}`);
+                    localStorage.removeItem(`COMMENT_CONTENT_${groupStore.defaultGroup.groupId}`);
                     if (props.replyingComment) {
                       localStorage.removeItem(`COMMENT_REPLY:${props.replyingComment.trxId}_CONTENT`);
                     }

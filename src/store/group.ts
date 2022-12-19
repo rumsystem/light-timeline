@@ -1,37 +1,43 @@
 import { IGroup } from 'apis/types';
+import { runInAction } from 'mobx';
 
 export function createGroupStore() {
   return {
     loading: true,
 
-    group: {} as IGroup,
+    map: {} as Record<string, IGroup>,
 
-    relationGroupId: '' as string,
+    defaultGroupId: '' as string,
 
-    groupMap: {} as Record<string, IGroup>,
-
-    get groupId() {
-      return this.group.groupId || '';
+    get defaultGroup() {
+      if (this.defaultGroupId && this.map[this.defaultGroupId]) {
+        return this.map[this.defaultGroupId];
+      }
+      return Object.values(this.map).find(group => group.extra.rawGroup.appKey === 'group_timeline')!;
     },
 
-    setGroup(group: IGroup) {
-      this.group = group;
+    get relationGroup() {
+      return Object.values(this.map).find(group => group.extra.rawGroup.appKey === 'group_relations')!;
     },
 
-    setRelationGroupId(groupId: string) {
-      this.relationGroupId = groupId;
+    setDefaultGroupId(defaultGroupId: string) {
+      this.defaultGroupId = defaultGroupId;
     },
 
     setLoading(loading: boolean) {
       this.loading = loading;
     },
 
-    setGroupMap(map: Record<string, IGroup>) {
-      this.groupMap = map;
+    addGroup(group: IGroup) {
+      this.map[group.groupId] = group;
     },
 
-    getCipherKey(groupId: string) {
-      return this.groupMap[groupId]?.extra.rawGroup.cipherKey
-    }
+    addGroups(groups: IGroup[]) {
+      runInAction(() => {
+        for (const group of groups) {
+          this.addGroup(group);
+        }
+      });
+    },
   };
 }

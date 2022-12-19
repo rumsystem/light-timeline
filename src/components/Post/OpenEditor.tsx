@@ -22,23 +22,24 @@ const PostEditor = observer((props: {
   rs: (result?: any) => void
 }) => {
   const { userStore, groupStore } = useStore();
+  const matched = window.location.pathname.match(/(?<=\/groups\/)(.*)/);
+  const groupId = matched && matched[0] ? matched[0] : groupStore.defaultGroup.groupId;
+  const group = groupStore.map[groupId];
   const submit = async (payload: IObject) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
     }
     const res = await TrxApi.createObject({
-      groupId: groupStore.groupId,
+      groupId: group.groupId,
       object: payload,
-      aesKey: groupStore.getCipherKey(groupStore.groupId),
-      privateKey: userStore.privateKey,
-    }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
+    });
     console.log(res);
     const post: IPost = {
       content: payload.content || '',
       images: (payload.image || []).map(image => Base64.getUrl(image)),
       userAddress: userStore.address,
-      groupId: groupStore.groupId,
+      groupId: group.groupId,
       trxId: res.trx_id,
       latestTrxId: '',
       storage: TrxStorage.cache,
@@ -49,7 +50,7 @@ const PostEditor = observer((props: {
       timestamp: Date.now(),
       extra: {
         userProfile: toJS(userStore.profile),
-        groupName: groupStore.group.groupName
+        groupName: group.groupName
       }
     };
     props.rs(post);
@@ -69,6 +70,7 @@ const PostEditor = observer((props: {
       </div>
       <div className="bg-white dark:bg-[#181818] box-border">
         <Editor
+          groupId={groupStore.defaultGroup.groupId}
           post={props.post}
           editorKey="post"
           placeholder={props.post ? '' : lang.andNewIdea}
