@@ -41,12 +41,12 @@ export default (props: Props) => {
           'w-full': fullWidth,
           [size]: size,
           mobile: isMobile,
-          'bg-black text-white': !outline && color === 'primary',
+          'bg-black text-white dark:bg-white dark:text-black': !outline && color === 'primary',
           'bg-white text-black': !outline && color === 'white',
-          'bg-gray-bd text-white': !outline && color === 'gray',
+          'bg-gray-bd text-white dark:bg-[#333] dark:opacity-60': !outline && color === 'gray',
           'bg-green-500 text-white': !outline && color === 'green',
           'bg-red-500 text-white': !outline && color === 'red',
-          'border-black text-black border outline': outline && color === 'primary',
+          'border-black text-black dark:border-white dark:text-white dark:text-opacity-80 border outline': outline && color === 'primary',
           'border-red-500 text-red-500 border outline': outline && color === 'red',
           'border-green-500 text-green-500 border outline': outline && color === 'green',
           'border-white text-white border outline': outline && color === 'white',
@@ -64,7 +64,7 @@ export default (props: Props) => {
         <ButtonProgress
           isDoing={isDoing}
           isDone={isDone}
-          color={(!outline && color === 'white') || (outline && color !== 'white') ? 'text-black' : 'text-white'}
+          color='inherit'
         />
       </div>
     </button>

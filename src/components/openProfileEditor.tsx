@@ -112,9 +112,9 @@ const ModalWrapper = observer((props: IModalProps) => {
 
   return (
     <Modal open={state.open} onClose={handleClose}>
-      <div className="w-full md:w-[450px] bg-white text-center pb-8 pt-12 px-4 md:px-10 rounded-12">
+      <div className="w-full md:w-[450px] bg-white dark:bg-[#181818] text-center pb-8 pt-12 px-4 md:px-10 rounded-12">
         <div>
-          <div className="text-18 font-bold text-gray-4a">{lang.editProfile}</div>
+          <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-4a">{lang.editProfile}</div>
           <div className="mt-3">
             <div className="px-4 py-6">
               <div className="py-2 mt-2 md:mt-0 flex justify-center">

@@ -125,8 +125,8 @@ export default observer(() => {
       <div className="w-full md:w-[600px] box-border mx-auto relative">
         <div className="pt-[23px] md:pt-[38px] pb-12 md:pb-4">
           <div className="fixed top-0 left-0 md:left-[50%] md:ml-[-300px] z-[100] w-full md:w-[600px]">
-            <div className="bg-white flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b border-gray-ec md:rounded-12 shadow-sm">
-              <div className="flex items-center text-30 ml-1 mr-3 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
+            <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b dark:border dark:border-white dark:border-opacity-10 border-gray-ec md:rounded-12 shadow-sm">
+              <div className="flex items-center text-30 ml-1 mr-3 dark:text-white dark:text-opacity-80 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
                 history.push(`/`);
                 postStore.resetSearchedTrxIds();
                 await aliveController.drop('search');
@@ -150,7 +150,7 @@ export default observer(() => {
               </form>
               <div className={classNames({
                 'text-orange-500': state.minLike || state.minComment
-              }, "ml-4 flex items-center text-gray-88 cursor-pointer mt-1 mr-1 md:mr-0")}
+              }, "ml-4 flex items-center dark:text-white dark:text-opacity-80 text-gray-88 cursor-pointer mt-1 mr-1 md:mr-0")}
               onClick={async () => {
                 const result = await openSearchModal({
                   q: state.q,
@@ -194,7 +194,7 @@ export default observer(() => {
             </div>
           )}
           {state.fetched && total === 0 && (
-            <div className="pt-[20vh] text-center text-gray-500 text-14 leading-10 opacity-70">
+            <div className="pt-[20vh] text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 leading-10 opacity-70">
               没有搜索到相关内容<br /> 换一个关键词试试呢？
             </div>
           )}

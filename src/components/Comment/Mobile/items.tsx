@@ -31,7 +31,7 @@ export default observer((props: IProps) => {
 
   return (
     <div>
-      <div className="-mt-2 md:mt-0 md:border-t md:border-gray-300 md:pt-5">
+      <div className="-mt-2 md:mt-0 md:border-t md:dark:border-white dark:border-opacity-10 border-gray-300 md:pt-5">
         {topComments.map((comment: IComment, index: number) => {
           const isTopLast = index === topComments.length - 1;
           const highlight = selectedComment?.trxId === comment.trxId;
@@ -47,7 +47,7 @@ export default observer((props: IProps) => {
             <div
               key={index}
               className={classNames({
-                'border-b border-gray-200': !isTopLast && !noSubComments,
+                'border-b dark:border-white dark:border-opacity-10 border-gray-200': !isTopLast && !noSubComments,
               })}
             >
               <CommentItem
@@ -66,7 +66,7 @@ export default observer((props: IProps) => {
                 >
                   <div className="ml-10-px md:ml-3" style={{ paddingLeft: '36px' }}>
                     <div
-                      className='bg-gray-f7 rounded md:bg-none p-3 pb-10-px mt-2 mr-4'
+                      className='dark:bg-[#202020] bg-gray-f7 rounded md:bg-none p-3 pb-10-px mt-2 mr-4'
                       onClick={() => {
                         commentStore.mobile.topCommentPage.setTopComment(comment);
                         commentStore.mobile.topCommentPage.setOpen(true);

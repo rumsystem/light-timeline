@@ -8,7 +8,7 @@ export default observer((props: {
 }) => (
   <div className="relative w-[18px] h-[14px]">
     <div
-      className="absolute top-[-1px] left-0 text-gray-af px-[2px] cursor-pointer"
+      className="absolute top-[-1px] left-0 dark:text-white dark:text-opacity-80 text-gray-af px-[2px] cursor-pointer"
       onClick={() => openTrxModal(props)}
     >
       <ImInfo className="text-15" />

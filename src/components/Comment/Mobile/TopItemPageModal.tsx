@@ -38,7 +38,7 @@ export default observer((props: IProps) => {
     >
       {topComment && (
         <div className="relative overflow-hidden">
-          <div className="font-bold items-center text-16 text-center border-b border-gray-200 py-3">
+          <div className="font-bold items-center text-16 text-center border-b dark:border-white dark:border-opacity-10 border-gray-200 py-3">
             评论详情
           </div>
           <div className="top-comment-height overflow-y-auto h-[90vh]">
@@ -54,8 +54,8 @@ export default observer((props: IProps) => {
             </div>
             {subCommentsGroupMap[topComment.trxId] && (
               <div>
-                <div className="pb-6-px bg-gray-f7" />
-                <div className="pt-3 pb-1 px-4 text-16 font-bold text-gray-700">
+                <div className="pb-6-px dark:bg-[#181818] bg-gray-f7" />
+                <div className="pt-3 pb-1 px-4 text-16 font-bold dark:text-white dark:text-opacity-80 text-gray-700">
                   全部回复（{subCommentsGroupMap[topComment.trxId].length}）
                 </div>
                 <div>

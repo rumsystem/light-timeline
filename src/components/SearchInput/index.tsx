@@ -60,13 +60,13 @@ export default observer((props: IProps) => {
 
   return (
     <div className="relative">
-      <div className="text-20 text-gray-af flex items-center absolute top-0 left-0 z-10 mt-2 ml-[10px]">
+      <div className="text-20 dark:text-white dark:text-opacity-80 text-gray-af flex items-center absolute top-0 left-0 z-10 mt-2 ml-[10px]">
         <MdSearch />
       </div>
       {state.value && (
         <div className="flex items-center absolute top-0 right-0 z-10 mr-[10px] mt-2 cursor-pointer">
           <div
-            className="flex items-center h-5 w-5 justify-center bg-gray-f7 text-black rounded-full text-18"
+            className="flex items-center h-5 w-5 justify-center dark:bg-[#181818] bg-gray-f7 dark:text-white dark:text-opacity-80 text-black rounded-full text-18"
             onClick={async () => {
               state.value = '';
               await sleep(200);

@@ -48,10 +48,10 @@ const Editor = observer((props: IProps) => {
         {replyingComment && (
           <div style={{ marginLeft: '1px' }} className="md:pl-3 pt-1">
             <div
-              className="border-gray-bd pl-2 text-12 cursor-pointer"
+              className="dark:border-white dark:border-opacity-10 border-gray-bd pl-2 text-12 cursor-pointer"
               style={{ borderLeftWidth: '3px' }}
             >
-              <div className="truncate text-gray-99">{replyingComment.content}</div>
+              <div className="truncate dark:text-white dark:text-opacity-80 text-gray-99">{replyingComment.content}</div>
             </div>
           </div>
         )}

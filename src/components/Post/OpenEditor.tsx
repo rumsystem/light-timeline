@@ -65,10 +65,10 @@ const PostEditor = observer((props: {
           size={40}
         />
         <div
-          className="cursor-pointer ml-3 text-16 text-gray-6f max-w-60 truncate"
+          className="cursor-pointer ml-3 text-16 dark:text-white dark:text-opacity-80 text-gray-6f max-w-60 truncate"
         >{userStore.profile.name}</div>
       </div>
-      <div className="bg-white box-border">
+      <div className="bg-white dark:bg-[#181818] box-border">
         <Editor
           post={props.post}
           editorKey="post"

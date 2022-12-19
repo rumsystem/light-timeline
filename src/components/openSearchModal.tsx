@@ -66,7 +66,7 @@ const Main = observer((props: IModalProps) => {
         />
       </form>
       {!state.showCondition && (
-        <div className="flex justify-center mt-5 text-gray-9c" onClick={() => {
+        <div className="flex justify-center mt-5 dark:text-white dark:text-opacity-80 text-gray-9c" onClick={() => {
           state.showCondition = true;
         }}>
           <span className="cursor-pointer flex items-center">条件筛选 <FiFilter className="text-14 ml-1" /></span>

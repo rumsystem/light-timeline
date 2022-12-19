@@ -107,7 +107,7 @@ const Main = observer((props: IModalProps) => {
           )}
           {!state.loading && (
             <div>
-              <div className="text-18 font-bold text-gray-700 text-center">
+              <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center">
                 <div className="flex items-center justify-center">
                   {state.group.groupName}
                 </div>
@@ -117,11 +117,11 @@ const Main = observer((props: IModalProps) => {
               </div>
               <div className="mt-8">
                 <div className="flex">
-                  <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
+                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
                     种子
                   </div>
                 </div>
-                <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
                     <Tooltip
                       enterDelay={300}
                       enterNextDelay={300}
@@ -136,10 +136,10 @@ const Main = observer((props: IModalProps) => {
                         message: lang.copied,
                       });
                     }}>
-                      <div className="w-[22px] h-[22px] box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">
+                      <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">
                         <FaSeedling className="text-12" />
                       </div>
-                      <div className="text-12 md:text-13 text-gray-88 flex-1 pr-1 truncate">{state.group.seedUrl}</div>
+                      <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate">{state.group.seedUrl}</div>
                       <BiCopy className="mr-2 text-sky-400 text-16" />
                     </div>
                   </Tooltip>
@@ -147,13 +147,13 @@ const Main = observer((props: IModalProps) => {
               </div>
               <div className="mt-8">
                 <div className="flex">
-                  <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
+                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
                     节点
                   </div>
                 </div>
-                <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
                   {state.group.status === 'disconnected' && (
-                    <div className="flex items-center justify-center bg-red-400 text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
+                    <div className="flex items-center justify-center bg-red-400 dark:text-black text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
                       <MdOutlineErrorOutline className="mr-1 text-18" /> 节点都访问不了，无法连接
                     </div>
                   )}
@@ -173,8 +173,8 @@ const Main = observer((props: IModalProps) => {
                           message: lang.copied,
                         });
                       }}>
-                        <div className="w-[22px] h-[22px] box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
-                        <div className="text-12 md:text-13 text-gray-88 flex-1 pr-1 truncate">{api}</div>
+                        <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
+                        <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate">{api}</div>
                         <BiCopy className="mr-2 text-sky-400 text-16" />
                       </div>
                     </Tooltip>
@@ -184,11 +184,11 @@ const Main = observer((props: IModalProps) => {
               {state.contents.length > 0 && (
                 <div className="mt-8">
                   <div className="flex">
-                    <div className="text-gray-500 font-bold bg-gray-100 rounded-0 pt-2 pb-3 px-4">
+                    <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
                       区块
                     </div>
                   </div>
-                  <div className="-mt-3 justify-center bg-gray-100 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                  <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
                     {state.contents.map((content, index) => (
                       <Tooltip
                         key={content.id}
@@ -201,9 +201,9 @@ const Main = observer((props: IModalProps) => {
                         interactive
                         >
                         <div className="flex items-center py-[2px] cursor-pointer">
-                          <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center bg-black text-white text-12 mr-[10px] rounded-full opacity-90">{state.group.contentCount - index}</div>
-                          <span className="text-12 md:text-13 text-gray-88 truncate">{content.TrxId}</span>
-                          <BiSearch className="ml-2 text-gray-88 text-16 opacity-80" />
+                          <div className="min-w-[22px] h-[22px] py-1 px-2 box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">{state.group.contentCount - index}</div>
+                          <span className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 truncate">{content.TrxId}</span>
+                          <BiSearch className="ml-2 dark:text-white dark:text-opacity-80 text-gray-88 text-16 opacity-80" />
                         </div>
                       </Tooltip>
                     ))}

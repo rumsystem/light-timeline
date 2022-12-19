@@ -8,6 +8,7 @@ import { createPostStore } from './post';
 import { createCommentStore } from './comment';
 import { createGroupStore } from './group';
 import { createPathStore } from './path';
+import { createSettingStore } from './setting';
 
 const storeContext = React.createContext<any>(null);
 
@@ -20,6 +21,7 @@ const createStore = () => ({
   commentStore: observable(createCommentStore()),
   groupStore: observable(createGroupStore()),
   pathStore: observable(createPathStore()),
+  settingStore: observable(createSettingStore()),
 });
 
 interface Store {
@@ -31,6 +33,7 @@ interface Store {
   commentStore: ReturnType<typeof createCommentStore>
   groupStore: ReturnType<typeof createGroupStore>
   pathStore: ReturnType<typeof createPathStore>
+  settingStore: ReturnType<typeof createSettingStore>
 }
 
 export const store = createStore();

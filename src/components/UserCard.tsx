@@ -97,7 +97,7 @@ const UserCard = observer((props: IUserCardProps) => {
   }
 
   return (
-    <div className="bg-white mr-2 shadow-lg rounded-12 overflow-hidden border border-gray-bd leading-none relative w-[270px] pt-5 pb-5 px-[22px] min-h-[175px]">
+    <div className="popover-paper bg-white dark:bg-[#181818] mr-2 shadow-lg rounded-12 overflow-hidden border dark:border-white dark:border-opacity-10 border-gray-bd leading-none relative w-[270px] pt-5 pb-5 px-[22px] min-h-[175px]">
       {state.fetched && (
         <div>
           <div
@@ -112,8 +112,8 @@ const UserCard = observer((props: IUserCardProps) => {
               <div className="pt-[88px]">
                 <UserName
                   name={profile.name}
-                  normalNameClass="text-15 truncate text-gray-6d font-bold"
-                  fromNameClass="text-15 opacity-80 md:opacity-100 truncate font-bold text-gray-6d max-w-[180px]"
+                  normalNameClass="text-15 truncate dark:text-white dark:text-opacity-80 text-gray-6d font-bold"
+                  fromNameClass="text-15 opacity-80 md:opacity-100 truncate font-bold dark:text-white dark:text-opacity-80 text-gray-6d max-w-[180px]"
                   fromIconClass="text-24 text-sky-400 mx-1"
                   fromIdClass="hidden"
                   />
@@ -122,7 +122,7 @@ const UserCard = observer((props: IUserCardProps) => {
             </div>
           </div>
 
-          <div className="text-13 flex items-center text-neutral-400 pt-4">
+          <div className="text-13 flex items-center dark:text-white dark:text-opacity-80 text-neutral-400 pt-4">
             <span>
               {' '}
               <span className="text-14 font-bold">
@@ -157,7 +157,7 @@ const UserCard = observer((props: IUserCardProps) => {
       )}
 
       {!state.fetched && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white">
+        <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
           <Loading size={24} />
         </div>
       )}

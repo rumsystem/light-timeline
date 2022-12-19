@@ -150,7 +150,7 @@ const Notification = observer((props: IProps) => {
   return (
     <div className="w-full h-[90vh] md:h-[80vh] md:w-[550px] flex flex-col">
       <Tabs
-        className="px-8 relative bg-white z-0 md:z-10 with-border flex-none mt-2"
+        className="px-8 relative bg-white dark:bg-[#181818] z-0 md:z-10 with-border flex-none mt-2"
         value={state.tabIndex}
         onChange={(_e, newIndex) => {
           if (state.loading || state.tabIndex === newIndex) {
@@ -201,7 +201,7 @@ const Notification = observer((props: IProps) => {
               />
             }
             {state.notifications.length === 0 && (
-              <div className="py-28 text-center text-14 text-gray-400 opacity-80">
+              <div className="py-28 text-center text-14 dark:text-white dark:text-opacity-80 text-gray-400 opacity-80">
                 {lang.empty(lang.message)}
               </div>
             )}

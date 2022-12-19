@@ -101,7 +101,7 @@ const Images = (props: {
             className={classNames({
               'w-6 h-6 right-[12px]': !props.smallSize,
               'w-5 h-5 right-[10px]': props.smallSize,
-            }, 'bg-black bg-opacity-70 text-white opacity-80 text-14 top-[3px] absolute cursor-pointer rounded-full flex items-center justify-center')}
+            }, 'bg-black bg-opacity-70 dark:text-black text-white opacity-80 text-14 top-[3px] absolute cursor-pointer rounded-full flex items-center justify-center')}
             onClick={(e: any) => {
               e.stopPropagation();
               props.removeImage(image.id);
@@ -396,7 +396,7 @@ const Editor = observer((props: IProps) => {
               </div>
             )}
             {state.submitting && (
-              <div className="absolute top-0 left-0 w-full z-10 bg-white opacity-70 flex items-center justify-center h-full">
+              <div className="absolute top-0 left-0 w-full z-10 bg-white dark:bg-[#181818] opacity-70 flex items-center justify-center h-full">
                 <div className="mt-[-6px]">
                   <Loading
                     size={props.minRows && props.minRows > 1 ? 22 : 16}
@@ -488,7 +488,7 @@ const Editor = observer((props: IProps) => {
                   ref={emojiButton}
                 >
                   <BiSmile
-                    className="mr-4 text-22 cursor-pointer text-gray-af"
+                    className="mr-4 text-22 cursor-pointer dark:text-white dark:text-opacity-80 text-gray-af"
                     onClick={action(() => { state.emoji = true; })}
                   />
                 </div>
@@ -497,7 +497,7 @@ const Editor = observer((props: IProps) => {
                 <div className="flex items-center">
                   <UploadButton>
                     <BsImage
-                      className="text-18 cursor-pointer text-gray-af"
+                      className="text-18 cursor-pointer dark:text-white dark:text-opacity-80 text-gray-af"
                     />
                   </UploadButton>
                 </div>
@@ -519,9 +519,9 @@ const Editor = observer((props: IProps) => {
                     title='您的内容将发送到这里'
                     arrow
                     >
-                    <div className="bg-stone-100 text-12 py-1 px-2 flex items-center rounded-full">
-                      <div className="w-[12px] h-[12px] bg-sky-400 rounded-full mr-[6px] opacity-60" />
-                      <span className="text-sky-400 font-bold opacity-80">{groupStore.group.groupName}</span>
+                    <div className="bg-[#e3e5e6] bg-opacity-60 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full">
+                      <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
+                      <span className="text-[#37434D] opacity-[0.6] font-bold dark:text-white dark:opacity-50">{groupStore.group.groupName}</span>
                     </div>
                   </Tooltip>
                 </div>
@@ -539,7 +539,7 @@ const Editor = observer((props: IProps) => {
                 <Button
                   size={isMobile ? 'large' : 'small'}
                   className={classNames({
-                    'opacity-30': !readyToSubmit,
+                    'dark:opacity-50 opacity-30': !readyToSubmit,
                   })}
                   onClick={submit}
                 >

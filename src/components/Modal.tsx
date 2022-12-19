@@ -28,11 +28,14 @@ export default (props: IProps) => {
     <Dialog
       {...DialogProps}
       maxWidth={false}
+      PaperProps={{
+        className: "bg-white dark:bg-[#181818] dark:text-white dark:text-opacity-80 rounded-12"
+      }}
       className="flex items-center justify-center">
-      <div className="bg-white rounded-12">
+      <div>
         {!hideCloseButton && (
           <div
-            className="text-gray-6d text-22 p-4 top-0 right-0 absolute cursor-pointer z-10"
+            className="dark:text-white dark:text-opacity-80 text-gray-6d text-22 p-4 top-0 right-0 absolute cursor-pointer z-10"
             onClick={props.onClose as any}
             data-test-id="dialog-close-button"
           >

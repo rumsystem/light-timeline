@@ -19,7 +19,7 @@ const MenuItem = (props: any) => {
   const { onClick, className } = props;
   return (
     <div
-      className={`py-4 text-gray-4a text-center border-b border-gray-ec bg-white text-16 ${className}`}
+      className={`py-4 dark:text-white dark:text-opacity-80 text-gray-4a text-center border-b dark:border-white dark:border-opacity-10 border-gray-ec bg-white dark:bg-[#181818] text-16 ${className}`}
       onClick={onClick}
     >
       {props.children}
@@ -39,7 +39,7 @@ export default (props: IProps) => {
         onClose();
       }}
     >
-      <div className="bg-gray-f2 leading-none rounded-t-10">
+      <div className="dark:bg-[#181818] bg-gray-f2 leading-none rounded-t-10">
         {items
           .filter((item) => !item.invisible)
           .map((item) => (
