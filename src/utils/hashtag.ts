@@ -9,6 +9,6 @@ export default (text: string, options?: { disabled: boolean }) => {
         return item;
       }
     } catch(_) {}
-    return `<a class="text-sky-400" href="${item.replace(/\s/, '')}" ${options && options.disabled ? 'disabled' : ''}>${item}</a>`
+    return `<a class="text-sky-500" href="${item.replace(/\s/, '')}" ${options && options.disabled ? 'disabled' : ''}>${item}</a>`
   });
 };
