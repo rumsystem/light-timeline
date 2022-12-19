@@ -1,16 +1,23 @@
 const router = require('koa-router')();
-const Group = require('../database/sequelize/group');
 const { assert, Errors } = require('../utils/validator');
 const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
 const { shuffle } = require('lodash');
 const config = require('../config');
 const { Op } = require("sequelize");
+const Group = require('../database/sequelize/group');
+const Seed = require('../database/sequelize/seed');
+const Content = require('../database/sequelize/content');
+const Post = require('../database/sequelize/post');
+const Comment = require('../database/sequelize/comment');
+const Profile = require('../database/sequelize/profile');
+const Notification = require('../database/sequelize/notification');
 
 router.get('/default', getDefaultGroup);
 router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', shuffleChainApi);
 router.get('/:groupId/ping', ping);
+router.delete('/:groupId', remove);
 router.get('/', list);
 
 async function get(ctx) {
@@ -117,5 +124,17 @@ async function ping(ctx) {
   ctx.body = true;
 }
 
+async function remove(ctx) {
+  const { groupId } = ctx.params;
+  await Group.destroy({ where: { groupId }});
+  await Seed.destroy({ where: { groupId }});
+  await Content.destroy({ where: { groupId }});
+  await Post.destroy({ where: { groupId }});
+  await Comment.destroy({ where: { groupId }});
+  await Profile.destroy({ where: { groupId }});
+  await Notification.destroy({ where: { groupId }});
+  QuorumLightNodeSDK.cache.Group.remove(groupId);
+  ctx.body = true;
+}
 
 module.exports = router;
