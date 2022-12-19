@@ -6,6 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import { BsPencil } from 'react-icons/bs';
 import openEditor from 'components/Post/OpenEditor';
 import { MdNotificationsNone } from 'react-icons/md';
+import { TiArrowForwardOutline } from 'react-icons/ti';
 import { BsInfo } from 'react-icons/bs';
 import openGroupInfo from 'components/openGroupInfo';
 import Avatar from 'components/Avatar';
@@ -34,6 +35,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
+import copy from 'copy-to-clipboard';
+import { lang } from 'utils/lang';
 
 export default observer(() => {
   const {
@@ -44,7 +47,8 @@ export default observer(() => {
     modalStore,
     pathStore,
     settingStore,
-    configStore
+    configStore,
+    snackbarStore
   } = useStore();
   const state = useLocalObservable(() => ({
     showBackToTop: true,
@@ -63,6 +67,7 @@ export default observer(() => {
   const isGroupsPage = location.pathname === `/groups`;
   const isMyUserPage = location.pathname === `/users/${userStore.address}`;
   const isGroupPage = location.pathname.startsWith(`/groups/`);
+  const isPostPage = location.pathname.startsWith(`/posts`);
 
   const fetchUnreadCount = async () => {
     try {
@@ -197,6 +202,18 @@ export default observer(() => {
                     }
                   }}>
                   <AiOutlineSearch className="text-22 dark:text-white text-neutral-500 opacity-70 dark:opacity-100 dark:dark:text-white" />
+                </div>
+              )}
+              {isMobile && isPostPage && (
+                <div
+                  className="p-1 cursor-pointer mr-1"
+                  onClick={() => { 
+                    copy(window.location.href);
+                    snackbarStore.show({
+                      message: `链接${lang.copied}`,
+                    });
+                  }}>
+                  <TiArrowForwardOutline className="text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
                 </div>
               )}
               <div
