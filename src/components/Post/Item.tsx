@@ -203,7 +203,7 @@ export default observer((props: IProps) => {
             />
           </UserCard>
           <div className="pl-12 ml-1">
-            <div className="leading-none pt-[1px]">
+            <div className="pt-[1px]">
               <UserCard
                 disableHover={props.disabledUserCardTooltip}
                 userAddress={post.userAddress}
@@ -216,7 +216,7 @@ export default observer((props: IProps) => {
                     fromClass='mt-[-2px] h-[15px] md:h-[17px]'
                     fromNameClass="opacity-80 truncate font-bold max-w-[120px]"
                     fromIconClass="text-22 text-sky-400 mx-1"
-                    fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[120px] md:max-w-[150px] mt-[1px]"
+                    fromIdClass="opacity-50 truncate text-13 md:text-14 max-w-[120px] md:max-w-[150px]"
                     />
                 </div>
               </UserCard>
@@ -248,7 +248,7 @@ export default observer((props: IProps) => {
                     'mt-[8px] text-gray-4a break-word whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: urlify(`${post.content}`) +`${isTweet ? ` <a class="text-sky-400 text-13" href="${post.title || ''}">查看原文</a>` : ''}`,
+                    __html: urlify(`${post.content}`) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}">查看原文</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {

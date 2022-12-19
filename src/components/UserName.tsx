@@ -21,7 +21,7 @@ export default (props: IProps) => {
     )
   }
   return (
-    <div className={`flex items-center leading-none ${props.fromClass}`}>
+    <div className={`flex items-center ${props.fromClass}`}>
       <span className={props.fromNameClass}>{name.split('\n@')[0]}</span>
       <Tooltip
         enterDelay={200}
