@@ -70,7 +70,7 @@ const PostEditor = observer((props: {
       </div>
       <div className="bg-white dark:bg-[#181818] box-border">
         <Editor
-          groupId={groupStore.defaultGroup.groupId}
+          groupId={group.groupId}
           post={props.post}
           editorKey="post"
           placeholder={props.post ? '' : lang.andNewIdea}
