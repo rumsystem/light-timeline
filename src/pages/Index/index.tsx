@@ -97,7 +97,7 @@ export default observer(() => {
     const res = await TrxApi.createObject({
       groupId: groupStore.groupId,
       object: payload,
-      aesKey: groupStore.cipherKey,
+      aesKey: groupStore.getCipherKey(groupStore.groupId),
       privateKey: userStore.privateKey,
     }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
     console.log(res);

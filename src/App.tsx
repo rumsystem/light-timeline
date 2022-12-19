@@ -24,7 +24,7 @@ import * as Vault from 'utils/vault';
 import { TrxApi } from 'apis';
 import Base64 from 'utils/base64';
 import { IVaultAppUser } from 'apis/types';
-import { isEmpty } from 'lodash';
+import { isEmpty, keyBy } from 'lodash';
 import openProfileEditor from 'components/openProfileEditor';
 import sleep from 'utils/sleep';
 import { useHistory } from 'react-router-dom';
@@ -115,6 +115,7 @@ const Preload = observer(() => {
         }
         groupStore.setLoading(false);
         initRelationGroup();
+        initGroupMap();
         tryOpenProfileModal();
       } catch (err: any) {
         console.log(err);
@@ -165,7 +166,7 @@ const Preload = observer(() => {
               content: Base64.getContent(avatar.url),
             },
           },
-          aesKey: groupStore.cipherKey,
+          aesKey: groupStore.getCipherKey(groupStore.groupId),
           privateKey: userStore.privateKey,
         }, userStore.jwt ? { ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : null);
         console.log(res);
@@ -186,6 +187,15 @@ const Preload = observer(() => {
     try {
       const relationGroup = await GroupApi.getRelationGroup();
       groupStore.setRelationGroupId(relationGroup.groupId);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const initGroupMap = async () => {
+    try {
+      const groups = await GroupApi.list();
+      groupStore.setGroupMap(keyBy(groups, 'groupId'));
     } catch (err) {
       console.log(err);
     }
