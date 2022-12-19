@@ -13,6 +13,7 @@ export default {
       type: '_Object',
       ...p,
       data: p.object,
+      version: (window as any).store.configStore.config.version,
       ...(vaultOptions ? getVaultTrxCreateParam(vaultOptions) : {})
     });
     console.log(payload);
@@ -28,6 +29,7 @@ export default {
       type: 'Person',
       ...p,
       data: p.person,
+      version: (window as any).store.configStore.config.version,
       ...(vaultOptions ? getVaultTrxCreateParam(vaultOptions) : {})
     });
     console.log(payload);

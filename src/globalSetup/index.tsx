@@ -10,7 +10,15 @@ import { isMobile } from 'utils/env';
 import { GroupApi } from 'apis';
 
 export default observer(() => {
-  const { userStore, commentStore, postStore, groupStore, pathStore, confirmDialogStore } = useStore();
+  const {
+    userStore,
+    commentStore,
+    postStore,
+    groupStore,
+    pathStore,
+    confirmDialogStore,
+    configStore
+  } = useStore();
   const location = useLocation();
   const history = useHistory();
   const state = useLocalObservable(() => ({
@@ -112,7 +120,7 @@ export default observer(() => {
   React.useEffect(() => {
     const { pathname } = location;
     if (pathname === `/`) {
-      document.title = 'Rum 微博广场';
+      document.title = configStore.config.title || 'Rum 微博广场';
     } else if (pathname === `/search`) {
       document.title = '搜索';
     }

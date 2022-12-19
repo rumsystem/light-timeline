@@ -11,3 +11,4 @@ export * from './user';
 export * from './feature';
 export * from './vault';
 export * from './relation';
+export * from './config';
