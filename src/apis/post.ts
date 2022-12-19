@@ -25,5 +25,11 @@ export default {
   }) {
     const item: IPost = await request(`${API_BASE_URL}/posts/${trxId}?${qs.stringify(options)}`);
     return item;
+  },
+
+  async remove(trxId: string) {
+    await request(`${API_BASE_URL}/posts/${trxId}`, {
+      method: 'DELETE'
+    });
   }
 }

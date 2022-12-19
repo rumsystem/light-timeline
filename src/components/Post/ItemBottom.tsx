@@ -19,7 +19,7 @@ import { TiArrowForwardOutline } from 'react-icons/ti';
 import { lang } from 'utils/lang';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
-import { TrxApi } from 'apis';
+import { TrxApi, PostApi } from 'apis';
 
 interface IProps {
   post: IPost
@@ -90,10 +90,6 @@ export default observer((props: IProps) => {
   }
 
   const deletePost = async (trxId: string) => {
-    if (!userStore.isLogin) {
-      openLoginModal();
-      return;
-    }
     if (state.submitting) {
       return;
     }
@@ -111,6 +107,19 @@ export default observer((props: IProps) => {
         ...(userStore.jwt ? { eth_pub_key: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt } : {})
       });
       console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+    state.submitting = false;
+  }
+
+  const deletePostByAdmin = async (trxId: string) => {
+    if (state.submitting) {
+      return;
+    }
+    state.submitting = true;
+    try {
+      await PostApi.remove(trxId);
     } catch (err) {
       console.log(err);
     }
@@ -227,12 +236,13 @@ export default observer((props: IProps) => {
                       }
                     }}
                     onClickDeleteMenu={() => {
+                      const deleteByAdmin = userStore.user.role === 'admin' && post.userAddress !== userStore.address;
                       confirmDialogStore.show({
-                        content: '确定删除吗？',
+                        content: deleteByAdmin ? '这是一条来自他人的内容，由于您是管理员，所以您有权利<strong>从界面上</strong>移除这条内容，确定移除吗？' : '确定删除吗？',
                         cancelText: '取消',
                         ok: async () => {
                           confirmDialogStore.setLoading(true);
-                          await deletePost(post.trxId);
+                          await (deleteByAdmin ? deletePostByAdmin(post.trxId): deletePost(post.trxId));
                           confirmDialogStore.hide();
                           await sleep(400);
                           if (props.where === 'postDetailModal') {
@@ -244,7 +254,7 @@ export default observer((props: IProps) => {
                           }
                           postStore.removePost(post.trxId);
                           snackbarStore.show({
-                            message: `已删除`
+                            message: deleteByAdmin ? '已从界面上移除' : '已删除'
                           });
                         },
                       });

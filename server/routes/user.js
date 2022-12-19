@@ -1,6 +1,7 @@
 const router = require('koa-router')();
 const Post = require('../database/post');
 const Relation = require('../database/sequelize/relation');
+const config = require('../config');
 
 router.get('/:userAddress', get);
 
@@ -47,7 +48,8 @@ async function get(ctx) {
     followingCount,
     followerCount,
     following: !!following,
-    muted: !!muted
+    muted: !!muted,
+    role: (config.admins || []).includes(ctx.params.userAddress) ? 'admin' : ''
   };
 }
 

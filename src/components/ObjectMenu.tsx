@@ -38,7 +38,7 @@ export default observer((props: IProps) => {
   };
 
   if (isMobile) {
-    if (!userStore.isLogin || props.data.userAddress !== userStore.address) {
+    if (!userStore.isLogin || (userStore.user.role !== 'admin' && props.data.userAddress !== userStore.address)) {
       return null;
     }
 
@@ -109,7 +109,7 @@ export default observer((props: IProps) => {
             </div>
           </MenuItem>
         )}
-        {userStore.address === data.userAddress && (
+        {(userStore.address === data.userAddress || userStore.user.role === 'admin') && (
           <div>
             {/* <MenuItem
               onClick={() => {
