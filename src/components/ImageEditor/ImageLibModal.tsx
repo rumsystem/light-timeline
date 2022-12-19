@@ -110,6 +110,7 @@ const ImageLib = observer((props: any) => {
           style={{
             height: isPc ? 400 : '84vh',
           }}
+          ref={rootRef}
         >
           <div
             className={classNames(
@@ -118,7 +119,6 @@ const ImageLib = observer((props: any) => {
               },
               'grid-container',
             )}
-            ref={rootRef}
           >
             {state.images.map((image: any) => (
               <div key={image.id} id={image.id}>
