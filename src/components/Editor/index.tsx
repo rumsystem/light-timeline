@@ -122,7 +122,7 @@ export default (props: IProps) => {
   const PasteUploadDropZone = withPasteUpload(UploadDropZone);
   if (props.enabledImage) {
     return (
-      <Uploady multiple accept={ACCEPT}>
+      <Uploady multiple accept={isPc ? ACCEPT : undefined}>
         <PasteUploadDropZone>
           <Editor {...props} />
         </PasteUploadDropZone>
@@ -152,6 +152,7 @@ const Editor = observer((props: IProps) => {
   const readyToSubmit = (state.content.trim() || imageCount > 0) && !state.submitting;
   const imageLImit = props.imageLimit || 4;
   const isUpdating = !!props.post;
+  const alertedPreviewsRef = React.useRef<string[]>([]);
 
   React.useEffect(() => {
     if (props.post && props.post.images) {
@@ -426,8 +427,19 @@ const Editor = observer((props: IProps) => {
             PreviewComponent={() => null}
             onPreviewsChanged={async (previews: PreviewItem[]) => {
               const newPreviews = previews.filter((preview: PreviewItem) => {
-                const ext = (preview.name || '').split('.').pop()?.toLowerCase();
-                return !state.cacheImageIdSet.has(preview.id) && (!ext || extensions.includes(ext));
+                const ext = (preview.name || '').split('.').pop()?.toLowerCase() || '';
+                console.log(preview);
+                if (!extensions.includes(ext)) {
+                  if (!alertedPreviewsRef.current.includes(preview.name)) {
+                    alertedPreviewsRef.current.push(preview.name);
+                    snackbarStore.show({
+                      message: `还不支持上传 ${ext} (${preview.name})`,
+                      type: 'error',
+                      duration: 3000
+                    });
+                  }
+                }
+                return !state.cacheImageIdSet.has(preview.id) && (extensions.includes(ext));
               });
               if (newPreviews.length + imageIdSet.size > imageLImit) {
                 for (const preview of newPreviews) {
