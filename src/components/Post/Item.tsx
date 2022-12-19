@@ -13,7 +13,7 @@ import sleep from 'utils/sleep';
 import { isMobile, isPc } from 'utils/env';
 import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
-import urlify from 'utils/urlify';
+import replaceContent from 'utils/replaceContent';
 import { useHistory } from 'react-router-dom';
 import BFSReplace from 'utils/BFSReplace';
 import Query from 'utils/query';
@@ -253,7 +253,7 @@ export default observer((props: IProps) => {
                     'mt-[4px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: urlify(`${post.content}`, {
+                    __html: replaceContent(`${post.content}`, {
                       disabled: isMobile && !inPostDetail
                     }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${post.title || ''}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
                   }}

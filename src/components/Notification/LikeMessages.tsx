@@ -11,7 +11,7 @@ import { useStore } from 'store';
 import { useHistory } from 'react-router-dom';
 import { isMobile } from 'utils/env';
 import sleep from 'utils/sleep';
-import urlify from 'utils/urlify';
+import replaceContent from 'utils/replaceContent';
 
 import './index.css';
 
@@ -77,7 +77,7 @@ export default observer((props: IMessagesProps) => {
                       <div
                         className="inline-block like-messages-content"
                         dangerouslySetInnerHTML={{
-                          __html: urlify(toObject.content || '')
+                          __html: replaceContent(toObject.content || '')
                         }}
                       >
                       </div>

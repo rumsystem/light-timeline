@@ -36,7 +36,7 @@ export default observer(() => {
   const fetchData = async () => {
     state.fetching = true;
     try {
-      const limit = 15;
+      const limit = isMobile ? 10 : 15;
       const posts = await PostApi.list({
         type: postStore.feedType,
         viewer: userStore.address,

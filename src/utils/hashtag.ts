@@ -2,13 +2,13 @@ export default (text: string, options?: { disabled: boolean }) => {
   if (!text) {
     return text;
   }
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urlRegex = /#[^#\s]+[#\s]{0,1}/g;
   return text.replace(urlRegex, item => {
     try {
       if (item.trim().endsWith('"')) {
         return item;
       }
     } catch(_) {}
-    return `<a class="text-sky-400" href="${item}" ${options && options.disabled ? 'disabled' : ''}>查看链接</a>`
+    return `<a class="text-sky-400" href="${item.replace(/\s/, '')}" ${options && options.disabled ? 'disabled' : ''}>${item}</a>`
   });
 };

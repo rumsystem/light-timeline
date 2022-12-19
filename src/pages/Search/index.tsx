@@ -16,9 +16,11 @@ import qs from 'query-string';
 import sleep from 'utils/sleep';
 import { useHistory } from 'react-router-dom';
 import { MdChevronLeft } from 'react-icons/md';
-import { isPc } from 'utils/env';
+import { isPc, isMobile } from 'utils/env';
 import { useAliveController } from 'react-activation';
 import TopPlaceHolder from 'components/TopPlaceHolder';
+
+import './index.css';
 
 export default observer(() => {
   const { userStore, postStore, pathStore } = useStore();
@@ -49,6 +51,27 @@ export default observer(() => {
     fetchData();
   }, [state.page]);
 
+  React.useEffect(() => {
+    let mounted = true;
+    history.listen(() => {
+      if (mounted) {
+        const isSearchPage = window.location.pathname === '/search';
+        if (isSearchPage) {
+          postStore.resetSearchedTrxIds();
+          state.fetched = false;
+          state.page = 1;
+          state.q = Query.get('q') || '';
+          state.minLike = Query.get('minLike') || '';
+          state.minComment = Query.get('minComment') || '';
+          fetchData();
+        }
+      }
+    });
+    return () => {
+      mounted = false;
+    }
+  }, []);
+
   const fetchData = async () => {
     if (state.fetching) {
       return;
@@ -58,7 +81,7 @@ export default observer(() => {
     }
     state.fetching = true;
     try {
-      const limit = 15;
+      const limit = isMobile ? 10 : 15;
       const posts = await PostApi.list({
         q: state.q,
         minLike: state.minLike,
@@ -106,9 +129,6 @@ export default observer(() => {
   }
 
   const submit = async () => {
-    state.page = 1;
-    state.fetched = false;
-    postStore.resetSearchedTrxIds();
     history.replace(`/search?${qs.stringify({
       q: state.q,
       minLike: state.minLike,
@@ -116,7 +136,6 @@ export default observer(() => {
     }, {
       skipEmptyString: true
     })}`);
-    await fetchData();
   }
 
   return (
@@ -125,7 +144,7 @@ export default observer(() => {
       <div className="w-full md:w-[600px] box-border mx-auto relative">
         <div className="pt-[23px] md:pt-[38px] pb-12 md:pb-4">
           <div className="fixed top-0 left-0 md:left-[50%] md:ml-[-300px] z-[100] w-full md:w-[600px]">
-            <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-2 pb-2 md:pb-5 border-b dark:border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec md:rounded-12 shadow-sm">
+            <div className="bg-white dark:bg-[#181818] flex justify-center items-center px-2 pt-1 md:pt-3 pb-2 md:pb-4 md:border-b dark:md:border dark:md:border-white dark:md:border-opacity-10  md:border-gray-ec md:rounded-12 shadow-sm">
               <div className="flex items-center text-30 ml-1 mr-3 dark:text-white dark:text-opacity-80 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
                 pathStore.paths.length > 0 ? history.goBack() : history.replace(`/`);
                 postStore.resetSearchedTrxIds();
@@ -136,6 +155,7 @@ export default observer(() => {
               </div>
               <form action="/" className="flex-1 md:flex-initial md:w-64">
                 <TextField
+                  className="top-search-input"
                   fullWidth
                   autoFocus
                   placeholder='输入关键词'
@@ -172,7 +192,7 @@ export default observer(() => {
           </div>
           <div className={classNames({
             'opacity-0': state.invisibleOverlay || !state.fetched || total === 0
-          }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12 overflow-hidden")}>
+          }, "md:mt-2 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12 overflow-hidden")}>
             {postStore.searchedPosts.map((post) => (
               <div key={post.trxId}>
                 <PostItem
