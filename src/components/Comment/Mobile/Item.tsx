@@ -64,7 +64,7 @@ export default observer((props: IProps) => {
       return;
     }
     const setCanExpand = () => {
-      if (commentRef.current && commentRef.current.scrollHeight > commentRef.current.clientHeight) {
+      if (commentRef.current && (commentRef.current.scrollHeight > commentRef.current.clientHeight || commentRef.current.clientHeight > 240)) {
         state.canExpand = true;
       } else {
         state.canExpand = false;
@@ -79,7 +79,7 @@ export default observer((props: IProps) => {
         setTimeout(() => {
           setCanExpand();
         }, 0);
-      }, 400);
+      }, 100);
     }
     return () => {
       window.removeEventListener('resize', setCanExpand);
@@ -173,7 +173,7 @@ export default observer((props: IProps) => {
             'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200': !hideDivider && noSubComments,
             'md:pb-1': !isTopComment,
           },
-          'comment-item pt-4 pr-4 duration-500 ease-in-out pl-4 md:pt-4',
+          'mobile-comment-item pt-4 pr-4 duration-500 ease-in-out pl-4 md:pt-4',
         )}
         id={`comment_${comment.trxId}`}
       >

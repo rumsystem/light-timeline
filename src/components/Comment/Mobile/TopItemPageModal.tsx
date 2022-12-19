@@ -58,7 +58,7 @@ export default observer((props: IProps) => {
                 <div className="pt-3 pb-1 px-4 text-16 font-bold dark:text-white dark:text-opacity-80 text-gray-700">
                   全部回复（{subCommentsGroupMap[topComment.trxId].length}）
                 </div>
-                <div>
+                <div className="ios-safe-area-padding">
                   {subCommentsGroupMap[topComment.trxId].map(
                     (subComment: IComment, index: number) => {
                       const isLast = index === subCommentsGroupMap[topComment.trxId].length - 1;
