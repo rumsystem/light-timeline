@@ -216,7 +216,7 @@ export default observer((props: IProps) => {
               className="text-gray-88 text-12 tracking-wide cursor-pointer mt-[6px] opacity-80 block md:hidden"
               onClick={() => {
                 if (isMobile) {
-                  history.push(`/${post.groupId}/posts/${post.trxId}`);
+                  history.push(`/posts/${post.trxId}`);
                 }
               }}
             >
@@ -243,7 +243,7 @@ export default observer((props: IProps) => {
                   }}
                   onClick={() => {
                     if (isMobile) {
-                      history.push(`/${post.groupId}/posts/${post.trxId}`);
+                      history.push(`/posts/${post.trxId}`);
                     }
                   }}
                 />
