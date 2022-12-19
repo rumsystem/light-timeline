@@ -20,6 +20,7 @@ const views = require('koa-views');
 const Socket = require('./socket');
 
 const pollingContent = require('./pollingContent');
+require('./mixin');
 
 const ping = require('./routes/ping');
 const group = require('./routes/group');
