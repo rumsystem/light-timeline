@@ -213,7 +213,7 @@ export default observer(() => {
                       message: `链接${lang.copied}`,
                     });
                   }}>
-                  <TiArrowForwardOutline className="text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
+                  <TiArrowForwardOutline className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
                 </div>
               )}
               <div
