@@ -516,8 +516,8 @@ const Editor = observer((props: IProps) => {
               {props.editorKey === 'post' && (
                 <div className="flex ml-5 mt-[2px] tracking-wider">
                   <Tooltip
-                    enterDelay={200}
-                    enterNextDelay={200}
+                    enterDelay={600}
+                    enterNextDelay={600}
                     placement="top"
                     title='您的内容将发送到这里'
                     arrow
