@@ -2,6 +2,7 @@ import request from 'request';
 import { API_BASE_URL } from './common';
 import { IPost } from './types';
 import qs from 'query-string';
+import { FeedType } from 'store/post';
 
 export default {
   async list(options: {
@@ -11,7 +12,7 @@ export default {
     minComment?: string;
     userAddress?: string
     viewer?: string
-    type?: string
+    type?: FeedType
     offset?: number
     limit?: number
   } = {}) {
