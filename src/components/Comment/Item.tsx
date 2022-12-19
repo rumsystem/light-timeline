@@ -139,7 +139,7 @@ export default observer((props: IProps) => {
             highlight: props.highlight,
             'mt-[10px] p-2': isTopComment,
             'mt-1 px-2 py-[7px]': isSubComment,
-            'border-b dark:border-white dark:border-opacity-[0.05] border-gray-ec pb-4': isMobile && comment.commentCount === 0
+            'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec pb-4': isMobile && comment.commentCount === 0
           },
           'comment-item duration-500 ease-in-out -mx-2 rounded-6 group',
         )}

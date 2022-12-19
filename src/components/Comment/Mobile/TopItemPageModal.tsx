@@ -38,7 +38,7 @@ export default observer((props: IProps) => {
     >
       {topComment && (
         <div className="relative overflow-hidden">
-          <div className="font-bold items-center text-16 text-center border-b dark:border-white dark:border-opacity-10 border-gray-200 py-3">
+          <div className="font-bold items-center text-16 text-center border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200 py-3">
             评论详情
           </div>
           <div className="top-comment-height overflow-y-auto h-[90vh]">

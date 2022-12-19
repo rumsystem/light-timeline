@@ -30,9 +30,9 @@ export default observer((props: IMessagesProps) => {
                 {
                   'pb-2': showLastReadFlag,
                   'pb-[18px]': !showLastReadFlag,
-                  'border-b dark:border-white dark:border-opacity-10 border-gray-ec': index !== notifications.length - 1
+                  'border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec': index !== notifications.length - 1
                 },
-                'p-2 pt-6 border-b dark:border-white dark:border-opacity-10 border-gray-ec',
+                'p-2 pt-6 border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-ec',
               )}
             >
               <div className="relative">

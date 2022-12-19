@@ -106,7 +106,7 @@ const UserList = observer((props: IProps) => {
 
   return (
     <div className="bg-white dark:bg-[#181818] rounded-12 dark:text-white dark:text-opacity-80 text-gray-4a">
-      <div className="px-5 py-4 leading-none text-16 border-b dark:border-white dark:border-opacity-10 border-gray-d8 border-opacity-75 flex justify-between items-center">
+      <div className="px-5 py-4 leading-none text-16 border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-d8 border-opacity-75 flex justify-between items-center">
         {props.type === 'following' && `${isMyList ? '我' : 'Ta '}关注的人`}
         {props.type === 'followers' && `关注${isMyList ? '我' : ' Ta '}的人`}
         {props.type === 'muted' && '我屏蔽掉的人'}
@@ -123,7 +123,7 @@ const UserList = observer((props: IProps) => {
               const isMyself = relation.to === userStore.address;
               return (
                 <div
-                  className="border-b dark:border-white dark:border-opacity-10 border-gray-200 py-3 px-5 flex items-center justify-between"
+                  className="border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200 py-3 px-5 flex items-center justify-between"
                   key={relation.to}
                 >
                   <div
